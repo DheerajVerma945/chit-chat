@@ -69,7 +69,7 @@ const ProfilePage = () => {
                 />
               </label>
             </div>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm">
               {isUpdatingProfile
                 ? "Uploading..."
                 : "Click the camera icon to update your photo"}
@@ -78,7 +78,7 @@ const ProfilePage = () => {
 
           <div className="space-y-6">
             <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
+              <div className="text-sm  flex items-center gap-2">
                 <User className="w-4 h-4" />
                 Full Name
               </div>
@@ -88,7 +88,7 @@ const ProfilePage = () => {
             </div>
 
             <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
+              <div className="text-sm  flex items-center gap-2">
                 <Mail className="w-4 h-4" />
                 Email Address
               </div>
@@ -99,9 +99,9 @@ const ProfilePage = () => {
           </div>
           <button
             onClick={() => setShowChangePass(!showChangePass)}
-            className="w-full bg-base-200 hover:bg-base-300 text-sm font-medium py-2.5 px-4 rounded-lg flex items-center justify-between"
+            className="w-full  bg-base-300 hover:bg-base-300 text-sm font-medium py-2.5 px-4 rounded-lg flex items-center justify-between"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 ">
               <Lock className="w-4 h-4 text-base-400" />
               Change Password
             </div>

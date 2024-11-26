@@ -10,6 +10,7 @@ export const useAuthStore = create((set) => ({
   isUpdatingPassword: false,
   isUpdatingProfile: false,
   isSendingMail: false,
+  onlineUsers:[],
 
   checkAuth: async () => {
     try {
@@ -106,5 +107,6 @@ export const useAuthStore = create((set) => ({
       toast.error(error.response.data.message);
       return error.response.data;
     }
-  }
+  },
+  
 }));

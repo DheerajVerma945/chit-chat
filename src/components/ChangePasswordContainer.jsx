@@ -102,7 +102,7 @@ const ChangePasswordContainer = () => {
       </div>
 
       <button
-        className="bg-blue-500 text-white px-6 py-3 rounded-lg mt-6 flex items-center justify-center w-full"
+        className="btn btn-primary px-6 py-3 rounded-lg mt-6 flex items-center justify-center w-full"
         onClick={handlePasswordChange}
         disabled={isUpdatingPassword}
       >

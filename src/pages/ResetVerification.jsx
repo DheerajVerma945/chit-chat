@@ -51,7 +51,7 @@ const ResetVerification = () => {
       <div className="flex items-center justify-center flex-col p-6 sm:p-12">
         {showResendMail && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="relative bg-gray-900 text-white p-8 rounded-lg shadow-lg w-80 max-w-sm">
+            <div className="relative bg-neutral-300 p-8 rounded-lg shadow-lg w-80 max-w-sm">
               <button
                 onClick={() => setShowResendMail(false)}
                 className="absolute top-2 right-2 text-base-content/60"
