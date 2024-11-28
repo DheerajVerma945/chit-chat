@@ -26,7 +26,8 @@ const ChangePasswordContainer = () => {
       currPass: formData.currPass,
       newPass: formData.newPass,
     });
-    if(res.status === "success"){
+    console.log("Password",res);
+    if(res.status === 200){
       setShowContainer(false);
       setFormData({
         currPass: "",

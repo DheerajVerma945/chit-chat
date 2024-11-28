@@ -1,3 +1,4 @@
+import ChatPage from "./ChatPage";
 import HomePage from "./HomePage";
 import LoginPage from "./LoginPage"
 import SignUpPage from "./SignUpPage"
@@ -6,4 +7,4 @@ import ProfilePage from "./ProfilePage"
 import ForgotPass from "./ForgotPass";
 import ResetVerification from "./ResetVerification";
 
-export {HomePage,SignUpPage,Settings,LoginPage,ProfilePage,ForgotPass,ResetVerification}
+export {HomePage,ChatPage,SignUpPage,Settings,LoginPage,ProfilePage,ForgotPass,ResetVerification}
