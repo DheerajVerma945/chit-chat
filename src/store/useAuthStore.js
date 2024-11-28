@@ -86,7 +86,6 @@ export const useAuthStore = create((set, get) => ({
       const res = await axiosInstance.patch("/auth/update-password", data);
       toast.success("Password updated successfully");
       set({ authUser: res.data });
-      return res;
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
