@@ -3,7 +3,7 @@ import { useChatStore } from "../store/useChatStore";
 import { MessageInput, MessageSkeleton, ChatHeader } from "../components";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
-import { useGroupChatStore } from "../store/useGroupChatStore";
+import { useGroupChatStore } from "../store/useGroupChatStore.js";
 
 const ChatContainer = () => {
   const { authUser } = useAuthStore();
