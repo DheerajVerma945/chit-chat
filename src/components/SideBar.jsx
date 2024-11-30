@@ -15,6 +15,7 @@ const Sidebar = () => {
     selectedGroup,
     setSelectedGroup,
     isGroupsLoading,
+    setShowInfo,
   } = useGroupChatStore();
 
   const { onlineUsers } = useAuthStore();
@@ -26,7 +27,6 @@ const Sidebar = () => {
     getUsers();
     getGroups();
   }, [getUsers]);
-
 
   if (isUsersLoading || isGroupsLoading) return <SidebarSkeleton />;
 
@@ -216,7 +216,10 @@ const Sidebar = () => {
               {groups.map((group) => (
                 <button
                   key={group._id}
-                  onClick={() => setSelectedGroup(group)}
+                  onClick={() => {
+                    setSelectedGroup(group);
+                    setShowInfo(false);
+                  }}
                   className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
