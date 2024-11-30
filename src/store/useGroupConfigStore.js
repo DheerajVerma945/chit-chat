@@ -113,7 +113,7 @@ export const useGroupConfigStore = create((set) => ({
     try {
       const res = await axiosInstance.post("/group/create", { name });
       setSelectedGroup(res.data.data);
-      setGroups(...groups, res.data.data);
+      setGroups([...groups, res.data.data]);
     } catch (error) {
       toast.error(error?.response?.data?.message);
     } finally {
