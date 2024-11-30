@@ -2,7 +2,7 @@ const UserSkeleton = () => {
   const skeletonUsers = Array(12).fill(null);
 
   return (
-    <div className=" grid grid-cols-2 sm:grid-cols-3  md:grid-cols-4 gap-x-16 sm:gap-x-24  md:gap-x-40 gap-y-20 p-4 overflow-hidden">
+    <div className=" grid grid-cols-2 sm:grid-cols-3  md:grid-cols-4 gap-x-16 sm:gap-x-24  md:gap-x-40 gap-y-20 p-4 overflow-auto scorllbar-hidden">
       {skeletonUsers.map((_, idx) => (
         <div key={idx} className="flex flex-col items-center gap-10">
           <div className="w-16 h-16 rounded-full skeleton" />
@@ -17,7 +17,7 @@ const GroupSkeleton = () => {
   const skeletonGroups = Array(12).fill(null);
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-16 sm:gap-x-24 md:gap-x-30 gap-y-20 p-4 overflow-x-auto">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-16 sm:gap-x-24 md:gap-x-30 gap-y-20 p-4 overflow-x-auto scorllbar-hidden">
       {skeletonGroups.map((_, idx) => (
         <div
           key={idx}

@@ -19,6 +19,8 @@ const GroupInfo = () => {
   const [visibility, setVisibility] = useState(group.visibility);
   const [imageUploading, setImageUploading] = useState(false);
 
+  const saveDisabled = false;
+
   const handleImageUpload = async (e) => {
     setImageUploading(true);
     const file = e.target.files[0];
@@ -41,9 +43,9 @@ const GroupInfo = () => {
   };
 
   return (
-    <div className="min-h-screen bg-base-100 relative ">
+    <div className="min-h-screen bg-base-100 relative">
       {imageUploading && (
-        <div className="absolute inset-0 bg-opacity-50 bg-black flex items-center justify-center">
+        <div className="absolute inset-0 bg-opacity-80 bg-black flex h-screen items-center justify-center">
           <div className="loading bg-primary w-12 h-12 rounded-full"></div>
         </div>
       )}
@@ -153,6 +155,7 @@ const GroupInfo = () => {
                     </button>
                     <button
                       onClick={handleGroupInfoUpdate}
+                      disabled={saveDisabled}
                       className={`btn btn-primary ${
                         isLoading ? "loading bg-primary" : ""
                       }`}

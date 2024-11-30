@@ -1,9 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { useGroupChatStore } from "./useGroupChatStore";
 import { axiosInstance } from "../lib/axios";
-
-const { selectedGroup, setSelectedGroup, setGroups } = useGroupChatStore();
+import { useGroupChatStore } from "./useGroupChatStore";
 
 export const useGroupConfigStore = create((set) => ({
   groupData: [],
@@ -16,6 +14,7 @@ export const useGroupConfigStore = create((set) => ({
   isCreatingGroup: false,
 
   addMember: async (userId) => {
+    const { selectedGroup } = useGroupChatStore.getState();
     set({ isAddingMember: true });
     try {
       const res = await axiosInstance.post("/group/addMember", {
@@ -30,11 +29,12 @@ export const useGroupConfigStore = create((set) => ({
     }
   },
 
-  setGroupData:(data)=>{
-    set({groupData:data})
+  setGroupData: (data) => {
+    set({ groupData: data });
   },
 
   removeMember: async (userId) => {
+    const { selectedGroup } = useGroupChatStore.getState();
     set({ isRemovingMember: true });
     try {
       const res = await axiosInstance.post("/group/removeMember", {
@@ -62,10 +62,11 @@ export const useGroupConfigStore = create((set) => ({
   },
 
   deleteGroup: async () => {
+    const { selectedGroup, setSelectedGroup } = useGroupChatStore.getState();
     set({ isDeletingGroup: true });
     try {
-      const res = await axiosInstance.delete("/group/deleteGroup", {
-        groupId: selectedGroup._id,
+      await axiosInstance.delete("/group/deleteGroup", {
+        data: { groupId: selectedGroup._id },
       });
       setSelectedGroup(null);
     } catch (error) {
@@ -76,6 +77,8 @@ export const useGroupConfigStore = create((set) => ({
   },
 
   exitGroup: async () => {
+    const { selectedGroup, setSelectedGroup, setGroups } =
+      useGroupChatStore.getState();
     set({ isExitingGroup: true });
     try {
       const res = await axiosInstance.post("/group/exitGroup", {
@@ -91,6 +94,7 @@ export const useGroupConfigStore = create((set) => ({
   },
 
   joinGroup: async (groupId) => {
+    const { setGroups, groups } = useGroupChatStore.getState();
     set({ isJoiningGroup: true });
     try {
       const res = await axiosInstance.post("/group/joinGroup", { groupId });
@@ -103,10 +107,13 @@ export const useGroupConfigStore = create((set) => ({
   },
 
   createGroup: async (name) => {
+    const { setSelectedGroup, setGroups, groups } =
+      useGroupChatStore.getState();
     set({ isCreatingGroup: true });
     try {
-        const res = await axiosInstance.post("/group/create");
-        setSelectedGroup(res.data.data);
+      const res = await axiosInstance.post("/group/create", { name });
+      setSelectedGroup(res.data.data);
+      setGroups(...groups, res.data.data);
     } catch (error) {
       toast.error(error?.response?.data?.message);
     } finally {
