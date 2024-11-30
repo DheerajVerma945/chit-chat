@@ -28,7 +28,7 @@ const Sidebar = () => {
   }, [getUsers]);
 
 
-  if (isUsersLoading) return <SidebarSkeleton />;
+  if (isUsersLoading || isGroupsLoading) return <SidebarSkeleton />;
 
   const sortedUsers =
     users &&
@@ -53,6 +53,7 @@ const Sidebar = () => {
             }`}
             onClick={() => {
               setShowContacts(true);
+              setSelectedGroup(null);
               setShowGroups(false);
             }}
           >

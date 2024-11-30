@@ -111,7 +111,7 @@ const ChatContainer = () => {
             <div
               key={message._id}
               className={`chat ${
-                message.senderId === authUser.data._id
+                message.senderId._id === authUser.data._id
                   ? "chat-end"
                   : "chat-start"
               }`}
@@ -121,9 +121,9 @@ const ChatContainer = () => {
                 <div className="size-10 rounded-full border">
                   <img
                     src={
-                      message.senderId === authUser.data._id
+                      message.senderId._id === authUser.data._id
                         ? authUser.data.profilePic
-                        : senderId.photo
+                        : message.senderId.profilePic
                     }
                     alt="profile pic"
                   />
@@ -136,11 +136,16 @@ const ChatContainer = () => {
               </div>
               <div
                 className={`${
-                  message.senderId === authUser.data._id
+                  message.senderId._id === authUser.data._id
                     ? "bg-primary text-primary-content"
                     : "bg-base-200 text-base-content"
-                } chat-bubble flex flex-col`}
+                } chat-bubble flex flex-col relative`}
               >
+                {message.senderId._id === authUser.data._id && (
+                  <p className="absolute top-[-1.5rem] right-0 text-sm text-gray-500">
+                    ~{message.senderId.fullName}
+                  </p>
+                )}
                 {message.image && (
                   <img
                     src={message.image}
@@ -158,4 +163,4 @@ const ChatContainer = () => {
     </div>
   );
 };
-export default ChatContainer
+export default ChatContainer;

@@ -21,7 +21,7 @@ export const useGroupChatStore = create((set, get) => ({
   },
 
   setSelectedGroup: (group) => {
-    set({ selectedgroup: group });
+    set({ selectedGroup: group });
   },
 
   getGroupMessages: async (groupId) => {
