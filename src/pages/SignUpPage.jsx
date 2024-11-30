@@ -9,17 +9,23 @@ import {
   Mail,
   MessageSquare,
   User,
+  Check,
+  X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import AuthImagePattern from "../components/AuthImagePattern";
+import { axiosInstance } from "../lib/axios";
 
 const SignUpPage = () => {
   const { signup, isSigningUp } = useAuthStore();
   const [showPass, setShowPass] = useState(false);
+  const [isValidatingUsername, setIsValidatingUsername] = useState(false);
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
+    username: "",
   });
 
   const validateForm = () => {
@@ -28,10 +34,28 @@ const SignUpPage = () => {
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email format");
     if (!formData.password) return toast.error("Password is required");
+    if (!formData.username) return toast.error("User name is required");
+    if (formData.username.length > 18)
+      return toast.error("User name cannot be greater than 18 characters");
     if (formData.password.length < 6)
-      return toast.error("Password must be atleast 6 characters");
-
+      return toast.error("Password must be at least 6 characters");
+    if (!/^[a-zA-Z0-9_]+$/.test(formData.username))
+      return toast.error("User name contains invalid characters");
     return true;
+  };
+
+  const debounceUsername = (username) => {
+    setIsValidatingUsername(true);
+    setTimeout(async () => {
+      try {
+        const res = await axiosInstance.get(`/auth/validateUserName/${username}`);
+        setIsUsernameValid(res?.data?.status === "success");
+      } catch {
+        setIsUsernameValid(false);
+      } finally {
+        setIsValidatingUsername(false);
+      }
+    }, 1000);
   };
 
   const handleSubmit = (e) => {
@@ -39,6 +63,7 @@ const SignUpPage = () => {
     const validData = validateForm();
     if (validData === true) signup(formData);
   };
+
   return (
     <div className="min-h-screen grid lg:grid-cols-2 mt-16">
       <div className="flex items-center justify-center flex-col p-6 sm:p-12">
@@ -53,7 +78,6 @@ const SignUpPage = () => {
                 Get started with your free account
               </p>
             </div>
-
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="form-control">
                 <label className="label">
@@ -65,13 +89,42 @@ const SignUpPage = () => {
                   </div>
                   <input
                     type="text"
-                    className={`input input-bordered w-full pl-10`}
-                    placeholder="Neeraj Kumar"
+                    className="input input-bordered w-full pl-10"
+                    placeholder="Your Name"
                     value={formData.fullName}
                     onChange={(e) =>
                       setFormData({ ...formData, fullName: e.target.value })
                     }
                   />
+                </div>
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text font-medium">Username</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="size-5 text-base-content/40" />
+                  </div>
+                  <input
+                    type="text"
+                    className="input input-bordered w-full pl-10"
+                    placeholder="username"
+                    value={formData.username}
+                    onChange={(e) => {
+                      setFormData({ ...formData, username: e.target.value });
+                      debounceUsername(e.target.value);
+                    }}
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    {isValidatingUsername ? (
+                      <Loader className="size-5 animate-spin text-base-content/40" />
+                    ) : isUsernameValid ? (
+                      <Check className="size-5 text-success" />
+                    ) : (
+                      <X className="size-5 text-error" />
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="form-control">
@@ -84,7 +137,7 @@ const SignUpPage = () => {
                   </div>
                   <input
                     type="text"
-                    className={`input input-bordered w-full pl-10`}
+                    className="input input-bordered w-full pl-10"
                     placeholder="your@example.com"
                     value={formData.email}
                     onChange={(e) =>
@@ -103,7 +156,7 @@ const SignUpPage = () => {
                   </div>
                   <input
                     type={showPass ? "text" : "password"}
-                    className={`input input-bordered w-full pl-10`}
+                    className="input input-bordered w-full pl-10"
                     placeholder="********"
                     value={formData.password}
                     onChange={(e) =>
@@ -123,11 +176,12 @@ const SignUpPage = () => {
                   </button>
                 </div>
               </div>
-
               <button
                 type="submit"
                 className="btn btn-primary w-full"
-                disabled={isSigningUp}
+                disabled={
+                  isSigningUp || isValidatingUsername || !isUsernameValid
+                }
               >
                 {isSigningUp ? (
                   <>
@@ -139,7 +193,6 @@ const SignUpPage = () => {
                 )}
               </button>
             </form>
-
             <div className="text-center mt-2">
               <p className="text-base-content/60">
                 Already have an account?{" "}
@@ -153,7 +206,7 @@ const SignUpPage = () => {
       </div>
       <AuthImagePattern
         title="Join our community"
-        subtitle="Connect with freinds, share moments, and stay in touch with your loved ones."
+        subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
       />
     </div>
   );

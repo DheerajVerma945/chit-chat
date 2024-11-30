@@ -141,9 +141,9 @@ const ChatContainer = () => {
                     : "bg-base-200 text-base-content"
                 } chat-bubble flex flex-col relative`}
               >
-                {message.senderId._id === authUser.data._id && (
+                {message.senderId._id !== authUser.data._id && (
                   <p className="absolute top-[-1.5rem] right-0 text-sm text-gray-500">
-                    ~{message.senderId.fullName}
+                    ~{message.senderId.fullName.split(' ')[0]}
                   </p>
                 )}
                 {message.image && (
