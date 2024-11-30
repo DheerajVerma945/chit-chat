@@ -7,6 +7,7 @@ export const useGroupChatStore = create((set, get) => ({
   selectedGroup: null,
   isGroupsLoading: false,
   isGroupMessagesLoading: false,
+  showInfo: false,
 
   getGroups: async () => {
     set({ isGroupsLoading: true });
@@ -23,11 +24,15 @@ export const useGroupChatStore = create((set, get) => ({
   setSelectedGroup: (group) => {
     set({ selectedGroup: group });
   },
+  
+  setShowInfo: (data) => {
+    set({ showInfo: data });
+  },
 
   setGroups: (data) => {
     set({ groups: data });
   },
-  
+
   getGroupMessages: async (groupId) => {
     set({ isGroupMessagesLoading: true });
     try {

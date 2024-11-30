@@ -4,6 +4,7 @@ import { MessageInput, MessageSkeleton, ChatHeader } from "../components";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 import { useGroupChatStore } from "../store/useGroupChatStore.js";
+import GroupInfo from "./GroupInfo.jsx";
 
 const ChatContainer = () => {
   const { authUser } = useAuthStore();
@@ -22,6 +23,7 @@ const ChatContainer = () => {
     getGroupMessages,
     isGroupMessagesLoading,
     selectedGroup,
+    showInfo
   } = useGroupChatStore();
 
   useEffect(() => {
@@ -57,7 +59,8 @@ const ChatContainer = () => {
   return (
     <div className="flex-1 flex flex-col overflow-auto">
       <ChatHeader />
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {
+        !showInfo && <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages &&
           messages.length > 0 &&
           messages.map((message) => (
@@ -158,6 +161,10 @@ const ChatContainer = () => {
             </div>
           ))}
       </div>
+      }
+      {
+        showInfo && <GroupInfo/>
+      }
 
       <MessageInput />
     </div>
