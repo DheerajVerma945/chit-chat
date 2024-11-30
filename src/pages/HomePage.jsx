@@ -13,7 +13,7 @@ const HomePage = () => {
           <div className="h-1/2 mt-16 flex flex-col">
             <button
               className={`flex h-1/2 items-center gap-2 p-4 w-full transition duration-300 hover:bg-base-200 rounded-md ${
-                currentContainer === "users" ? "btn-primary" : "btn-ghost"
+                currentContainer === "users" ? "btn-primary" : ""
               }`}
               onClick={() => setCurrentContainer("users")}
             >
@@ -22,7 +22,7 @@ const HomePage = () => {
             </button>
             <button
               className={`flex h-1/2 items-center gap-2 p-4 w-full transition duration-300 hover:bg-base-200 rounded-md ${
-                currentContainer === "groups" ? "btn-primary" : "btn-ghost"
+                currentContainer === "groups" ? "btn-primary" : ""
               }`}
               onClick={() => setCurrentContainer("groups")}
             >

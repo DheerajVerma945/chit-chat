@@ -44,7 +44,7 @@ const Sidebar = () => {
     : users;
 
   return (
-    <aside className="h-full w-28 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
+    <aside className="h-full w-28 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200  scrollbar-hidden">
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center justify-between  gap-2  md:gap-2">
           <button
@@ -205,10 +205,10 @@ const Sidebar = () => {
             <div className="flex flex-col items-center justify-center h-full text-center gap-3">
               <Users className="text-blue-500 size-8" />
               <Link
-                to="/"
+                to="/group"
                 className="text-blue-500 hover:underline font-medium text-lg lg:text-base"
               >
-                Explore groups
+                Create new group
               </Link>
             </div>
           ) : (

@@ -49,7 +49,7 @@ const ChatContainer = () => {
 
   if (isMessagesLoading || isGroupMessagesLoading)
     return (
-      <div className="flex-1 flex flex-col overflow-auto">
+      <div className="flex-1 flex flex-col overflow-auto  scrollbar-hidden">
         <ChatHeader />
         <MessageSkeleton />
         <MessageInput />
@@ -57,7 +57,7 @@ const ChatContainer = () => {
     );
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className="flex-1 flex flex-col overflow-auto  scrollbar-hidden">
       <ChatHeader />
       {!showInfo && (
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
