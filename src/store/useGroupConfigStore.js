@@ -30,6 +30,10 @@ export const useGroupConfigStore = create((set) => ({
     }
   },
 
+  setGroupData:(data)=>{
+    set({groupData:data})
+  },
+
   removeMember: async (userId) => {
     set({ isRemovingMember: true });
     try {

@@ -109,7 +109,6 @@ export const useAuthStore = create((set, get) => ({
 
   verifyAndReset: async (email, token, newPass) => {
     try {
-      console.log("email-", email, " token-", token, " newPass-", newPass);
       const res = await axiosInstance.post("/auth/forgot-password/verify", {
         email,
         token,
@@ -137,6 +136,7 @@ export const useAuthStore = create((set, get) => ({
       set({ onlineUsers: userIds})
     })
   },
+  
   disconnectSocket: () => {
     if(get().socket?.connected) get().socket.disconnect();
   },
