@@ -3,7 +3,7 @@ import { useChatStore } from "../store/useChatStore";
 import { useGroupChatStore } from "../store/useGroupChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "../components/skeletons/SideBarSkeleton";
-import { User, Users } from "lucide-react";
+import { Plus, User, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -201,26 +201,22 @@ const Sidebar = () => {
       )}
       {showGroups && (
         <>
-          {!groups || groups.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center gap-3">
-              <Users className="text-blue-500 size-8" />
-              <Link
-                to="/group"
-                className="text-blue-500 hover:underline font-medium text-lg lg:text-base"
-              >
-                Create new group
-              </Link>
-            </div>
-          ) : (
-            <div className="overflow-y-auto w-full py-3">
-              {groups.map((group) => (
-                <button
-                  key={group._id}
-                  onClick={() => {
-                    setSelectedGroup(group);
-                    setShowInfo(false);
-                  }}
-                  className={`
+          <div className="mt-2 flex items-center justify-center mb-2">
+            <button className="btn btn-primary flex items-center justify-center text-sm py-2 px-4 rounded-lg">
+              <Plus/>
+              <span className="hidden lg:block">Create new group</span>
+              <span className="block lg:hidden">Group</span>
+            </button>
+          </div>
+          <div className="overflow-y-auto w-full py-3 border-t border-base-300">
+            {groups.map((group) => (
+              <button
+                key={group._id}
+                onClick={() => {
+                  setSelectedGroup(group);
+                  setShowInfo(false);
+                }}
+                className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
               ${
@@ -229,21 +225,20 @@ const Sidebar = () => {
                   : ""
               }
             `}
-                >
-                  <div className="relative mx-auto lg:mx-0">
-                    <img
-                      src={group.photo}
-                      alt={group.name}
-                      className="size-12 object-cover rounded-full"
-                    />
-                  </div>
-                  <div className="hidden lg:block text-left min-w-0">
-                    <div className="font-medium truncate">{group.name}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+              >
+                <div className="relative mx-auto lg:mx-0">
+                  <img
+                    src={group.photo}
+                    alt={group.name}
+                    className="size-12 object-cover rounded-full"
+                  />
+                </div>
+                <div className="hidden lg:block text-left min-w-0">
+                  <div className="font-medium truncate">{group.name}</div>
+                </div>
+              </button>
+            ))}
+          </div>
         </>
       )}
     </aside>

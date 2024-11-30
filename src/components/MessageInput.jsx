@@ -10,6 +10,7 @@ const MessageInput = () => {
   const fileInputRef = useRef(null);
   const { sendMessage, selectedUser } = useChatStore();
   const { selectedGroup,sendGroupMessage } = useGroupChatStore();
+  const [sendMessageLoading,setSendMessageLoading] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -32,6 +33,7 @@ const MessageInput = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
+    setSendMessageLoading(true);
     if (!text.trim() && !imagePreview) return;
 
     try {
@@ -53,6 +55,9 @@ const MessageInput = () => {
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
       console.error("Failed to send message:", error);
+    }
+    finally{
+      setSendMessageLoading(false);
     }
   };
 
@@ -106,10 +111,12 @@ const MessageInput = () => {
         </div>
         <button
           type="submit"
-          className="btn-primary size-10 btn btn-sm btn-circle"
+          className = {`btn btn-primary ${
+            sendMessageLoading ? "loading bg-primary" : "size-10 btn-sm btn-circle"
+          }`}
           disabled={!text.trim() && !imagePreview}
         >
-          <Send className="size-8" />
+          {!sendMessageLoading && <Send className="size-8" />}
         </button>
       </form>
     </div>
