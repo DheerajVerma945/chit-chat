@@ -24,10 +24,16 @@ export const useGroupChatStore = create((set, get) => ({
     set({ selectedGroup: group });
   },
 
+  setGroups: (data) => {
+    set({ groups: data });
+  },
+  
   getGroupMessages: async (groupId) => {
     set({ isGroupMessagesLoading: true });
     try {
-      const res = await axiosInstance.get(`/group/messages/getMessages/${groupId}`);
+      const res = await axiosInstance.get(
+        `/group/messages/getMessages/${groupId}`
+      );
       set({ groupMessages: Array.isArray(res.data.data) ? res.data.data : [] });
     } catch (error) {
       set({ groupMessages: [] });
@@ -48,5 +54,4 @@ export const useGroupChatStore = create((set, get) => ({
       toast.error(error.response?.data?.message || "Failed to send message");
     }
   },
-
 }));
