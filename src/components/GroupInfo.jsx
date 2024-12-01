@@ -24,14 +24,15 @@ const GroupInfo = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [formData, setFormData] = useState({
     newName: group.name,
-    newPhoto: group.photo,
+    visibility: group.visibility,
     description: group.description,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [visibility, setVisibility] = useState(group.visibility);
   const [imageUploading, setImageUploading] = useState(false);
 
-  const validateSave = (newName !== group.name) || newPhoto || (description !== group.description)
+  const validateSave =
+    formData.newName !== group.name || formData.visibility !== group.visibility;
+  formData.description !== group.description;
 
   const handleImageUpload = async (e) => {
     setImageUploading(true);
@@ -45,17 +46,15 @@ const GroupInfo = () => {
 
   const handleGroupInfoUpdate = async () => {
     setIsLoading(true);
-    await updateGroup({
-      name: formData.newName,
-      photo: formData.newPhoto,
-      description: formData.description,
-      visibility,
-    });
+    await updateGroup(formData);
     setIsLoading(false);
   };
 
   const handleVisibilityToggle = () => {
-    setVisibility(visibility === "private" ? "public" : "private");
+    setFormData({
+      ...formData,
+      visibility: formData.visibility === "private" ? "public" : "private",
+    });
   };
 
   const handleAddMember = async (userId) => {
@@ -93,7 +92,7 @@ const GroupInfo = () => {
           <div className="flex flex-col items-center gap-6">
             <div className="relative">
               <img
-                src={formData.newPhoto}
+                src={group.photo}
                 alt="Group"
                 className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4"
               />
@@ -168,11 +167,13 @@ const GroupInfo = () => {
 
                     <div className="flex items-center gap-2">
                       <span className="text-xs sm:text-sm">
-                        {visibility === "private" ? "Private" : "Public"}
+                        {formData.visibility === "private"
+                          ? "Private"
+                          : "Public"}
                       </span>
                       <input
                         type="checkbox"
-                        checked={visibility === "private"}
+                        checked={formData.visibility === "private"}
                         onChange={handleVisibilityToggle}
                         className="toggle xs:toggle-xs"
                       />
@@ -199,19 +200,20 @@ const GroupInfo = () => {
               )}
             </div>
           )}
-          {group.visibility === "public" && (
-            <div className="space-y-6">
-              <div className="flex flex-wrap justify-center gap-4 items-center">
-                <button
-                  onClick={() => {}}
-                  className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
-                >
-                  <UserPlus2 />
-                  <span className="hidden lg:block">Add member</span>
-                </button>
+          {authUser.data._id !== group.admin &&
+            group.visibility === "public" && (
+              <div className="space-y-6">
+                <div className="flex flex-wrap justify-center gap-4 items-center">
+                  <button
+                    onClick={() => {}}
+                    className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
+                  >
+                    <UserPlus2 />
+                    <span className="hidden lg:block">Add member</span>
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           <div className="border-t-2 border-base-100">
             <h2 className="text-lg font-medium mb-4 mt-8">
