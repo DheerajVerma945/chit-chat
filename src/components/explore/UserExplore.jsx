@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { UserSkeleton } from "../skeletons/Explore";
 
 const UserExplore = () => {
+  const exploreUsers = [];
   const [users, setUsers] = useState([]);
   useEffect(() => {
     const fetch = async () => {

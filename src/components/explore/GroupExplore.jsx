@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { GroupSkeleton } from "../skeletons/Explore";
+import { useGroupConfigStore } from "../../store/useGroupConfigStore";
 
 const GroupExplore = () => {
+  const {exploreGroups} = useGroupConfigStore();
   const [groups, setGroups] = useState([]);
   useEffect(() => {
     const fetch = async () => {
@@ -9,7 +11,7 @@ const GroupExplore = () => {
       setGroups(res.data.data);
     };
     fetch();
-  }, [exploreUsers]);
+  }, [exploreGroups]);
   return (
     <div>
       <GroupSkeleton />

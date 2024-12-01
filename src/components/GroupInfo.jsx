@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGroupChatStore } from "../store/useGroupChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 import { Camera, MoreVertical, Settings, UserPlus2 } from "lucide-react";
+import { useGroupConfigStore } from "../store/useGroupConfigStore";
 
 const GroupInfo = () => {
-  const { selectedGroup: group } = useGroupChatStore();
+  const {groupData:group} = useGroupConfigStore();
+  useEffect( ()=>{
+
+  })
   const { authUser } = useAuthStore();
   const { users } = useChatStore();
   const [selectedMembers, setSelectedMembers] = useState([]);
