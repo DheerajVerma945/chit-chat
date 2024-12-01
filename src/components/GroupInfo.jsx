@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
+import imageCompression from "browser-image-compression";
 import { Camera, MoreVertical, Settings, UserPlus2 } from "lucide-react";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
 

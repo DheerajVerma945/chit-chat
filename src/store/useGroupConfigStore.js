@@ -79,6 +79,7 @@ export const useGroupConfigStore = create((set, get) => {
           data: { groupId: groupData[0]._id },
         });
         setSelectedGroup(null);
+        set({groupData:[]});
         toast.success("Group deleted successfully");
       } catch (error) {
         toast.error(error?.response?.data?.message);
@@ -96,6 +97,7 @@ export const useGroupConfigStore = create((set, get) => {
           groupId: groupData[0]._id,
         });
         setSelectedGroup(null);
+        set({groupData:[]});
         setGroups(res.data.data);
         toast.success("Exited from group successfully");
       } catch (error) {
@@ -122,10 +124,12 @@ export const useGroupConfigStore = create((set, get) => {
     createGroup: async (name) => {
       const { setSelectedGroup, setGroups, groups } =
         useGroupChatStore.getState();
+        const {groupData} = get();
       set({ isCreatingGroup: true });
       try {
         const res = await axiosInstance.post("/group/create", { name });
         setSelectedGroup(res.data.data);
+        set({groupData:[res.data.data]});
         setGroups([...groups, res.data.data]);
         toast.success("Group created successfully");
       } catch (error) {

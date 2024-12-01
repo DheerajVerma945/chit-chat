@@ -2,11 +2,13 @@ import { Loader, X } from "lucide-react";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
+import { useGroupChatStore } from "../store/useGroupChatStore";
 
 const CreateGroup = ({ onClose }) => {
   const [name, setName] = useState("");
   const [creationLoading, setCreationLoading] = useState(false);
   const { createGroup } = useGroupConfigStore();
+  const { setShowInfo } = useGroupChatStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,10 +23,10 @@ const CreateGroup = ({ onClose }) => {
       await createGroup(name);
       setName("");
       onClose();
+      setShowInfo(false);
     } catch (error) {
       toast.error(error?.message);
-    }
-    finally{
+    } finally {
       setCreationLoading(false);
     }
   };
