@@ -6,7 +6,7 @@ import { useGroupChatStore } from "./useGroupChatStore";
 export const useGroupConfigStore = create((set) => {
   const { selectedGroup } = useGroupChatStore.getState();
   return {
-    groupData: [selectedGroup],
+    groupData:[selectedGroup],
     isAddingMember: false,
     isUpdatingGroup: false,
     isRemovingMember: false,

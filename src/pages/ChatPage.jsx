@@ -7,7 +7,6 @@ const ChatPage = () => {
   const { selectedUser } = useChatStore();
   const {selectedGroup} = useGroupChatStore();
 
-  console.log(selectedGroup,selectedUser);
   return (
     <div className="bg-base-200 h-screen">
       <div className="flex items-center justify-center pt-20 px-2">

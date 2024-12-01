@@ -5,10 +5,13 @@ import { useAuthStore } from "../store/useAuthStore";
 import { CreateGroup, SideBarSkeleton } from "../components";
 import { Plus, User, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useGroupConfigStore } from "../store/useGroupConfigStore";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChatStore();
+
+  const { setGroupData } = useGroupConfigStore();
   const {
     getGroups,
     groups,
@@ -209,7 +212,7 @@ const Sidebar = () => {
             <div className="mt-2 flex items-center justify-center mb-2">
               <button
                 className="btn btn-primary flex items-center justify-center text-sm py-2 px-4 rounded-lg"
-                onClick={()=>setShowCreateGroup(true)}
+                onClick={() => setShowCreateGroup(true)}
               >
                 <Plus />
                 <span className="hidden lg:block">Create new group</span>
@@ -222,6 +225,7 @@ const Sidebar = () => {
                   key={group._id}
                   onClick={() => {
                     setSelectedGroup(group);
+                    setGroupData([group]);
                     setShowInfo(false);
                   }}
                   className={`

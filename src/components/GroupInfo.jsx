@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { useGroupChatStore } from "../store/useGroupChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 import { Camera, MoreVertical, Settings, UserPlus2 } from "lucide-react";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
 
 const GroupInfo = () => {
-  const {groupData:group} = useGroupConfigStore();
-  useEffect( ()=>{
+  const {
+    groupData,
+    addMember,
+    removeMember,
+    updateGroup,
+    setGroupData,
+    joinGroup,
+    exitGroup,
+  } = useGroupConfigStore();
+  const group = groupData[0];
 
-  })
+  useEffect(() => {
+    setGroupData(groupData);
+  }, [groupData, setGroupData]);
+
   const { authUser } = useAuthStore();
-  const { users } = useChatStore();
-  const [selectedMembers, setSelectedMembers] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [data, setData] = useState({
+  const [formData, setFormData] = useState({
     newName: group.name,
     newPhoto: group.photo,
     description: group.description,
@@ -23,27 +31,47 @@ const GroupInfo = () => {
   const [visibility, setVisibility] = useState(group.visibility);
   const [imageUploading, setImageUploading] = useState(false);
 
-  const saveDisabled = false;
+  const validateSave = (newName !== group.name) || newPhoto || (description !== group.description)
 
   const handleImageUpload = async (e) => {
     setImageUploading(true);
     const file = e.target.files[0];
     if (!file) return;
-    setData({ ...data, newPhoto: file });
+    setFormData({ ...formData, newPhoto: file });
     setTimeout(() => {
       setImageUploading(false);
     }, 2000);
   };
 
-  const handleGroupInfoUpdate = () => {
+  const handleGroupInfoUpdate = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    await updateGroup({
+      name: formData.newName,
+      photo: formData.newPhoto,
+      description: formData.description,
+      visibility,
+    });
+    setIsLoading(false);
   };
 
   const handleVisibilityToggle = () => {
     setVisibility(visibility === "private" ? "public" : "private");
+  };
+
+  const handleAddMember = async (userId) => {
+    await addMember(userId);
+  };
+
+  const handleRemoveMember = async (userId) => {
+    await removeMember(userId);
+  };
+
+  const handleExitGroup = async () => {
+    await exitGroup();
+  };
+
+  const handleJoinGroup = async (groupId) => {
+    await joinGroup(groupId);
   };
 
   return (
@@ -65,7 +93,7 @@ const GroupInfo = () => {
           <div className="flex flex-col items-center gap-6">
             <div className="relative">
               <img
-                src={data.newPhoto}
+                src={formData.newPhoto}
                 alt="Group"
                 className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4"
               />
@@ -113,25 +141,25 @@ const GroupInfo = () => {
                 <div className="form-control space-y-4 mt-6">
                   <input
                     type="text"
-                    value={data.newName}
+                    value={formData.newName}
                     onChange={(e) =>
-                      setData({ ...data, newName: e.target.value })
+                      setFormData({ ...formData, newName: e.target.value })
                     }
                     className="input input-bordered w-full"
                     placeholder="Group Name"
                   />
                   <input
                     type="text"
-                    value={data.description}
+                    value={formData.description}
                     onChange={(e) =>
-                      setData({ ...data, description: e.target.value })
+                      setFormData({ ...formData, description: e.target.value })
                     }
                     className="input input-bordered w-full"
                     placeholder="Group Description"
                   />
-                  <div className="flex flex-row items-center bg-base-100 btn no-animation  justify-between mt-4">
-                    <div className="flex gap-2  items-center">
-                      <span className=" text-xs sm:text-lg">Visibility</span>
+                  <div className="flex flex-row items-center bg-base-100 btn no-animation justify-between mt-4">
+                    <div className="flex gap-2 items-center">
+                      <span className="text-xs sm:text-lg">Visibility</span>
                       <p className="text-xs hidden lg:block">
                         (In private groups, only the admin can send and accept
                         requests to users.)
@@ -159,7 +187,7 @@ const GroupInfo = () => {
                     </button>
                     <button
                       onClick={handleGroupInfoUpdate}
-                      disabled={saveDisabled}
+                      disabled={!validateSave}
                       className={`btn btn-primary ${
                         isLoading ? "loading bg-primary" : ""
                       }`}
@@ -171,8 +199,21 @@ const GroupInfo = () => {
               )}
             </div>
           )}
+          {group.visibility === "public" && (
+            <div className="space-y-6">
+              <div className="flex flex-wrap justify-center gap-4 items-center">
+                <button
+                  onClick={() => {}}
+                  className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
+                >
+                  <UserPlus2 />
+                  <span className="hidden lg:block">Add member</span>
+                </button>
+              </div>
+            </div>
+          )}
 
-          <div className=" border-t-2 border-base-100">
+          <div className="border-t-2 border-base-100">
             <h2 className="text-lg font-medium mb-4 mt-8">
               Members ({group.members.length})
             </h2>
