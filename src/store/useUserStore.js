@@ -11,12 +11,6 @@ export const useUserStore = create((set) => ({
   isGroupRequestsLoading: false,
 
   //  /user/requests
-  exploreUsers: async () => {
-    try {
-      return await axiosInstance.get("/user/request/exploreUsers");
-    } catch (error) {}
-  },
-
   getConnections: async () => {
     set({ isConnectionsLoading: true });
     try {
@@ -108,7 +102,7 @@ export const useUserStore = create((set) => ({
     }
   },
 
-  // explore Groups
+  // explore Groups and users
   exloreGroups: async () => {
     try {
       await axiosInstance.get("/group/exploreGroups");
@@ -116,4 +110,22 @@ export const useUserStore = create((set) => ({
       toast.error(error?.response?.data?.message);
     }
   },
+
+  exploreUsers: async () => {
+    try {
+      return await axiosInstance.get("/user/request/exploreUsers");
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  },
+
+  searchUser: async (username) => {
+    try {
+      const user = await axiosInstance.get(`/user/request/search/${username}`);
+      return user;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  },
+  
 }));
