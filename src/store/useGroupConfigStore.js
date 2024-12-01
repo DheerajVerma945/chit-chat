@@ -23,7 +23,7 @@ export const useGroupConfigStore = create((set, get) => {
           userId,
           groupId: groupData[0]._id,
         });
-        set({ groupData: [res.data.data ]});
+        set({ groupData: [res.data.data] });
         toast.success("Member added successfully");
       } catch (error) {
         toast.error(error?.response?.data?.message);
@@ -57,7 +57,10 @@ export const useGroupConfigStore = create((set, get) => {
       const { groupData } = get();
       set({ isUpdatingGroup: true });
       try {
-        const res = await axiosInstance.patch(`/group/updateGroup/${groupData[0]._id}`, data);
+        const res = await axiosInstance.patch(
+          `/group/updateGroup/${groupData[0]._id}`,
+          data
+        );
         set({ groupData: [res.data.data] });
         toast.success("Group updated successfully");
       } catch (error) {
@@ -117,7 +120,8 @@ export const useGroupConfigStore = create((set, get) => {
     },
 
     createGroup: async (name) => {
-      const { setSelectedGroup, setGroups, groups } = useGroupChatStore.getState();
+      const { setSelectedGroup, setGroups, groups } =
+        useGroupChatStore.getState();
       set({ isCreatingGroup: true });
       try {
         const res = await axiosInstance.post("/group/create", { name });
@@ -128,6 +132,22 @@ export const useGroupConfigStore = create((set, get) => {
         toast.error(error?.response?.data?.message);
       } finally {
         set({ isCreatingGroup: false });
+      }
+    },
+
+    updateGroupDp: async (newPhoto) => {
+      const { groupData } = get();
+      try {
+        const res = await axiosInstance.put(
+          `/group/updateGroupPhoto/${groupData[0]._id}`,
+          { newPhoto }
+        );
+        set({ groupData: [res.data.data] });
+        toast.success("Group updated successfully");
+      } catch (error) {
+        toast.error(error?.response?.data?.message);
+      } finally {
+        set({ isUpdatingGroup: false });
       }
     },
   };

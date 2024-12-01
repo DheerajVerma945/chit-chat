@@ -13,6 +13,7 @@ const GroupInfo = () => {
     setGroupData,
     joinGroup,
     exitGroup,
+    updateGroupDp,
   } = useGroupConfigStore();
   const group = groupData[0];
 
@@ -25,23 +26,36 @@ const GroupInfo = () => {
   const [formData, setFormData] = useState({
     newName: group.name,
     visibility: group.visibility,
-    description: group.description,
+    description: group.description || "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
 
   const validateSave =
-    formData.newName !== group.name || formData.visibility !== group.visibility;
-  formData.description !== group.description;
+    formData?.newName?.trim() !== group.name.trim() ||
+    formData?.visibility !== group.visibility ||
+    (formData?.description?.trim() || "") !== (group.description?.trim() || "");
 
   const handleImageUpload = async (e) => {
     setImageUploading(true);
     const file = e.target.files[0];
     if (!file) return;
-    setFormData({ ...formData, newPhoto: file });
-    setTimeout(() => {
-      setImageUploading(false);
-    }, 2000);
+
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 2,
+      maxWidthOrHeight: 1920,
+      initialQuality: 0.9,
+      useWebWorker: true,
+    });
+
+    const reader = new FileReader();
+    reader.readAsDataURL(compressedFile);
+
+    reader.onload = async () => {
+      const base64Image = reader.result;
+      await updateGroupDp(base64Image);
+    };
+    setImageUploading(false);
   };
 
   const handleGroupInfoUpdate = async () => {
