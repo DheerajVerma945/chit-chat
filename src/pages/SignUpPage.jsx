@@ -45,6 +45,8 @@ const SignUpPage = () => {
     return true;
   };
 
+  
+ //Add debouncing logic Here
   const debounceUsername = (username) => {
     setIsValidatingUsername(true);
     setTimeout(async () => {
@@ -56,7 +58,7 @@ const SignUpPage = () => {
       } finally {
         setIsValidatingUsername(false);
       }
-    }, 1000);
+    }, 1500);
   };
 
   const handleSubmit = (e) => {

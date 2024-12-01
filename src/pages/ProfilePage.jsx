@@ -7,18 +7,17 @@ import {
   Lock,
   Mail,
   User,
-  Eye,
-  EyeOff,
   Tag,
 } from "lucide-react";
 import imageCompression from "browser-image-compression";
 import ChangePasswordContainer from "../components/ChangePasswordContainer";
 
 const ProfilePage = () => {
-  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
-  const [selectedImg, setSelectedImg] = useState(null);
+  const { authUser, isUpdatingProfile, updateProfile, updatePrivacy } =
+    useAuthStore();
   const [showChangePass, setShowChangePass] = useState(false);
-  const [privacy, setPrivacy] = useState(authUser?.data.privacy || false); // Initial state based on current user privacy setting
+  const [privacy, setPrivacy] = useState(authUser?.data.privacy);
+  const [updatingPrivacy, setUpdatingPrivacy] = useState(false);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -36,14 +35,20 @@ const ProfilePage = () => {
 
     reader.onload = async () => {
       const base64Image = reader.result;
-      setSelectedImg(base64Image);
       await updateProfile({ profilePic: base64Image });
     };
   };
 
-  const togglePrivacy = () => {
-    setPrivacy(!privacy);
-    updateProfile({ privacy: !privacy });
+  const togglePrivacy = async () => {
+    setUpdatingPrivacy(true);
+    try {
+      await updatePrivacy(!privacy);
+      setPrivacy(!privacy);
+    } catch (error) {
+      toast.error(error?.message);
+    } finally {
+      setUpdatingPrivacy(false);
+    }
   };
 
   return (
@@ -135,6 +140,22 @@ const ProfilePage = () => {
           </button>
 
           {showChangePass && <ChangePasswordContainer />}
+          <div className="flex flex-row items-center bg-base-100 btn no-animation justify-between mt-4">
+            <div className="flex gap-2 items-center">
+              <span className="text-xs sm:text-lg">Visibility</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm">
+                {privacy ? "Private" : "Public"}
+              </span>
+              <input
+                type="checkbox"
+                checked={privacy}
+                onChange={togglePrivacy}
+                className={` ${updatingPrivacy?"loading bg-primary btn btn-primary btn-sm ":"toggle xs:toggle-xs"}`}
+              />
+            </div>
+          </div>
 
           <div className="mt-6 bg-base-300 rounded-xl p-6">
             <h2 className="text-lg font-medium mb-4">Account Information</h2>
@@ -148,23 +169,6 @@ const ProfilePage = () => {
                 <span className="text-green-500">Active</span>
               </div>
             </div>
-          </div>
-
-          <div className="mt-6 flex items-center gap-4">
-            <span className="text-sm">Privacy</span>
-            <button
-              onClick={togglePrivacy}
-              className={`${
-                privacy ? "bg-green-500" : "bg-gray-500"
-              } p-2 rounded-full`}
-            >
-              {privacy ? (
-                <Eye className="w-5 h-5 text-base-200" />
-              ) : (
-                <EyeOff className="w-5 h-5 text-base-200" />
-              )}
-            </button>
-            <span className="text-sm">{privacy ? "Public" : "Private"}</span>
           </div>
         </div>
       </div>
