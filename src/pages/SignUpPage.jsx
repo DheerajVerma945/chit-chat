@@ -27,6 +27,7 @@ const SignUpPage = () => {
     password: "",
     username: "",
   });
+  const showX = formData.username !== "";
 
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
@@ -116,7 +117,7 @@ const SignUpPage = () => {
                       debounceUsername(e.target.value);
                     }}
                   />
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  {showX && <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                     {isValidatingUsername ? (
                       <Loader className="size-5 animate-spin text-base-content/40" />
                     ) : isUsernameValid ? (
@@ -124,7 +125,7 @@ const SignUpPage = () => {
                     ) : (
                       <X className="size-5 text-error" />
                     )}
-                  </div>
+                  </div>}
                 </div>
               </div>
               <div className="form-control">

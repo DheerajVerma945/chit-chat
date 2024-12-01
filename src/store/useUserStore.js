@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
-import { connections } from "mongoose";
+
 
 export const useUserStore = create((set) => ({
   connections: [],
@@ -8,6 +8,7 @@ export const useUserStore = create((set) => ({
   userRequests: [],
   isUserRequestsLoading: false,
   groupRequestsUser: [],
+  exploreGroups: [],
   isGroupRequestsLoading: false,
 
   //  /user/requests
@@ -103,9 +104,11 @@ export const useUserStore = create((set) => ({
   },
 
   // explore Groups and users
-  exloreGroups: async () => {
+
+  fetchExploreGroups: async () => {
     try {
-      await axiosInstance.get("/group/exploreGroups");
+      const res = await axiosInstance.get("/group/exploreGroups");
+      set({ exploreGroups: res?.data?.data });
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
