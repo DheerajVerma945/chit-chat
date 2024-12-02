@@ -64,7 +64,7 @@ const GroupRequests = () => {
           <div className="flex gap-4">
             <button
               className={`btn btn-success btn-sm ${
-                currReq === request._id && status === "accepted" ? "loading bg-primary" : ""
+                currReq === request._id && status === "accepted" ? "loading bg-success" : ""
               }`}
               onClick={() => handleAccept(request)}
             >
@@ -72,7 +72,7 @@ const GroupRequests = () => {
             </button>
             <button
               className={`btn btn-error btn-sm ${
-                currReq === request._id && status === "rejected" ? "loading bg-primary" : ""
+                currReq === request._id && status === "rejected" ? "loading bg-error" : ""
               }`}
               onClick={() => handleReject(request)}
             >

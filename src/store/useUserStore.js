@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
 export const useUserStore = create((set, get) => ({
-  connections: [],
+
   isConnectionsLoading: false,
   userRequests: [],
   isUserRequestsLoading: false,
@@ -12,18 +12,6 @@ export const useUserStore = create((set, get) => ({
   exploreUsers: [],
   isGroupRequestsLoading: false,
 
-  //  /user/requests
-  getConnections: async () => {
-    set({ isConnectionsLoading: true });
-    try {
-      const res = await axiosInstance.get("/user/request/connections");
-      set({ connections: res.data.data });
-    } catch (error) {
-      set({ connections: [] });
-    } finally {
-      set({ isConnectionsLoading: false });
-    }
-  },
 
   reviewUserRequest: async (status, reqId) => {
     try {
@@ -31,10 +19,7 @@ export const useUserStore = create((set, get) => ({
       const res = await axiosInstance.post(`/user/request/review/${status}`, {
         reqId,
       });
-      if (status === "accepted") {
-        set({ connections: [...connections, res.data.data] });
-      }
-      const filteredUserRequests = userRequests.filter(req._id !== reqId);
+      const filteredUserRequests = userRequests.filter((req)=>req._id !== reqId);
       set({ userRequests: filteredUserRequests });
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -103,7 +88,7 @@ export const useUserStore = create((set, get) => ({
         `/group/requets/review/user/${status}`,
         { groupId, reqId }
       );
-      const filteredGroupRequests = groupRequestsUser.filter(req._id !== reqId);
+      const filteredGroupRequests = groupRequestsUser.filter((req)=>req._id !== reqId);
       set({ groupRequestsUser: filteredGroupRequests });
     } catch (error) {
       toast.error(error?.response?.data?.message);

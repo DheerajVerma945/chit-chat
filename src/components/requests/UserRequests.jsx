@@ -64,7 +64,7 @@ const UserRequests = () => {
             <button
               className={`btn btn-success btn-sm ${
                 currReq === request._id && status === "accepted"
-                  ? "loading bg-primary"
+                  ? "loading bg-success"
                   : ""
               }`}
               onClick={() => handleAccept(request)}
@@ -74,7 +74,7 @@ const UserRequests = () => {
             <button
               className={`btn btn-error btn-sm ${
                 currReq === request._id && status === "rejected"
-                  ? "loading bg-primary"
+                  ? "loading bg-error"
                   : ""
               }`}
               onClick={() => handleReject(request)}
