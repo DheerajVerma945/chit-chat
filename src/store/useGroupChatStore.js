@@ -20,6 +20,9 @@ export const useGroupChatStore = create((set, get) => ({
       set({ isGroupsLoading: false });
     }
   },
+  setGroupMessages:(data)=>{
+    set({groupMessages:data})
+  },
 
   setSelectedGroup: (group) => {
     set({ selectedGroup: group });

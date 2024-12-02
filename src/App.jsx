@@ -65,10 +65,6 @@ const App = () => {
           element={authUser ? <Requests /> : <Navigate to="/login" />}
         />
         <Route
-          path="/chat"
-          element={authUser ? <ChatPage /> : <Navigate to="/login" />}
-        />
-        <Route
           path="/reset-password"
           element={authUser ? <Navigate to="/" /> : <ForgotPass />}
         />

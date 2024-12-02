@@ -34,6 +34,9 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  setMessages:(data)=>{
+    set({messages:data})
+  },
   subscribeToMessages: () => {
     const { selectedUser } = get();
     if (!selectedUser) return;

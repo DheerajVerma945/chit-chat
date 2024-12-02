@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
+  const { getUsers, users, selectedUser, setMessages,setSelectedUser, isUsersLoading } =
     useChatStore();
 
   const { setGroupData } = useGroupConfigStore();
@@ -19,6 +19,7 @@ const Sidebar = () => {
     setSelectedGroup,
     isGroupsLoading,
     setShowInfo,
+    setGroupMessages
   } = useGroupChatStore();
 
   const { onlineUsers } = useAuthStore();
@@ -62,6 +63,7 @@ const Sidebar = () => {
               onClick={() => {
                 setShowContacts(true);
                 setSelectedGroup(null);
+                setGroupMessages([]);
                 setShowGroups(false);
               }}
             >
@@ -225,6 +227,7 @@ const Sidebar = () => {
                   key={group._id}
                   onClick={() => {
                     setSelectedGroup(group);
+                    setMessages([]);
                     setGroupData([group]);
                     setShowInfo(false);
                   }}
