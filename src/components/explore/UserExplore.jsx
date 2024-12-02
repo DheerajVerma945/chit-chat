@@ -44,11 +44,12 @@ const UserExplore = () => {
 
   return (
     <div className="mt-16 py-8 px-4 max-w-7xl mx-auto">
+      <p className="text-2xl md:text-3xl font-semibold text-center sm:text-left mb-5">Explore People</p>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
         {users.map((user) => (
           <div
             key={user._id}
-            className="flex flex-col items-center space-y-4 shadow-lg hover:shadow-xl p-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+            className="flex flex-col items-center space-y-4 shadow-lg hover:shadow-xl p-6 rounded-lg transition duration-300 ease-in-out transform"
           >
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
               <img
@@ -65,9 +66,7 @@ const UserExplore = () => {
             <div className="text-center space-y-2">
               <button
                 className={`btn btn-primary ${
-                  requestSending === user._id
-                    ? "loading bg-primary"
-                    : ""
+                  requestSending === user._id ? "loading bg-primary" : ""
                 }`}
                 onClick={() => handleConnectionRequest(user._id)}
               >

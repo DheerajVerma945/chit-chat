@@ -62,7 +62,9 @@ const GroupExplore = () => {
 
   return (
     <div className="py-8 mt-20 px-4 max-w-7xl mx-auto">
-      <p className="font-bold text-lg md:text-xl ml-4">Explore Groups</p>
+      <p className="text-2xl md:text-3xl font-semibold text-center sm:text-left mb-5">
+        Explore Groups
+      </p>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
         {groups.map((group) => (
           <div
@@ -86,9 +88,7 @@ const GroupExplore = () => {
                 <Lock className="w-6 h-6 mx-auto" />
                 <button
                   className={`btn btn-primary ${
-                    requestSending === group._id
-                      ? "loading bg-primary"
-                      : ""
+                    requestSending === group._id ? "loading bg-primary" : ""
                   }`}
                   onClick={() => handleGroupRequest(group._id)}
                 >
@@ -96,13 +96,11 @@ const GroupExplore = () => {
                 </button>
               </div>
             ) : (
-              <div className="text-center space-y-2">
+              <div className="text-center space-y-4">
                 <UserPlus className="w-6 h-6 mx-auto" />
                 <button
                   className={`btn btn-primary ${
-                    isJoiningGroup === group._id
-                      ? "loading bg-primary"
-                      : ""
+                    isJoiningGroup === group._id ? "loading bg-primary" : ""
                   }`}
                   onClick={() => handleJoinGroup(group._id)}
                 >
