@@ -3,6 +3,7 @@ import { GroupSkeleton } from "../skeletons/Explore";
 import { useUserStore } from "../../store/useUserStore";
 import { Lock, UserPlus } from "lucide-react";
 import { useGroupConfigStore } from "../../store/useGroupConfigStore";
+import toast from "react-hot-toast";
 
 const GroupExplore = () => {
   const { exploreGroups, fetchExploreGroups, sendGroupRequestUser } =
@@ -73,7 +74,7 @@ const GroupExplore = () => {
                       ? "btn btn-primary  loading bg-primary"
                       : "btn btn-primary flex items-center gap-2 text-xs md:text-md py-2 px-4 rounded-lg"
                   }`}
-                  onClick={handleGroupRequest(group._id)}
+                  onClick={()=>handleGroupRequest(group._id)}
                 >
                   Request
                 </button>
@@ -87,7 +88,7 @@ const GroupExplore = () => {
                       ? "btn btn-primary  loading bg-primary"
                       : "btn btn-primary flex items-center gap-2 text-xs md:text-md py-2 px-4 rounded-lg"
                   }`}
-                  onClick={handleJoinGroup(group._id)}
+                  onClick={()=>handleJoinGroup(group._id)}
                 >
                   Join Group
                 </button>
