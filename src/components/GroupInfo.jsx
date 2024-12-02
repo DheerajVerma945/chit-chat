@@ -244,7 +244,7 @@ const GroupInfo = () => {
                     <img
                       src={member.profilePic}
                       alt={member.fullName}
-                      className="w-10 h-10 rounded-full"
+                      className="w-10 h-10 object-cover rounded-full"
                     />
                     <span className="text-sm font-medium">
                       {member.fullName}

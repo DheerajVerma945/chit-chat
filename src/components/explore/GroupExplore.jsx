@@ -8,10 +8,12 @@ import toast from "react-hot-toast";
 const GroupExplore = () => {
   const { exploreGroups, fetchExploreGroups, sendGroupRequestUser } =
     useUserStore();
+  const { joinGroup } = useGroupConfigStore();
 
-  const { joinGroup, isJoiningGroup } = useGroupConfigStore();
   const [isLoading, setIsLoading] = useState(true);
-  const [requestSending, setRequestSending] = useState(false);
+  const [requestSending, setRequestSending] = useState(null);
+  const [isJoiningGroup, setIsJoiningGroup] = useState(null);
+  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,39 +23,52 @@ const GroupExplore = () => {
     fetchData();
   }, [fetchExploreGroups]);
 
+  useEffect(() => {
+    setGroups(exploreGroups);
+  }, [exploreGroups]);
+
   const handleGroupRequest = async (id) => {
-    setRequestSending(true);
+    setRequestSending(id);
     try {
       await sendGroupRequestUser(id);
+      setGroups((prev) => prev.filter((group) => group._id !== id));
     } catch (error) {
-      toast.error(error?.response?.data?.messsage);
+      toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
-      setRequestSending(false);
+      setRequestSending(null);
     }
   };
 
   const handleJoinGroup = async (id) => {
-    await joinGroup(id);
+    setIsJoiningGroup(id);
+    try {
+      await joinGroup(id);
+      setGroups((prev) => prev.filter((group) => group._id !== id));
+    } catch (error) {
+      toast.error("Failed to join group");
+    } finally {
+      setIsJoiningGroup(null);
+    }
   };
 
   if (isLoading) return <GroupSkeleton />;
 
-  if (!exploreGroups || exploreGroups.length === 0)
+  if (!groups || groups.length === 0)
     return (
-      <p className="h-screen justify-center items-center flex">
+      <p className="h-screen flex justify-center items-center  text-lg font-medium">
         No groups found
       </p>
     );
 
   return (
-    <div className="py-8 px-4">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 sm:gap-12 md:gap-16">
-        {exploreGroups.map((group) => (
+    <div className="py-8 px-4 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
+        {groups.map((group) => (
           <div
             key={group._id}
-            className="flex  flex-col items-center space-y-6 p-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out"
+            className="flex flex-col items-center space-y-4  shadow-lg hover:shadow-xl p-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
           >
-            <div className="size-20 md:size-24 rounded-full overflow-hidden ">
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
               <img
                 src={group.photo}
                 alt={group.name}
@@ -70,13 +85,13 @@ const GroupExplore = () => {
                 <Lock className="w-6 h-6 mx-auto" />
                 <button
                   className={`${
-                    requestSending
-                      ? "btn btn-primary  loading bg-primary"
-                      : "btn btn-primary flex items-center gap-2 text-xs md:text-md py-2 px-4 rounded-lg"
+                    requestSending === group._id
+                      ? "btn btn-primary loading bg-primary"
+                      : "btn btn-primary flex items-center justify-center gap-2 text-xs md:text-sm py-2 px-4 rounded-md"
                   }`}
-                  onClick={()=>handleGroupRequest(group._id)}
+                  onClick={() => handleGroupRequest(group._id)}
                 >
-                  Request
+                  {requestSending === group._id ? "Requesting..." : "Request"}
                 </button>
               </div>
             ) : (
@@ -84,13 +99,13 @@ const GroupExplore = () => {
                 <UserPlus className="w-6 h-6 mx-auto" />
                 <button
                   className={`${
-                    isJoiningGroup
-                      ? "btn btn-primary  loading bg-primary"
-                      : "btn btn-primary flex items-center gap-2 text-xs md:text-md py-2 px-4 rounded-lg"
+                    isJoiningGroup === group._id
+                      ? "btn btn-primary loading bg-primary"
+                      : "btn btn-primary flex items-center justify-center gap-2 text-xs md:text-sm py-2 px-4 rounded-md"
                   }`}
-                  onClick={()=>handleJoinGroup(group._id)}
+                  onClick={() => handleJoinGroup(group._id)}
                 >
-                  Join Group
+                  {isJoiningGroup === group._id ? "Joining..." : "Join Group"}
                 </button>
               </div>
             )}
