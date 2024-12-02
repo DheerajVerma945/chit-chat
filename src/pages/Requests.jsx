@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import { GroupRequests, UserRequests } from '../components';
 
 const Requests = () => {
   const [showUserRequests, setShowUserRequests] = useState(true);
 
   return (
     <div className='flex flex-col items-center justify-start mt-16 pt-4 h-screen'>
-      <div className="flex gap-4 mb-4 w-full mx-5">
+      <div className="flex gap-4 mb-4 w-4/5 mx-5">
         <button
           onClick={() => setShowUserRequests(true)}
           className={`w-1/2 ${
-            showUserRequests ? 'bg-primary text-white' : 'bg-base-200 text-base-content'
+            showUserRequests ? 'bg-primary text-base-300' : 'bg-base-200 text-base-content'
           } py-2 px-4 rounded-lg transition-all`}
         >
           User Requests
@@ -17,7 +18,7 @@ const Requests = () => {
         <button
           onClick={() => setShowUserRequests(false)}
           className={`w-1/2 ${
-            !showUserRequests ? 'bg-primary text-white' : 'bg-base-200 text-base-content'
+            !showUserRequests ? 'bg-primary text-base-300' : 'bg-base-200 text-base-content'
           } py-2 px-4 rounded-lg transition-all`}
         >
           Group Requests
@@ -25,9 +26,9 @@ const Requests = () => {
       </div>
 
       {showUserRequests ? (
-        <div>User requests content here</div>
+        <UserRequests/>
       ) : (
-        <div>Group requests content here</div>
+        <GroupRequests/>
       )}
     </div>
   );

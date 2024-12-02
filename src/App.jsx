@@ -17,16 +17,35 @@ import { Loader } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
-
+import { useUserStore } from "./store/useUserStore";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const {
+    getUserRequests,
+    getGroupRequestsUser,
+    isUserRequestsLoading,
+    isGroupRequestsLoading,
+  } = useUserStore();
+
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    if (authUser) {
+      getUserRequests();
+      getGroupRequestsUser();
+    }
+  }, [authUser, getUserRequests, getGroupRequestsUser]);
+
   const { theme } = useThemeStore();
 
-  if (isCheckingAuth && !authUser)
+  if (
+    (isCheckingAuth && !authUser) ||
+    isUserRequestsLoading ||
+    isGroupRequestsLoading
+  )
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
