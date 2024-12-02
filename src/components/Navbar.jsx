@@ -3,10 +3,13 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 import Logo from "../../public/Logo.png";
 import { LogOut, Settings, User, UserRoundPlusIcon } from "lucide-react";
+import { useUserStore } from "../store/useUserStore";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
   const [showLogoutMsg, setShowLogoutMsg] = useState(false);
+  const { userRequests, groupRequestsUser } = useUserStore();
+  const totalRequests = userRequests.length + groupRequestsUser.length;
 
   return (
     <>
@@ -43,10 +46,21 @@ const Navbar = () => {
                     <User className="size-5" />
                     <span className="hidden sm:inline">Profile</span>
                   </Link>
-                  <Link to="/requests" className="btn btn-sm gap-2">
+                  <Link
+                    to="/requests"
+                    className="btn btn-sm gap-2 flex items-center justify-center relative group"
+                  >
                     <UserRoundPlusIcon className="size-5" />
-                    <span className="hidden sm:inline">Requests</span>
+                    {totalRequests > 0 && (
+                      <span className="absolute top-0 right-0  w-4 h-4 bg-red-500 text-xs  rounded-full flex items-center justify-center">
+                        {totalRequests}
+                      </span>
+                    )}
+                    <span className="hidden sm:inline ml-2 text-sm font-medium ">
+                      Requests
+                    </span>
                   </Link>
+
                   <button
                     className="flex gap-2 items-center"
                     onClick={() => setShowLogoutMsg(true)}
