@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 
-export const useUserStore = create((set) => ({
+export const useUserStore = create((set, get) => ({
   connections: [],
   isConnectionsLoading: false,
   userRequests: [],
@@ -26,12 +26,15 @@ export const useUserStore = create((set) => ({
 
   reviewUserRequest: async (status, reqId) => {
     try {
+      const { userRequests } = get();
       const res = await axiosInstance.post(`/user/request/review/${status}`, {
         reqId,
       });
       if (status === "accepted") {
         set({ connections: [...connections, res.data.data] });
       }
+      const filteredUserRequests = userRequests.filter(req._id !== reqId);
+      set({ userRequests: filteredUserRequests });
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
@@ -93,16 +96,18 @@ export const useUserStore = create((set) => ({
   },
 
   reviewGroupRequestUser: async (status, reqId, groupId) => {
+    const groupRequestsUser = get();
     try {
       const res = await axiosInstance.post(
         `/group/requets/review/user/${status}`,
         { groupId, reqId }
       );
+      const filteredGroupRequests = groupRequestsUser.filter(req._id !== reqId);
+      set({ groupRequestsUser: filteredGroupRequests });
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
   },
-
 
   fetchExploreGroups: async () => {
     try {

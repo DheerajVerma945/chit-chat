@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { useUserStore } from "../../store/useUserStore";
 
 const GroupRequests = () => {
-  const { groupRequestsUser } = useUserStore();
+  const { groupRequestsUser, reviewGroupRequestUser } = useUserStore();
+  const [currReq, setCurrReq] = useState(null);
+
+  // (status, reqId, groupId)
+
+  const handleAccept =async (req)=>{
+
+    try {
+      await reviewGroupRequestUser("accepted",req._id,req.groupId);
+      toast.success("Request accepted successfully");
+    } catch (error) {
+      
+    }
+  }
+
+  const handleReject = (req)=>{
+
+  }
   if (!groupRequestsUser || groupRequestsUser.length === 0)
     return (
       <div className="h-screen flex items-center justify-center">
@@ -10,10 +27,14 @@ const GroupRequests = () => {
       </div>
     );
 
+
   return (
     <div className="w-full p-5">
       {groupRequestsUser.map((request) => (
-        <div key={request.id} className="flex items-center justify-between p-4 bg-base-100 rounded-lg shadow-md mb-4">
+        <div
+          key={request._id}
+          className="flex items-center justify-between p-4 bg-base-100 rounded-lg shadow-md mb-4"
+        >
           <div className="flex items-center gap-4">
             <img
               src={request.senderId.profilePic}
@@ -26,8 +47,12 @@ const GroupRequests = () => {
           </div>
 
           <div className="flex gap-4">
-            <button className="btn btn-success btn-sm">Accept</button>
-            <button className="btn btn-error btn-sm">Reject</button>
+            <button className="btn btn-success btn-sm" onClick={()=>handleAccept(request)}>
+              Accept
+            </button>
+            <button className="btn btn-error btn-sm" onClick={()=>handleReject(request)}>
+              Reject
+            </button>
           </div>
         </div>
       ))}

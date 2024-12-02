@@ -13,7 +13,7 @@ const UserRequests = () => {
   return (
     <div className="w-full p-5">
       {userRequests.map((request) => (
-        <div key={request.id} className="flex items-center justify-between p-4 bg-base-100 rounded-lg shadow-md mb-4">
+        <div key={request._id} className="flex items-center justify-between p-4 bg-base-100 rounded-lg shadow-md mb-4">
           <div className="flex items-center gap-4">
             <img
               src={request.senderId.profilePic}
