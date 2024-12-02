@@ -1,32 +1,47 @@
 import React, { useState } from "react";
 import { useUserStore } from "../../store/useUserStore";
+import toast from "react-hot-toast";
 
 const GroupRequests = () => {
   const { groupRequestsUser, reviewGroupRequestUser } = useUserStore();
   const [currReq, setCurrReq] = useState(null);
+  const [status,setStatus] = useState("");
 
-  // (status, reqId, groupId)
-
-  const handleAccept =async (req)=>{
-
+  const handleAccept = async (req) => {
+    setCurrReq(req._id);
+    setStatus("accepted")
     try {
-      await reviewGroupRequestUser("accepted",req._id,req.groupId);
+      await reviewGroupRequestUser("accepted", req._id, req.groupId);
       toast.success("Request accepted successfully");
     } catch (error) {
-      
+      console.log(error);
+    } finally {
+      setCurrReq(null);
+      setStatus("");
     }
-  }
+  };
 
-  const handleReject = (req)=>{
+  const handleReject = async (req) => {
+    setCurrReq(req._id);
+    setStatus("rejected");
+    try {
+      await reviewGroupRequestUser("rejected", req._id, req.groupId);
+      toast.success("Request rejected successfully");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setCurrReq(null);
+      setStatus("");
+    }
+  };
 
-  }
+
   if (!groupRequestsUser || groupRequestsUser.length === 0)
     return (
       <div className="h-screen flex items-center justify-center">
         No group requests at the moment
       </div>
     );
-
 
   return (
     <div className="w-full p-5">
@@ -47,10 +62,20 @@ const GroupRequests = () => {
           </div>
 
           <div className="flex gap-4">
-            <button className="btn btn-success btn-sm" onClick={()=>handleAccept(request)}>
+            <button
+              className={`btn btn-success btn-sm ${
+                currReq === request._id && status === "accepted" ? "loading bg-primary" : ""
+              }`}
+              onClick={() => handleAccept(request)}
+            >
               Accept
             </button>
-            <button className="btn btn-error btn-sm" onClick={()=>handleReject(request)}>
+            <button
+              className={`btn btn-error btn-sm ${
+                currReq === request._id && status === "rejected" ? "loading bg-primary" : ""
+              }`}
+              onClick={() => handleReject(request)}
+            >
               Reject
             </button>
           </div>
