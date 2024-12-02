@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 
-
 export const useUserStore = create((set) => ({
   connections: [],
   isConnectionsLoading: false,
@@ -9,7 +8,7 @@ export const useUserStore = create((set) => ({
   isUserRequestsLoading: false,
   groupRequestsUser: [],
   exploreGroups: [],
-  exploreUsers:[],
+  exploreUsers: [],
   isGroupRequestsLoading: false,
 
   //  /user/requests
@@ -104,23 +103,22 @@ export const useUserStore = create((set) => ({
     }
   },
 
-  // explore Groups and users
 
   fetchExploreGroups: async () => {
     try {
       const res = await axiosInstance.get("/group/exploreGroups");
       set({ exploreGroups: res?.data?.data });
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      set({ exploreGroups: [] });
     }
   },
 
   fetchExploreUsers: async () => {
     try {
-      const res =  await axiosInstance.get("/user/request/exploreUsers");
-      set({exploreUsers:res.data.data});
+      const res = await axiosInstance.get("/user/request/exploreUsers");
+      set({ exploreUsers: res.data.data });
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      set({ exploreUsers: [] });
     }
   },
 
@@ -132,5 +130,4 @@ export const useUserStore = create((set) => ({
       toast.error(error?.response?.data?.message);
     }
   },
-  
 }));
