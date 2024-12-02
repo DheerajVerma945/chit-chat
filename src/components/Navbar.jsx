@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import Logo from "../../public/Logo.png"
-import { LogOut, Settings, User } from "lucide-react";
+import Logo from "../../public/Logo.png";
+import { LogOut, Settings, User, UserRoundPlusIcon } from "lucide-react";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
@@ -18,10 +18,13 @@ const Navbar = () => {
                 to="/"
                 className="flex items-center gap-2.5 hover:opacity-80 transition-all"
               >
-                <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <img className="size-10 object-cover rounded-full text-primary" src={Logo}/>
+                <div className="size-6 sm:size-10 rounded-lg  flex items-center justify-center">
+                  <img
+                    className="size-6 sm:size-10 object-cover rounded-full"
+                    src={Logo}
+                  />
                 </div>
-                <h1 className="text-lg font-bold">BaatCheet</h1>
+                <h1 className="text-sm sm:text-lg font-bold">BaatCheet</h1>
               </Link>
             </div>
 
@@ -40,6 +43,10 @@ const Navbar = () => {
                     <User className="size-5" />
                     <span className="hidden sm:inline">Profile</span>
                   </Link>
+                  <Link to="/requests" className="btn btn-sm gap-2">
+                    <UserRoundPlusIcon className="size-5" />
+                    <span className="hidden sm:inline">Requests</span>
+                  </Link>
                   <button
                     className="flex gap-2 items-center"
                     onClick={() => setShowLogoutMsg(true)}
@@ -54,32 +61,31 @@ const Navbar = () => {
         </div>
       </header>
       {showLogoutMsg && (
-  <div className="fixed inset-0 bg-black/50 flex items-center justify-center h-screen z-50">
-    <div className="bg-base-100 border border-base-300 rounded-lg shadow-lg w-4/5 sm:w-1/3 p-6 flex flex-col items-center gap-6">
-      <h2 className="text-lg font-semibold  text-center">
-        Are you sure you want to logout?
-      </h2>
-      <div className="flex w-full justify-between gap-4">
-        <button
-          onClick={()=>{
-            logout();
-            setShowLogoutMsg(false);
-          }}
-          className="btn btn-sm bg-red-500 text-white flex-1 hover:bg-red-600"
-        >
-          Logout
-        </button>
-        <button
-          onClick={() => setShowLogoutMsg(false)}
-          className="btn btn-sm bg-gray-200 text-gray-800 flex-1 hover:bg-gray-300"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center h-screen z-50">
+          <div className="bg-base-100 border border-base-300 rounded-lg shadow-lg w-4/5 sm:w-1/3 p-6 flex flex-col items-center gap-6">
+            <h2 className="text-lg font-semibold  text-center">
+              Are you sure you want to logout?
+            </h2>
+            <div className="flex w-full justify-between gap-4">
+              <button
+                onClick={() => {
+                  logout();
+                  setShowLogoutMsg(false);
+                }}
+                className="btn btn-sm bg-red-500 text-white flex-1 hover:bg-red-600"
+              >
+                Logout
+              </button>
+              <button
+                onClick={() => setShowLogoutMsg(false)}
+                className="btn btn-sm bg-gray-200 text-gray-800 flex-1 hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

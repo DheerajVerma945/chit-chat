@@ -8,6 +8,7 @@ import {
   ProfilePage,
   ForgotPass,
   ResetVerification,
+  Requests,
   ChatPage,
   HomePage,
 } from "./pages/index";
@@ -16,6 +17,7 @@ import { Loader } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore";
+
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
@@ -38,6 +40,10 @@ const App = () => {
         <Route
           path="/"
           element={authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/requests"
+          element={authUser ? <Requests /> : <Navigate to="/login" />}
         />
         <Route
           path="/chat"
