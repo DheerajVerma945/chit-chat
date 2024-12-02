@@ -70,7 +70,7 @@ export const useUserStore = create((set) => ({
 
   // /group/request
 
-  sendGroupRequest: async (groupId) => {
+  sendGroupRequestUser: async (groupId) => {
     try {
       const res = await axiosInstance.post("/group/request/send/user", {
         groupId,

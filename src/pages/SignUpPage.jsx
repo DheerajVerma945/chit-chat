@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import toast from "react-hot-toast";
 import {
@@ -16,6 +16,19 @@ import { Link } from "react-router-dom";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { axiosInstance } from "../lib/axios";
 
+const useDebounce = (callback, delay) => {
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  return useCallback(
+    (...args) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      const id = setTimeout(() => callback(...args), delay);
+      setTimeoutId(id);
+    },
+    [callback, delay, timeoutId]
+  );
+};
+
 const SignUpPage = () => {
   const { signup, isSigningUp } = useAuthStore();
   const [showPass, setShowPass] = useState(false);
@@ -27,7 +40,6 @@ const SignUpPage = () => {
     password: "",
     username: "",
   });
-  const showX = formData.username !== "";
 
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
@@ -45,26 +57,27 @@ const SignUpPage = () => {
     return true;
   };
 
-  
- //Add debouncing logic Here
-  const debounceUsername = (username) => {
-    setIsValidatingUsername(true);
-    setTimeout(async () => {
-      try {
-        const res = await axiosInstance.get(`/auth/validateUserName/${username}`);
-        setIsUsernameValid(res?.data?.status === "success");
-      } catch {
-        setIsUsernameValid(false);
-      } finally {
-        setIsValidatingUsername(false);
-      }
-    }, 1500);
+  const validateUsername = useDebounce(async (username) => {
+    try {
+      setIsValidatingUsername(true);
+      const res = await axiosInstance.get(`/auth/validateUserName/${username}`);
+      setIsUsernameValid(res?.data?.status === "success");
+    } catch (error){
+      toast.error(error?.response?.data?.message)
+      setIsUsernameValid(false);
+    } finally {
+      setIsValidatingUsername(false);
+    }
+  }, 1000);
+
+  const handleUserNameChange = (username) => {
+    setFormData((prev) => ({ ...prev, username }));
+    validateUsername(username);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validData = validateForm();
-    if (validData === true) signup(formData);
+    if (validateForm()) signup(formData);
   };
 
   return (
@@ -114,20 +127,19 @@ const SignUpPage = () => {
                     className="input input-bordered w-full pl-10"
                     placeholder="username"
                     value={formData.username}
-                    onChange={(e) => {
-                      setFormData({ ...formData, username: e.target.value });
-                      debounceUsername(e.target.value);
-                    }}
+                    onChange={(e) => handleUserNameChange(e.target.value)}
                   />
-                  {showX && <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    {isValidatingUsername ? (
-                      <Loader className="size-5 animate-spin text-base-content/40" />
-                    ) : isUsernameValid ? (
-                      <Check className="size-5 text-success" />
-                    ) : (
-                      <X className="size-5 text-error" />
-                    )}
-                  </div>}
+                  {formData.username !== "" && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      {isValidatingUsername ? (
+                        <Loader className="size-5 animate-spin text-base-content/40" />
+                      ) : isUsernameValid ? (
+                        <Check className="size-5 text-success" />
+                      ) : (
+                        <X className="size-5 text-error" />
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="form-control">
