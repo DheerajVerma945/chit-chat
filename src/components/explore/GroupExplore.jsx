@@ -61,12 +61,13 @@ const GroupExplore = () => {
     );
 
   return (
-    <div className="py-8 px-4 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
+    <div className="py-8 mt-20 px-4 max-w-7xl mx-auto">
+      <p className="font-bold text-lg md:text-xl ml-4">Explore Groups</p>
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
         {groups.map((group) => (
           <div
             key={group._id}
-            className="flex flex-col items-center space-y-4  shadow-lg hover:shadow-xl p-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+            className="flex flex-col items-center space-y-4  shadow-inherit hover:shadow-xl p-6 rounded-lg transition duration-300 ease-in-out transform "
           >
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden">
               <img
@@ -76,18 +77,18 @@ const GroupExplore = () => {
               />
             </div>
             <div className="text-center text-sm md:text-lg font-semibold">
-              {group.name.length > 7
-                ? group.name.slice(0, 7).trim() + "..."
+              {group.name.length > 10
+                ? group.name.slice(0, 10).trim() + "..."
                 : group.name}
             </div>
             {group.visibility === "private" ? (
-              <div className="text-center space-y-2">
+              <div className="text-center space-y-4">
                 <Lock className="w-6 h-6 mx-auto" />
                 <button
-                  className={`${
+                  className={`btn btn-primary ${
                     requestSending === group._id
-                      ? "btn btn-primary loading bg-primary"
-                      : "btn btn-primary flex items-center justify-center gap-2 text-xs md:text-sm py-2 px-4 rounded-md"
+                      ? "loading bg-primary"
+                      : ""
                   }`}
                   onClick={() => handleGroupRequest(group._id)}
                 >
@@ -98,10 +99,10 @@ const GroupExplore = () => {
               <div className="text-center space-y-2">
                 <UserPlus className="w-6 h-6 mx-auto" />
                 <button
-                  className={`${
+                  className={`btn btn-primary ${
                     isJoiningGroup === group._id
-                      ? "btn btn-primary loading bg-primary"
-                      : "btn btn-primary flex items-center justify-center gap-2 text-xs md:text-sm py-2 px-4 rounded-md"
+                      ? "loading bg-primary"
+                      : ""
                   }`}
                   onClick={() => handleJoinGroup(group._id)}
                 >

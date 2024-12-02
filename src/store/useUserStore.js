@@ -9,6 +9,7 @@ export const useUserStore = create((set) => ({
   isUserRequestsLoading: false,
   groupRequestsUser: [],
   exploreGroups: [],
+  exploreUsers:[],
   isGroupRequestsLoading: false,
 
   //  /user/requests
@@ -114,9 +115,10 @@ export const useUserStore = create((set) => ({
     }
   },
 
-  exploreUsers: async () => {
+  fetchExploreUsers: async () => {
     try {
-      return await axiosInstance.get("/user/request/exploreUsers");
+      const res =  await axiosInstance.get("/user/request/exploreUsers");
+      set({exploreUsers:res.data.data});
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
