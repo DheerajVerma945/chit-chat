@@ -11,5 +11,7 @@ import { UserSkeleton,GroupSkeleton } from "./skeletons/Explore";
 import CreateGroup from "./CreateGroup";
 import GroupRequests from "./requests/GroupRequests";
 import UserRequests from "./requests/UserRequests"
+import GroupRequestsAdmin from "./group/GroupRequestsAdmin";
+import AddMembers from "./group/AddMembers";
 
-export{NoChatSelected,SideBarSkeleton,ChatContainer,SideBar,ChatHeader,MessageInput,MessageSkeleton,GroupExplore,UserExplore,UserSkeleton,GroupSkeleton,CreateGroup,UserRequests,GroupRequests}
+export{NoChatSelected,SideBarSkeleton,ChatContainer,AddMembers,SideBar,ChatHeader,MessageInput,MessageSkeleton,GroupExplore,UserExplore,UserSkeleton,GroupSkeleton,CreateGroup,UserRequests,GroupRequests,GroupRequestsAdmin}

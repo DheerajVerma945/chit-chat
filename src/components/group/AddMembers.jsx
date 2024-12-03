@@ -2,10 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useGroupConfigStore } from "../../store/useGroupConfigStore";
 import { useChatStore } from "../../store/useChatStore";
 import { UserPlus2, Lock, X } from "lucide-react";
+import { groupRequestAdminStore } from "../../store/useGroupRequestAdminStore";
 
 const AddMembers = () => {
-  const { getMembersForAdding, connectionsForGroup, setShowAddUsers } = useGroupConfigStore();
+  const {
+    getMembersForAdding,
+    addMember,
+    connectionsForGroup,
+    setShowAddUsers,
+  } = useGroupConfigStore();
+
+  const { sendGroupRequestAdmin } = groupRequestAdminStore();
   const { users } = useChatStore();
+  const [currUser, setCurrUser] = useState(null);
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
 
   useEffect(() => {
@@ -17,6 +26,28 @@ const AddMembers = () => {
 
     fetchUsers();
   }, [users, getMembersForAdding]);
+
+  const handleAddUser = async (id) => {
+    setCurrUser(id);
+    try {
+      await addMember(id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setCurrUser(null);
+    }
+  };
+
+  const handleInviteUser = async (id) => {
+    setCurrUser(id);
+    try {
+      await sendGroupRequestAdmin(id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setCurrUser(null);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-base-300 bg-opacity-50 z-40 flex justify-center items-center">
@@ -45,18 +76,38 @@ const AddMembers = () => {
                     alt={connection.fullName}
                     className="w-12 h-12 rounded-full object-cover"
                   />
-                  <span className="text-sm font-medium">{connection.fullName}</span>
+                  <span className="text-sm font-medium">
+                    {connection.fullName}
+                  </span>
                 </div>
                 <div className="flex items-center gap-4">
                   {connection.privacy ? (
-                    <button className="btn btn-secondary text-sm flex items-center gap-2">
-                      <Lock className="w-4 h-4" />
-                      Invite
+                    <button
+                      className={`btn btn-secondary text-sm ${
+                        currUser === connection._id ? "loading bg-primary" : ""
+                      }`}
+                      onClick={() => handleInviteUser(connection._id)}
+                    >
+                      {currUser !== connection._id && (
+                        <>
+                          <Lock className="w-4 h-4" />
+                          <p>Invite</p>
+                        </>
+                      )}
                     </button>
                   ) : (
-                    <button className="btn btn-primary text-sm flex items-center gap-2">
-                      <UserPlus2 className="w-4 h-4" />
-                      Add
+                    <button
+                      className={`btn btn-primary text-sm ${
+                        currUser === connection._id ? "loading bg-primary" : ""
+                      }`}
+                      onClick={() => handleAddUser(connection._id)}
+                    >
+                      {currUser !== connection._id && (
+                        <>
+                          <UserPlus2 className="w-4 h-4" />
+                          <p>Add</p>
+                        </>
+                      )}
                     </button>
                   )}
                 </div>

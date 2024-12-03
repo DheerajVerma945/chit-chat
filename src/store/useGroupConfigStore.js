@@ -35,7 +35,7 @@ export const useGroupConfigStore = create((set, get) => {
         });
         set({ groupData: [res.data.data] });
         const newList = connectionsForGroup.filter(
-          (connection) => connection.id !== userId
+          (connection) => connection._id !== userId
         );
         set({ connectionsForGroup: newList });
 

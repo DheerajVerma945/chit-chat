@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { useChatStore } from "../store/useChatStore";
 import imageCompression from "browser-image-compression";
-import { Camera, MoreVertical, Settings, UserPlus2 } from "lucide-react";
+import { BellPlusIcon, Camera, MoreVertical, Settings, UserPlus2 } from "lucide-react";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
-import AddMembers from "./group/AddMembers";
+import {AddMembers,GroupRequestsAdmin} from "../components"
+import {groupRequestAdminStore} from "../store/useGroupRequestAdminStore"
+
 
 const GroupInfo = () => {
-  const {users} = useChatStore();
+
+  const {setShowGroupRequestsAdmin,showGroupRequestsAdmin} = groupRequestAdminStore()
   const {
     groupData,
     addMember,
@@ -76,9 +78,6 @@ const GroupInfo = () => {
     });
   };
 
-  const handleAddMember = async (userId) => {
-    await addMember(userId);
-  };
 
   const handleRemoveMember = async (userId) => {
     await removeMember(userId);
@@ -86,10 +85,6 @@ const GroupInfo = () => {
 
   const handleExitGroup = async () => {
     await exitGroup();
-  };
-
-  const handleJoinGroup = async (groupId) => {
-    await joinGroup(groupId);
   };
 
   return (
@@ -100,6 +95,7 @@ const GroupInfo = () => {
         </div>
       )}
       {showAddUsers && <AddMembers/>}
+      {showGroupRequestsAdmin && <GroupRequestsAdmin/>}
       <div className="max-w-5xl mx-auto p-4 lg:p-8">
         <div className="bg-base-300 rounded-xl p-6 space-y-8 shadow-lg">
           <div className="text-center">
@@ -139,20 +135,27 @@ const GroupInfo = () => {
 
           {authUser.data._id === group.admin && (
             <div className="space-y-6">
-              <div className="flex flex-wrap justify-center gap-4 items-center">
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-6 items-center">
                 <button
                   onClick={() => {setShowAddUsers(true)}}
-                  className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
+                  className="btn btn-sm btn-primary"
                 >
-                  <UserPlus2 />
+                  <UserPlus2/>
                   <span className="hidden lg:block">Add member</span>
                 </button>
                 <button
                   onClick={(e) => setIsUpdating(!isUpdating)}
-                  className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
+                  className="btn btn-sm btn-primary "
                 >
                   <Settings />
                   <span className="hidden lg:block">Settings</span>
+                </button>
+                <button
+                  onClick={(e) => setShowGroupRequestsAdmin(true)}
+                  className="btn btn-sm btn-primary "
+                >
+                  <BellPlusIcon />
+                  <span className="hidden lg:block">Requests</span>
                 </button>
               </div>
 
