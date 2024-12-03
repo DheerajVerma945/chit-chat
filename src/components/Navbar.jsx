@@ -4,12 +4,16 @@ import { Link } from "react-router-dom";
 import Logo from "../../public/Logo.png";
 import { LogOut, Settings, User, UserRoundPlusIcon } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
+import { useGroupChatStore } from "../store/useGroupChatStore";
+import { useChatStore } from "../store/useChatStore";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
   const [showLogoutMsg, setShowLogoutMsg] = useState(false);
   const { userRequests, groupRequestsUser } = useUserStore();
   const totalRequests = userRequests.length + groupRequestsUser.length;
+  const { setGroupMessages, setSelectedGroup } = useGroupChatStore();
+  const { setSelectedUser, setMessages } = useChatStore();
 
   return (
     <>
@@ -85,6 +89,11 @@ const Navbar = () => {
                 onClick={() => {
                   logout();
                   setShowLogoutMsg(false);
+                  setSelectedUser(null);
+                  setSelectedGroup(null);
+                  setGroupData(null);
+                  setMessages(null);
+                  setGroupMessages(null);
                 }}
                 className="btn btn-sm bg-red-500 text-white flex-1 hover:bg-red-600"
               >

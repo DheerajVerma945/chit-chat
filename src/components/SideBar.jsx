@@ -65,6 +65,7 @@ const Sidebar = () => {
                 setSelectedGroup(null);
                 setGroupMessages([]);
                 setShowGroups(false);
+                setShowInfo(false);
               }}
             >
               <User className="size-6" />
