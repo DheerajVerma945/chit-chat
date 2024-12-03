@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import imageCompression from "browser-image-compression";
-import { BellPlusIcon, Camera, MoreVertical, Settings, UserPlus2 } from "lucide-react";
+import {
+  BellPlusIcon,
+  Camera,
+  MoreVertical,
+  Settings,
+  UserPlus2,
+} from "lucide-react";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
-import {AddMembers,GroupRequestsAdmin} from "../components"
-import {groupRequestAdminStore} from "../store/useGroupRequestAdminStore"
-
+import { AddMembers, GroupRequestsAdmin } from "../components";
+import { groupRequestAdminStore } from "../store/useGroupRequestAdminStore";
 
 const GroupInfo = () => {
-
-  const {setShowGroupRequestsAdmin,getGroupRequestsAdmin,showGroupRequestsAdmin} = groupRequestAdminStore()
+  const {
+    setShowGroupRequestsAdmin,
+    getGroupRequestsAdmin,
+    adminGroupRequests,
+    showGroupRequestsAdmin,
+  } = groupRequestAdminStore();
   const {
     groupData,
     removeMember,
@@ -18,7 +27,7 @@ const GroupInfo = () => {
     exitGroup,
     updateGroupDp,
     showAddUsers,
-    setShowAddUsers
+    setShowAddUsers,
   } = useGroupConfigStore();
   const group = groupData[0];
 
@@ -77,7 +86,6 @@ const GroupInfo = () => {
     });
   };
 
-
   const handleRemoveMember = async (userId) => {
     await removeMember(userId);
   };
@@ -93,8 +101,8 @@ const GroupInfo = () => {
           <div className="loading bg-primary w-12 h-12 rounded-full"></div>
         </div>
       )}
-      {showAddUsers && <AddMembers/>}
-      {showGroupRequestsAdmin && <GroupRequestsAdmin/>}
+      {showAddUsers && <AddMembers />}
+      {showGroupRequestsAdmin && <GroupRequestsAdmin />}
       <div className="max-w-5xl mx-auto p-4 lg:p-8">
         <div className="bg-base-300 rounded-xl p-6 space-y-8 shadow-lg">
           <div className="text-center">
@@ -136,10 +144,12 @@ const GroupInfo = () => {
             <div className="space-y-6">
               <div className="flex flex-wrap justify-center gap-2 sm:gap-6 items-center">
                 <button
-                  onClick={() => {setShowAddUsers(true)}}
+                  onClick={() => {
+                    setShowAddUsers(true);
+                  }}
                   className="btn btn-sm btn-primary"
                 >
-                  <UserPlus2/>
+                  <UserPlus2 />
                   <span className="hidden lg:block">Add member</span>
                 </button>
                 <button
@@ -151,9 +161,16 @@ const GroupInfo = () => {
                 </button>
                 <button
                   onClick={(e) => setShowGroupRequestsAdmin(true)}
-                  className="btn btn-sm btn-primary "
+                  className="relative flex items-center gap-2 btn btn-sm btn-primary"
                 >
-                  <BellPlusIcon />
+                  <div className="relative">
+                    <BellPlusIcon />
+                    {adminGroupRequests.length > 0 && (
+                      <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                        {adminGroupRequests.length}
+                      </span>
+                    )}
+                  </div>
                   <span className="hidden lg:block">Requests</span>
                 </button>
               </div>
@@ -227,7 +244,9 @@ const GroupInfo = () => {
               <div className="space-y-6">
                 <div className="flex flex-wrap justify-center gap-4 items-center">
                   <button
-                    onClick={() => {setShowAddUsers(true)}}
+                    onClick={() => {
+                      setShowAddUsers(true);
+                    }}
                     className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
                   >
                     <UserPlus2 />
