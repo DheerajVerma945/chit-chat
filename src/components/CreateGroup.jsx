@@ -14,9 +14,11 @@ const CreateGroup = ({ onClose }) => {
     e.preventDefault();
     setCreationLoading(true);
     if (!name.trim()) {
+      setCreationLoading(false);
       return toast.error("Group name is required");
     }
     if (name.length > 15) {
+      setCreationLoading(false);
       return toast.error("Group name cannot be greater than 15 characters");
     }
     try {

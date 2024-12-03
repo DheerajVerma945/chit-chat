@@ -4,6 +4,7 @@ import imageCompression from "browser-image-compression";
 import {
   BellPlusIcon,
   Camera,
+  LucideTrash2,
   MoreVertical,
   Settings,
   UserPlus2,
@@ -22,14 +23,19 @@ const GroupInfo = () => {
   const {
     groupData,
     removeMember,
+    isRemovingMember,
     updateGroup,
     setGroupData,
     exitGroup,
     updateGroupDp,
     showAddUsers,
     setShowAddUsers,
+    deleteGroup,
+    isDeletingGroup,
   } = useGroupConfigStore();
   const group = groupData[0];
+
+  const [showDeleteWarning, setShowDeleteWarning] = useState(false);
 
   useEffect(() => {
     setGroupData(groupData);
@@ -37,6 +43,8 @@ const GroupInfo = () => {
   }, [groupData, setGroupData]);
 
   const { authUser } = useAuthStore();
+
+  const [showAdminOptions, setShowAdminOptions] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [formData, setFormData] = useState({
     newName: group.name,
@@ -90,6 +98,16 @@ const GroupInfo = () => {
     await removeMember(userId);
   };
 
+  const toggleAdminOptions = (id) => {
+    showAdminOptions === id
+      ? setShowAdminOptions(null)
+      : setShowAdminOptions(id);
+  };
+
+  const handleConfirmDelete = async () => {
+    await deleteGroup();
+  };
+
   const handleExitGroup = async () => {
     await exitGroup();
   };
@@ -103,13 +121,40 @@ const GroupInfo = () => {
       )}
       {showAddUsers && <AddMembers />}
       {showGroupRequestsAdmin && <GroupRequestsAdmin />}
+
+      {showDeleteWarning && (
+        <>
+          <div className="fixed inset-0 bg-base-300 bg-opacity-50 z-40 flex justify-center items-center">
+            <div className="  relative bg-base-100 flex flex-col p-6 rounded-xl max-w-lg w-full shadow-lg">
+              <p className="text-center">
+                Deleting this group will remove all the members and the
+                chats.Are you sure you want to delete?
+              </p>
+              <div className="flex items-center justify-between m-5">
+                <button
+                  onClick={handleConfirmDelete}
+                  className={`btn btn-error bg-error ${
+                    isDeletingGroup ? "loading" : ""
+                  }`}
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => setShowDeleteWarning(false)}
+                  className="btn btn-secondary bg-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
       <div className="max-w-5xl mx-auto p-4 lg:p-8">
         <div className="bg-base-300 rounded-xl p-6 space-y-8 shadow-lg">
           <div className="text-center">
             <h1 className="text-2xl font-bold">{group.name}</h1>
-            <p className="mt-2 text-sm text-gray-500">
-              Group information and settings
-            </p>
+            <p className="mt-2 text-sm ">{group.description}</p>
           </div>
 
           <div className="flex flex-col items-center gap-6">
@@ -119,25 +164,30 @@ const GroupInfo = () => {
                 alt="Group"
                 className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4"
               />
-              <label
-                htmlFor="group-image-upload"
-                className="absolute bottom-2 right-2 bg-base-content hover:scale-110 p-2 rounded-full cursor-pointer transition-transform duration-300"
-              >
-                <Camera className="w-5 h-5 text-base-200" />
-                <input
-                  type="file"
-                  id="group-image-upload"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                />
-              </label>
+              {authUser.data._id === group.admin && (
+                <label
+                  htmlFor="group-image-upload"
+                  className="absolute -bottom-1 -right-1 bg-base-content hover:scale-110 p-2 rounded-full cursor-pointer transition-transform duration-300"
+                >
+                  <Camera className="w-5 h-5 text-base-200" />
+                  <input
+                    type="file"
+                    id="group-image-upload"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                  />
+                </label>
+              )}
             </div>
-            <p className="text-sm text-center">
-              {imageUploading
-                ? "Uploading..."
-                : "Click the camera icon to update group photo"}
-            </p>
+
+            {authUser.data._id === group.admin && (
+              <p className="text-sm text-center">
+                {imageUploading
+                  ? "Uploading..."
+                  : "Click the camera icon to update group photo"}
+              </p>
+            )}
           </div>
 
           {authUser.data._id === group.admin && (
@@ -172,6 +222,15 @@ const GroupInfo = () => {
                     )}
                   </div>
                   <span className="hidden lg:block">Requests</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setShowDeleteWarning(true);
+                  }}
+                  className="btn btn-error  btn-sm"
+                >
+                  <LucideTrash2 />
+                  <span className="hidden lg:block">Delete group</span>
                 </button>
               </div>
 
@@ -241,13 +300,13 @@ const GroupInfo = () => {
           )}
           {authUser.data._id !== group.admin &&
             group.visibility === "public" && (
-              <div className="space-y-6">
-                <div className="flex flex-wrap justify-center gap-4 items-center">
+              <div className="space-y-2">
+                <div className="flex justify-center items-center">
                   <button
                     onClick={() => {
                       setShowAddUsers(true);
                     }}
-                    className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
+                    className="btn btn-primary btn-sm"
                   >
                     <UserPlus2 />
                     <span className="hidden lg:block">Add member</span>
@@ -276,11 +335,35 @@ const GroupInfo = () => {
                       {member.fullName}
                     </span>
                   </div>
-                  {authUser.data._id === group.admin && (
-                    <button onClick={() => {}} className="btn btn-ghost p-2">
-                      <MoreVertical className="w-5 h-5 text-gray-500" />
-                    </button>
-                  )}
+                  {authUser.data._id === group.admin &&
+                    member._id !== group.admin && (
+                      <div className="flex relative">
+                        {showAdminOptions === member._id && (
+                          <button
+                            className={`absolute -right-5 top-12 sm:right-16 sm:top-2 btn btn-error btn-sm ${
+                              isRemovingMember ? "loading bg-error" : ""
+                            }`}
+                            onClick={() => handleRemoveMember(member._id)}
+                          >
+                            {!isRemovingMember ? "Remove":""}
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            toggleAdminOptions(member._id);
+                          }}
+                          className="btn  btn-ghost p-2"
+                        >
+                          <MoreVertical className="w-5 h-5 relative" />
+                        </button>
+                      </div>
+                    )}
+
+                  {authUser.data._id !== group.admin &&
+                    member._id === group.admin && (
+                      <span className="text-sm text-primary/90">Admin</span>
+                    )}
                 </div>
               ))}
             </div>

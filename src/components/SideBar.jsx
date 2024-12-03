@@ -84,6 +84,7 @@ const Sidebar = () => {
               onClick={() => {
                 setShowContacts(false);
                 setSelectedUser(null);
+                setMessages([]);
                 setShowGroups(true);
               }}
             >

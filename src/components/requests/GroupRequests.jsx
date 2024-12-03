@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { useUserStore } from "../../store/useUserStore";
-import toast from "react-hot-toast";
 
 const GroupRequests = () => {
   const { groupRequestsUser, reviewGroupRequestUser } = useUserStore();
   const [currReq, setCurrReq] = useState(null);
-  const [status,setStatus] = useState("");
+  const [status, setStatus] = useState("");
 
   const handleAccept = async (req) => {
     setCurrReq(req._id);
-    setStatus("accepted")
+    setStatus("accepted");
     try {
-      await reviewGroupRequestUser("accepted", req._id, req.groupId);
-      toast.success("Request accepted successfully");
+      await reviewGroupRequestUser("accepted", req._id, req.groupId._id);
     } catch (error) {
       console.log(error);
     } finally {
@@ -25,8 +23,7 @@ const GroupRequests = () => {
     setCurrReq(req._id);
     setStatus("rejected");
     try {
-      await reviewGroupRequestUser("rejected", req._id, req.groupId);
-      toast.success("Request rejected successfully");
+      await reviewGroupRequestUser("rejected", req._id, req.groupId._id);
     } catch (error) {
       console.log(error);
     } finally {
@@ -34,7 +31,6 @@ const GroupRequests = () => {
       setStatus("");
     }
   };
-
 
   if (!groupRequestsUser || groupRequestsUser.length === 0)
     return (
@@ -48,7 +44,7 @@ const GroupRequests = () => {
       {groupRequestsUser.map((request) => (
         <div
           key={request._id}
-          className="flex items-center justify-between p-4 bg-base-100 rounded-lg shadow-md mb-4"
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-base-100 rounded-lg shadow-md mb-4"
         >
           <div className="flex items-center gap-4">
             <img
@@ -58,13 +54,20 @@ const GroupRequests = () => {
             />
             <div>
               <p className="font-medium">{request.senderId.fullName}</p>
+              <p className="text-sm">invited you to join their group</p>
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex items-center text-center gap-4 mt-4 sm:mt-0">
+            <p className="font-medium">{request.groupId.name}</p>
+          </div>
+
+          <div className="flex gap-4 mt-4 sm:mt-0">
             <button
               className={`btn btn-success btn-sm ${
-                currReq === request._id && status === "accepted" ? "loading bg-success" : ""
+                currReq === request._id && status === "accepted"
+                  ? "loading bg-success"
+                  : ""
               }`}
               onClick={() => handleAccept(request)}
             >
@@ -72,7 +75,9 @@ const GroupRequests = () => {
             </button>
             <button
               className={`btn btn-error btn-sm ${
-                currReq === request._id && status === "rejected" ? "loading bg-error" : ""
+                currReq === request._id && status === "rejected"
+                  ? "loading bg-error"
+                  : ""
               }`}
               onClick={() => handleReject(request)}
             >

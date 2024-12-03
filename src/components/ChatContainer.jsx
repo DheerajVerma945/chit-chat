@@ -143,7 +143,7 @@ const ChatContainer = () => {
                 } chat-bubble flex flex-col relative text-base sm:text-sm`}
               >
                 {message.senderId._id !== authUser.data._id && (
-                  <p className="absolute top-[-1.5rem] right-0 text-sm text-gray-500">
+                  <p className="absolute top-[-1.5rem] right-0 text-sm">
                     ~{message.senderId.fullName.split(" ")[0]}
                   </p>
                 )}

@@ -3,7 +3,6 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
 export const useUserStore = create((set, get) => ({
-
   isConnectionsLoading: false,
   userRequests: [],
   isUserRequestsLoading: false,
@@ -12,14 +11,15 @@ export const useUserStore = create((set, get) => ({
   exploreUsers: [],
   isGroupRequestsLoading: false,
 
-
   reviewUserRequest: async (status, reqId) => {
     try {
       const { userRequests } = get();
       const res = await axiosInstance.post(`/user/request/review/${status}`, {
         reqId,
       });
-      const filteredUserRequests = userRequests.filter((req)=>req._id !== reqId);
+      const filteredUserRequests = userRequests.filter(
+        (req) => req._id !== reqId
+      );
       set({ userRequests: filteredUserRequests });
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -73,23 +73,26 @@ export const useUserStore = create((set, get) => ({
     set({ isGroupRequestsLoading: true });
     try {
       const res = await axiosInstance.get("/group/request/getRequests/user");
-      set({ groupRequests: res.data.data });
+      set({ groupRequestsUser: res.data.data });
     } catch (error) {
-      set({ groupRequests: [] });
+      set({ groupRequestsUser: [] });
     } finally {
       set({ isGroupRequestsLoading: false });
     }
   },
 
   reviewGroupRequestUser: async (status, reqId, groupId) => {
-    const groupRequestsUser = get();
+    const { groupRequestsUser } = get();
     try {
       const res = await axiosInstance.post(
-        `/group/requets/review/user/${status}`,
+        `/group/request/review/user/${status}`,
         { groupId, reqId }
       );
-      const filteredGroupRequests = groupRequestsUser.filter((req)=>req._id !== reqId);
+      const filteredGroupRequests = groupRequestsUser.filter(
+        (req) => req._id !== reqId
+      );
       set({ groupRequestsUser: filteredGroupRequests });
+      toast.success(`Request ${status} successfully`);
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }

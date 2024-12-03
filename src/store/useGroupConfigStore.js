@@ -51,18 +51,18 @@ export const useGroupConfigStore = create((set, get) => {
       set({ groupData: data });
     },
 
-    removeMember: async (user) => {
+    removeMember: async (userId) => {
       const { groupData } = get();
       set({ isRemovingMember: true });
       try {
         const res = await axiosInstance.post("/group/removeMember", {
-          userId: user._id,
+          userId,
           groupId: groupData[0]._id,
         });
         set({ groupData: [res.data.data] });
-        set({ connectionsForGroup: [...connectionsForGroup, user] });
         toast.success("Member removed successfully");
       } catch (error) {
+        console.log(error);
         toast.error(error?.response?.data?.message);
       } finally {
         set({ isRemovingMember: false });
@@ -88,12 +88,15 @@ export const useGroupConfigStore = create((set, get) => {
 
     deleteGroup: async () => {
       const { groupData } = get();
-      const { setSelectedGroup } = useGroupChatStore.getState();
+      const { setSelectedGroup,setGroups,groups } = useGroupChatStore.getState();
       set({ isDeletingGroup: true });
+      const deletedGroup = groupData[0];
       try {
         await axiosInstance.delete("/group/deleteGroup", {
           data: { groupId: groupData[0]._id },
         });
+        const newGroups = groups.filter( (group)=>group._id !== deletedGroup._id);
+        setGroups(newGroups);
         setSelectedGroup(null);
         set({ groupData: [] });
         toast.success("Group deleted successfully");
@@ -172,7 +175,6 @@ export const useGroupConfigStore = create((set, get) => {
       const { groupData } = get();
       try {
         const groupId = groupData[0]._id;
-        console.log(connections);
         const res = await axiosInstance.get(
           `/group/connectionForGroup/${groupId}`,
           {
@@ -181,7 +183,6 @@ export const useGroupConfigStore = create((set, get) => {
             },
           }
         );
-        console.log(res);
         set({ connectionsForGroup: res.data.data });
       } catch (error) {
         console.log(error);
