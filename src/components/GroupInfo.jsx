@@ -8,7 +8,6 @@ import AddMembers from "./group/AddMembers";
 
 const GroupInfo = () => {
   const {users} = useChatStore();
-  const [showAddUsers,setShowAddUsers] = useState(false);
   const {
     groupData,
     addMember,
@@ -18,13 +17,13 @@ const GroupInfo = () => {
     joinGroup,
     exitGroup,
     updateGroupDp,
-    getMembersForAdding,
+    showAddUsers,
+    setShowAddUsers
   } = useGroupConfigStore();
   const group = groupData[0];
 
   useEffect(() => {
     setGroupData(groupData);
-    getMembersForAdding(users);
   }, [groupData, setGroupData]);
 
   const { authUser } = useAuthStore();
@@ -149,7 +148,7 @@ const GroupInfo = () => {
                   <span className="hidden lg:block">Add member</span>
                 </button>
                 <button
-                  onClick={() => setIsUpdating(!isUpdating)}
+                  onClick={(e) => setIsUpdating(!isUpdating)}
                   className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
                 >
                   <Settings />

@@ -15,18 +15,23 @@ export const useGroupConfigStore = create((set, get) => {
     isDeletingGroup: false,
     isCreatingGroup: false,
     connectionsForGroup: [],
+    showAddUsers: false,
 
-    addMember: async (userIds) => {
+    setShowAddUsers: (data) => {
+      set({ showAddUsers: data });
+    },
+
+    addMember: async (userId) => {
       const { groupData, connectionsForGroup } = get();
       set({ isAddingMember: true });
       try {
         const res = await axiosInstance.post("/group/addMember", {
-          userIds,
+          userId,
           groupId: groupData[0]._id,
         });
         set({ groupData: [res.data.data] });
         const newList = connectionsForGroup.filter(
-          (connection) => !userIds.includes(connection._id)
+          (connection) => connection.id !== userId
         );
         set({ connectionsForGroup: newList });
 
@@ -159,13 +164,19 @@ export const useGroupConfigStore = create((set, get) => {
       }
     },
 
-    getMembersForAdding: async (users) => {
+    getMembersForAdding: async (connections) => {
+      const { groupData } = get();
       try {
-        const { groupData } = get();
-        const res = await axiosInstance.get("/group/connectionForGroup", {
-          groupId: groupData[0]._id,
-          connections: users,
-        });
+        const groupId = groupData[0]._id;
+        console.log(connections);
+        const res = await axiosInstance.get(
+          `/group/connectionForGroup/${groupId}`,
+          {
+            params: {
+              connections: JSON.stringify(connections),
+            },
+          }
+        );
         console.log(res);
         set({ connectionsForGroup: res.data.data });
       } catch (error) {
