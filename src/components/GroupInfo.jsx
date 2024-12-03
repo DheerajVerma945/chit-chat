@@ -4,6 +4,7 @@ import imageCompression from "browser-image-compression";
 import {
   BellPlusIcon,
   Camera,
+  LogOut,
   LucideTrash2,
   MoreVertical,
   Settings,
@@ -32,6 +33,7 @@ const GroupInfo = () => {
     setShowAddUsers,
     deleteGroup,
     isDeletingGroup,
+    isExitingGroup,
   } = useGroupConfigStore();
   const group = groupData[0];
 
@@ -53,6 +55,7 @@ const GroupInfo = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
+  const [showExitWarning, setShowExitWarning] = useState(false);
 
   const validateSave =
     formData?.newName?.trim() !== group.name.trim() ||
@@ -141,6 +144,34 @@ const GroupInfo = () => {
                 </button>
                 <button
                   onClick={() => setShowDeleteWarning(false)}
+                  className="btn btn-secondary bg-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {showExitWarning && (
+        <>
+          <div className="fixed inset-0 bg-base-300 bg-opacity-50 z-40 flex justify-center items-center">
+            <div className="  relative bg-base-100 flex flex-col p-6 rounded-xl max-w-lg w-full shadow-lg">
+              <p className="text-center">
+                Are you sure, you want to leave this group ?
+              </p>
+              <div className="flex items-center justify-between m-5">
+                <button
+                  onClick={handleExitGroup}
+                  className={`btn btn-error bg-error ${
+                    isExitingGroup ? "loading" : ""
+                  }`}
+                >
+                  Exit
+                </button>
+                <button
+                  onClick={() => setShowExitWarning(false)}
                   className="btn btn-secondary bg-secondary"
                 >
                   Cancel
@@ -300,8 +331,8 @@ const GroupInfo = () => {
           )}
           {authUser.data._id !== group.admin &&
             group.visibility === "public" && (
-              <div className="space-y-2">
-                <div className="flex justify-center items-center">
+              <div className="space-y-2r">
+                <div className="flex justify-center gap-4 items-center">
                   <button
                     onClick={() => {
                       setShowAddUsers(true);
@@ -311,9 +342,32 @@ const GroupInfo = () => {
                     <UserPlus2 />
                     <span className="hidden lg:block">Add member</span>
                   </button>
+                  <button
+                    className={`btn btn-error btn-sm `}
+                    onClick={() => {
+                      setShowExitWarning(true);
+                    }}
+                  >
+                    <LogOut />
+                    <span className="hidden lg:block">Leave</span>
+                  </button>
                 </div>
               </div>
             )}
+
+          {authUser.data._id !== group.admin && group.visibility ==="private" && (
+            <div className="flex items-center justify-center">
+              <button
+              className={` btn btn-error btn-sm `}
+              onClick={() => {
+                setShowExitWarning(true);
+              }}
+            >
+              <LogOut />
+              <span className="hidden lg:block">Leave</span>
+            </button>
+            </div>
+          )}
 
           <div className="border-t-2 border-base-100">
             <h2 className="text-lg font-medium mb-4 mt-8">
@@ -345,7 +399,7 @@ const GroupInfo = () => {
                             }`}
                             onClick={() => handleRemoveMember(member._id)}
                           >
-                            {!isRemovingMember ? "Remove":""}
+                            {!isRemovingMember ? "Remove" : ""}
                           </button>
                         )}
 

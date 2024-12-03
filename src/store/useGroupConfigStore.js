@@ -62,7 +62,6 @@ export const useGroupConfigStore = create((set, get) => {
         set({ groupData: [res.data.data] });
         toast.success("Member removed successfully");
       } catch (error) {
-        console.log(error);
         toast.error(error?.response?.data?.message);
       } finally {
         set({ isRemovingMember: false });
@@ -88,14 +87,17 @@ export const useGroupConfigStore = create((set, get) => {
 
     deleteGroup: async () => {
       const { groupData } = get();
-      const { setSelectedGroup,setGroups,groups } = useGroupChatStore.getState();
+      const { setSelectedGroup, setGroups, groups } =
+        useGroupChatStore.getState();
       set({ isDeletingGroup: true });
       const deletedGroup = groupData[0];
       try {
         await axiosInstance.delete("/group/deleteGroup", {
           data: { groupId: groupData[0]._id },
         });
-        const newGroups = groups.filter( (group)=>group._id !== deletedGroup._id);
+        const newGroups = groups.filter(
+          (group) => group._id !== deletedGroup._id
+        );
         setGroups(newGroups);
         setSelectedGroup(null);
         set({ groupData: [] });
@@ -185,7 +187,6 @@ export const useGroupConfigStore = create((set, get) => {
         );
         set({ connectionsForGroup: res.data.data });
       } catch (error) {
-        console.log(error);
         set({ connectionsForGroup: [] });
       }
     },
