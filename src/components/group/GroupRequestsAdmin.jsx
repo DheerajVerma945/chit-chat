@@ -1,37 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { groupRequestAdminStore } from "../../store/useGroupRequestAdminStore";
 import { UserPlus2, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 const GroupRequestsAdmin = () => {
   const {
     setShowGroupRequestsAdmin,
     adminGroupRequests,
+    reviewGroupRequestAdmin,
     isGroupRequestsAdminLoading,
   } = groupRequestAdminStore();
 
   const [currUser, setCurrUser] = useState(null);
-  const [currOperation,setCurrOperation] = useState("");
+  const [currOperation, setCurrOperation] = useState("");
 
-  const handleAccept = (id) => {
+  const handleAccept = async (id) => {
     setCurrUser(id);
-    setCurrOperation("accepted")
-    console.log("Accepted the req");
-    setTimeout(() => {
+    setCurrOperation("accepted");
+    try {
+      await reviewGroupRequestAdmin("accepted", id);
+      toast.success("Request accepted successfully");
+    } catch (error) {
+      console.log(error);
+    } finally {
       setCurrUser(null);
       setCurrOperation("");
-    }, 15000);
+    }
   };
 
-  const handleReject = (id) => {
+  const handleReject = async(id) => {
     setCurrOperation("rejected");
     setCurrUser(id);
-    console.log("Rejected the req");
-    setTimeout(() => {
+    try {
+        await reviewGroupRequestAdmin("rejected",id);
+        toast.success("Request rejected successfully")
+    } catch (error) {
+      console.log(error);
+    } finally {
       setCurrUser(null);
       setCurrOperation("");
-    }, 15000);
+    }
   };
-
 
   return (
     <div className="fixed inset-0 bg-base-300 bg-opacity-50 z-40 flex justify-center items-center">
@@ -67,7 +76,9 @@ const GroupRequestsAdmin = () => {
                 <div className="flex items-center gap-3">
                   <button
                     className={`btn btn-success btn-sm ${
-                      currUser === request._id && currOperation==="accepted"? "loading bg-success" : ""
+                      currUser === request._id && currOperation === "accepted"
+                        ? "loading bg-success"
+                        : ""
                     }`}
                     onClick={() => handleAccept(request._id)}
                   >
@@ -80,7 +91,9 @@ const GroupRequestsAdmin = () => {
                   </button>
                   <button
                     className={`btn btn-error btn-sm ${
-                      currUser === request._id && currOperation==="rejected" ? "loading bg-error" : ""
+                      currUser === request._id && currOperation === "rejected"
+                        ? "loading bg-error"
+                        : ""
                     }`}
                     onClick={() => handleReject(request._id)}
                   >

@@ -8,10 +8,16 @@ import { Link } from "react-router-dom";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setMessages,setSelectedUser, isUsersLoading } =
-    useChatStore();
+  const {
+    getUsers,
+    users,
+    selectedUser,
+    setMessages,
+    setSelectedUser,
+    isUsersLoading,
+  } = useChatStore();
 
-  const { setGroupData,setConnectionsForGroup } = useGroupConfigStore();
+  const { setGroupData, setConnectionsForGroup } = useGroupConfigStore();
   const {
     getGroups,
     groups,
@@ -19,7 +25,7 @@ const Sidebar = () => {
     setSelectedGroup,
     isGroupsLoading,
     setShowInfo,
-    setGroupMessages
+    setGroupMessages,
   } = useGroupChatStore();
 
   const { onlineUsers } = useAuthStore();
@@ -120,7 +126,13 @@ const Sidebar = () => {
                     {sortedUsers.map((user) => (
                       <button
                         key={user._id}
-                        onClick={() => setSelectedUser(user)}
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setSelectedGroup(null);
+                          setGroupMessages([]);
+                          setShowGroups(false);
+                          setShowInfo(false);
+                        }}
                         className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
@@ -163,7 +175,13 @@ const Sidebar = () => {
                     {filteredUsers.map((user) => (
                       <button
                         key={user._id}
-                        onClick={() => setSelectedUser(user)}
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setSelectedGroup(null);
+                          setGroupMessages([]);
+                          setShowGroups(false);
+                          setShowInfo(false);
+                        }}
                         className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors

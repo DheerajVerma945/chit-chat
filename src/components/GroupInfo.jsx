@@ -12,11 +12,9 @@ const GroupInfo = () => {
   const {setShowGroupRequestsAdmin,getGroupRequestsAdmin,showGroupRequestsAdmin} = groupRequestAdminStore()
   const {
     groupData,
-    addMember,
     removeMember,
     updateGroup,
     setGroupData,
-    joinGroup,
     exitGroup,
     updateGroupDp,
     showAddUsers,

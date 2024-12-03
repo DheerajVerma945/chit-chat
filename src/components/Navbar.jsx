@@ -6,13 +6,16 @@ import { LogOut, Settings, User, UserRoundPlusIcon } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
 import { useGroupChatStore } from "../store/useGroupChatStore";
 import { useChatStore } from "../store/useChatStore";
+import { useGroupConfigStore } from "../store/useGroupConfigStore";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
   const [showLogoutMsg, setShowLogoutMsg] = useState(false);
   const { userRequests, groupRequestsUser } = useUserStore();
   const totalRequests = userRequests.length + groupRequestsUser.length;
-  const { setGroupMessages, setSelectedGroup } = useGroupChatStore();
+  const { setGroupMessages, setSelectedGroup, setShowInfo } =
+    useGroupChatStore();
+  const { setGroupData } = useGroupConfigStore();
   const { setSelectedUser, setMessages } = useChatStore();
 
   return (
@@ -25,7 +28,16 @@ const Navbar = () => {
                 to="/"
                 className="flex items-center gap-2.5 hover:opacity-80 transition-all"
               >
-                <div className="size-6 sm:size-10 rounded-lg  flex items-center justify-center">
+                <div
+                  className="size-6 sm:size-10 rounded-lg  flex items-center justify-center"
+                  onClick={() => {
+                    setSelectedUser(null);
+                    setSelectedGroup(null);
+                    setGroupData(null);
+                    setMessages(null);
+                    setGroupMessages(null);
+                  }}
+                >
                   <img
                     className="size-6 sm:size-10 object-cover rounded-full"
                     src={Logo}
@@ -41,14 +53,36 @@ const Navbar = () => {
                 className="btn btn-sm gap-2 transition-colors"
               >
                 <Settings className="size-4" />
-                <span className="hidden sm:inline">Settings</span>
+                <span
+                  className="hidden sm:inline"
+                  onClick={() => {
+                    setSelectedUser(null);
+                    setSelectedGroup(null);
+                    setGroupData(null);
+                    setMessages(null);
+                    setGroupMessages(null);
+                  }}
+                >
+                  Settings
+                </span>
               </Link>
 
               {authUser && (
                 <>
                   <Link to="/profile" className="btn btn-sm gap-2">
                     <User className="size-5" />
-                    <span className="hidden sm:inline">Profile</span>
+                    <span
+                      className="hidden sm:inline"
+                      onClick={() => {
+                        setSelectedUser(null);
+                        setSelectedGroup(null);
+                        setGroupData(null);
+                        setMessages(null);
+                        setGroupMessages(null);
+                      }}
+                    >
+                      Profile
+                    </span>
                   </Link>
                   <Link
                     to="/requests"
@@ -60,7 +94,16 @@ const Navbar = () => {
                         {totalRequests}
                       </span>
                     )}
-                    <span className="hidden sm:inline ml-2 text-sm font-medium ">
+                    <span
+                      className="hidden sm:inline ml-2 text-sm font-medium "
+                      onClick={() => {
+                        setSelectedUser(null);
+                        setSelectedGroup(null);
+                        setGroupData(null);
+                        setMessages(null);
+                        setGroupMessages(null);
+                      }}
+                    >
                       Requests
                     </span>
                   </Link>

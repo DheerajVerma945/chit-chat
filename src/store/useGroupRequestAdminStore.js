@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { useGroupChatStore } from "./useGroupChatStore";
 import { useGroupConfigStore } from "./useGroupConfigStore";
+import toast from "react-hot-toast";
 
 export const groupRequestAdminStore = create((set) => ({
   adminGroupRequests: [],
@@ -47,6 +48,7 @@ export const groupRequestAdminStore = create((set) => ({
   },
 
   reviewGroupRequestAdmin: async (status, reqId) => {
+    const {setGroupData} = useGroupConfigStore.getState();
     const { selectedGroup } = useGroupChatStore.getState();
 
     try {
@@ -54,8 +56,10 @@ export const groupRequestAdminStore = create((set) => ({
         `group/request/review/admin/${status}`,
         { reqId, groupId: selectedGroup._id }
       );
-      setGroupData(res.data.data);
+      console.log(res);
+      setGroupData([res.data.data]);
     } catch (error) {
+      console.log(error);
       toast.error(error?.response?.data?.message);
     }
   },
