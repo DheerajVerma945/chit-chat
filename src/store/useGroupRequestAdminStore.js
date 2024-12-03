@@ -48,7 +48,7 @@ export const groupRequestAdminStore = create((set) => ({
   },
 
   reviewGroupRequestAdmin: async (status, reqId) => {
-    const {setGroupData} = useGroupConfigStore.getState();
+    const { setGroupData } = useGroupConfigStore.getState();
     const { selectedGroup } = useGroupChatStore.getState();
 
     try {
@@ -56,10 +56,8 @@ export const groupRequestAdminStore = create((set) => ({
         `group/request/review/admin/${status}`,
         { reqId, groupId: selectedGroup._id }
       );
-      console.log(res);
       setGroupData([res.data.data]);
     } catch (error) {
-      console.log(error);
       toast.error(error?.response?.data?.message);
     }
   },
