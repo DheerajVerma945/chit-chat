@@ -6,31 +6,32 @@ const GroupRequestsAdmin = () => {
   const {
     setShowGroupRequestsAdmin,
     adminGroupRequests,
-    getGroupRequestsAdmin,
     isGroupRequestsAdminLoading,
   } = groupRequestAdminStore();
 
   const [currUser, setCurrUser] = useState(null);
+  const [currOperation,setCurrOperation] = useState("");
 
   const handleAccept = (id) => {
     setCurrUser(id);
+    setCurrOperation("accepted")
     console.log("Accepted the req");
     setTimeout(() => {
       setCurrUser(null);
+      setCurrOperation("");
     }, 15000);
   };
 
   const handleReject = (id) => {
+    setCurrOperation("rejected");
     setCurrUser(id);
     console.log("Rejected the req");
     setTimeout(() => {
       setCurrUser(null);
+      setCurrOperation("");
     }, 15000);
   };
 
-  useEffect(() => {
-    getGroupRequestsAdmin();
-  }, []);
 
   return (
     <div className="fixed inset-0 bg-base-300 bg-opacity-50 z-40 flex justify-center items-center">
@@ -55,22 +56,22 @@ const GroupRequestsAdmin = () => {
               >
                 <div className="flex items-center gap-4">
                   <img
-                    src={request.profilePic}
-                    alt={request.fullName}
+                    src={request.senderId.profilePic}
+                    alt={request.senderId.fullName}
                     className="w-12 h-12 rounded-full object-cover border border-base-300"
                   />
                   <span className="text-sm font-medium text-base-content">
-                    {request.fullName}
+                    {request.senderId.fullName}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
                     className={`btn btn-success btn-sm ${
-                      currUser === request._id ? "loading" : ""
+                      currUser === request._id && currOperation==="accepted"? "loading bg-success" : ""
                     }`}
                     onClick={() => handleAccept(request._id)}
                   >
-                    {currUser !== request._id && (
+                    {currOperation !== "accepted" && (
                       <>
                         <UserPlus2 className="w-4 h-4" />
                         Accept
@@ -79,11 +80,11 @@ const GroupRequestsAdmin = () => {
                   </button>
                   <button
                     className={`btn btn-error btn-sm ${
-                      currUser === request._id ? "loading" : ""
+                      currUser === request._id && currOperation==="rejected" ? "loading bg-error" : ""
                     }`}
                     onClick={() => handleReject(request._id)}
                   >
-                    {currUser !== request._id && "Reject"}
+                    {currOperation !== "rejected" && "Reject"}
                   </button>
                 </div>
               </div>

@@ -9,7 +9,7 @@ import {groupRequestAdminStore} from "../store/useGroupRequestAdminStore"
 
 const GroupInfo = () => {
 
-  const {setShowGroupRequestsAdmin,showGroupRequestsAdmin} = groupRequestAdminStore()
+  const {setShowGroupRequestsAdmin,getGroupRequestsAdmin,showGroupRequestsAdmin} = groupRequestAdminStore()
   const {
     groupData,
     addMember,
@@ -26,6 +26,7 @@ const GroupInfo = () => {
 
   useEffect(() => {
     setGroupData(groupData);
+    getGroupRequestsAdmin();
   }, [groupData, setGroupData]);
 
   const { authUser } = useAuthStore();
