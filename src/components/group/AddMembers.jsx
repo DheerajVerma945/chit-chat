@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useGroupConfigStore } from "../../store/useGroupConfigStore";
 import { useChatStore } from "../../store/useChatStore";
 import { UserPlus2, Lock, X } from "lucide-react";
@@ -6,23 +6,34 @@ import { UserPlus2, Lock, X } from "lucide-react";
 const AddMembers = () => {
   const { getMembersForAdding, connectionsForGroup, setShowAddUsers } = useGroupConfigStore();
   const { users } = useChatStore();
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
 
   useEffect(() => {
-    getMembersForAdding(users);
-  }, [users]);
+    const fetchUsers = async () => {
+      setIsLoadingUsers(true);
+      await getMembersForAdding(users);
+      setIsLoadingUsers(false);
+    };
+
+    fetchUsers();
+  }, [users, getMembersForAdding]);
 
   return (
     <div className="fixed inset-0 bg-base-300 bg-opacity-50 z-40 flex justify-center items-center">
       <div className="relative bg-base-100 p-6 rounded-xl max-w-lg w-full shadow-lg">
         <button
           onClick={() => setShowAddUsers(false)}
-          className="absolute top-2 right-2 text-gray-500"
+          className="absolute top-2 right-2"
         >
           <X className="w-6 h-6" />
         </button>
         <h2 className="text-center text-lg font-bold mb-4">Add Connections</h2>
         <div className="space-y-4">
-          {connectionsForGroup.length > 0 ? (
+          {isLoadingUsers ? (
+            <div className="flex items-center h-10 justify-center">
+              <div className="loading bg-primary"></div>
+            </div>
+          ) : connectionsForGroup.length > 0 ? (
             connectionsForGroup.map((connection) => (
               <div
                 key={connection._id}

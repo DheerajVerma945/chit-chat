@@ -17,6 +17,10 @@ export const useGroupConfigStore = create((set, get) => {
     connectionsForGroup: [],
     showAddUsers: false,
 
+    setConnectionsForGroup: (data) => {
+      set({ connectionsForGroup: data });
+    },
+
     setShowAddUsers: (data) => {
       set({ showAddUsers: data });
     },

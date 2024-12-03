@@ -11,7 +11,7 @@ const Sidebar = () => {
   const { getUsers, users, selectedUser, setMessages,setSelectedUser, isUsersLoading } =
     useChatStore();
 
-  const { setGroupData } = useGroupConfigStore();
+  const { setGroupData,setConnectionsForGroup } = useGroupConfigStore();
   const {
     getGroups,
     groups,
@@ -228,6 +228,7 @@ const Sidebar = () => {
                   key={group._id}
                   onClick={() => {
                     setSelectedGroup(group);
+                    setConnectionsForGroup([]);
                     setMessages([]);
                     setGroupData([group]);
                     setShowInfo(false);
