@@ -4,8 +4,11 @@ import { useChatStore } from "../store/useChatStore";
 import imageCompression from "browser-image-compression";
 import { Camera, MoreVertical, Settings, UserPlus2 } from "lucide-react";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
+import AddMembers from "./group/AddMembers";
 
 const GroupInfo = () => {
+  const {users} = useChatStore();
+  const [showAddUsers,setShowAddUsers] = useState(false);
   const {
     groupData,
     addMember,
@@ -15,11 +18,13 @@ const GroupInfo = () => {
     joinGroup,
     exitGroup,
     updateGroupDp,
+    getMembersForAdding,
   } = useGroupConfigStore();
   const group = groupData[0];
 
   useEffect(() => {
     setGroupData(groupData);
+    getMembersForAdding(users);
   }, [groupData, setGroupData]);
 
   const { authUser } = useAuthStore();
@@ -95,6 +100,7 @@ const GroupInfo = () => {
           <div className="loading bg-primary w-12 h-12 rounded-full"></div>
         </div>
       )}
+      {showAddUsers && <AddMembers/>}
       <div className="max-w-5xl mx-auto p-4 lg:p-8">
         <div className="bg-base-300 rounded-xl p-6 space-y-8 shadow-lg">
           <div className="text-center">
@@ -136,7 +142,7 @@ const GroupInfo = () => {
             <div className="space-y-6">
               <div className="flex flex-wrap justify-center gap-4 items-center">
                 <button
-                  onClick={() => {}}
+                  onClick={() => {setShowAddUsers(true)}}
                   className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
                 >
                   <UserPlus2 />
@@ -220,7 +226,7 @@ const GroupInfo = () => {
               <div className="space-y-6">
                 <div className="flex flex-wrap justify-center gap-4 items-center">
                   <button
-                    onClick={() => {}}
+                    onClick={() => {setShowAddUsers(true)}}
                     className="btn btn-primary flex items-center gap-2 text-sm py-2 px-4 rounded-lg"
                   >
                     <UserPlus2 />

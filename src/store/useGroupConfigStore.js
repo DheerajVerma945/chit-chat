@@ -2,6 +2,7 @@ import { create } from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 import { useGroupChatStore } from "./useGroupChatStore";
+import { useChatStore } from "./useChatStore";
 
 export const useGroupConfigStore = create((set, get) => {
   const { selectedGroup } = useGroupChatStore.getState();
@@ -13,16 +14,22 @@ export const useGroupConfigStore = create((set, get) => {
     isExitingGroup: false,
     isDeletingGroup: false,
     isCreatingGroup: false,
+    connectionsForGroup: [],
 
-    addMember: async (userId) => {
-      const { groupData } = get();
+    addMember: async (userIds) => {
+      const { groupData, connectionsForGroup } = get();
       set({ isAddingMember: true });
       try {
         const res = await axiosInstance.post("/group/addMember", {
-          userId,
+          userIds,
           groupId: groupData[0]._id,
         });
         set({ groupData: [res.data.data] });
+        const newList = connectionsForGroup.filter(
+          (connection) => !userIds.includes(connection._id)
+        );
+        set({ connectionsForGroup: newList });
+
         toast.success("Member added successfully");
       } catch (error) {
         toast.error(error?.response?.data?.message);
@@ -35,15 +42,16 @@ export const useGroupConfigStore = create((set, get) => {
       set({ groupData: data });
     },
 
-    removeMember: async (userId) => {
+    removeMember: async (user) => {
       const { groupData } = get();
       set({ isRemovingMember: true });
       try {
         const res = await axiosInstance.post("/group/removeMember", {
-          userId,
+          userId: user._id,
           groupId: groupData[0]._id,
         });
         set({ groupData: [res.data.data] });
+        set({ connectionsForGroup: [...connectionsForGroup, user] });
         toast.success("Member removed successfully");
       } catch (error) {
         toast.error(error?.response?.data?.message);
@@ -148,6 +156,21 @@ export const useGroupConfigStore = create((set, get) => {
         toast.error(error?.response?.data?.message);
       } finally {
         set({ isUpdatingGroup: false });
+      }
+    },
+
+    getMembersForAdding: async (users) => {
+      try {
+        const { groupData } = get();
+        const res = await axiosInstance.get("/group/connectionForGroup", {
+          groupId: groupData[0]._id,
+          connections: users,
+        });
+        console.log(res);
+        set({ connectionsForGroup: res.data.data });
+      } catch (error) {
+        console.log(error);
+        set({ connectionsForGroup: [] });
       }
     },
   };
