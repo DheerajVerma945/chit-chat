@@ -2,11 +2,20 @@ import React, { useEffect, useState } from "react";
 import { UserSkeleton } from "../skeletons/Explore";
 import { useUserStore } from "../../store/useUserStore";
 import toast from "react-hot-toast";
+import { Search } from "lucide-react";
+import SearchUser from "./SearchUser";
 
 const UserExplore = () => {
-  const { exploreUsers, fetchExploreUsers, sendUserRequest } = useUserStore();
+  const {
+    exploreUsers,
+    fetchExploreUsers,
+    sendUserRequest,
+    setShowSearch,
+    showSearch,
+  } = useUserStore();
   const [isLoading, setIsLoading] = useState(true);
   const [requestSending, setRequestSending] = useState(null);
+
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -37,14 +46,35 @@ const UserExplore = () => {
 
   if (!users || users.length === 0)
     return (
-      <p className="h-screen flex justify-center items-center text-lg font-medium">
-        No users found
-      </p>
+      <div className="relative h-screen flex flex-col justify-center items-center">
+        <p className="text-lg font-medium ">No users found</p>
+        {showSearch && <SearchUser />}
+
+        <div className="fixed right-10 bottom-20">
+          <button
+            className="btn btn-primary flex items-center justify-center p-3 rounded-full shadow-lg hover:shadow-xl transition"
+            onClick={() => setShowSearch(true)}
+          >
+            <Search className=" w-6 h-6" />
+          </button>
+        </div>
+      </div>
     );
 
   return (
-    <div className="mt-16 py-8 px-4 max-w-7xl mx-auto">
-      <p className="text-2xl md:text-3xl font-semibold text-center sm:text-left mb-5">Explore People</p>
+    <div className="mt-16 py-8 px-4 max-w-7xl mx-auto relative">
+      {showSearch && <SearchUser />}
+      <div className="fixed right-10 bottom-20">
+        <button
+          className="btn btn-primary flex items-center justify-center p-3 rounded-full shadow-lg hover:shadow-xl transition"
+          onClick={() => setShowSearch(true)}
+        >
+          <Search className=" w-6 h-6" />
+        </button>
+      </div>
+      <p className="text-2xl md:text-3xl font-semibold text-center sm:text-left mb-5">
+        Explore People
+      </p>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
         {users.map((user) => (
           <div

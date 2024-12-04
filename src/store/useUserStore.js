@@ -10,6 +10,7 @@ export const useUserStore = create((set, get) => ({
   exploreGroups: [],
   exploreUsers: [],
   isGroupRequestsLoading: false,
+  showSearch: false,
 
   reviewUserRequest: async (status, reqId) => {
     try {
@@ -24,6 +25,10 @@ export const useUserStore = create((set, get) => ({
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
+  },
+
+  setShowSearch: (data) => {
+    set({ showSearch: data });
   },
 
   removeConnections: async (userId) => {
@@ -120,8 +125,6 @@ export const useUserStore = create((set, get) => ({
     try {
       const user = await axiosInstance.get(`/user/request/search/${username}`);
       return user;
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
-    }
+    } catch {}
   },
 }));

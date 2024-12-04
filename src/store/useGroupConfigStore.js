@@ -2,7 +2,6 @@ import { create } from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 import { useGroupChatStore } from "./useGroupChatStore";
-import { useChatStore } from "./useChatStore";
 
 export const useGroupConfigStore = create((set, get) => {
   const { selectedGroup } = useGroupChatStore.getState();
