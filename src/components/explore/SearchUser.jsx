@@ -5,7 +5,8 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { X } from "lucide-react";
 
 const SearchUser = () => {
-  const { setShowSearch, searchUser, reviewUserRequest } = useUserStore();
+  const { setShowSearch, searchUser, reviewUserRequest, sendUserRequest,exploreUsers } =
+    useUserStore();
   const { authUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState([]);
@@ -16,11 +17,13 @@ const SearchUser = () => {
   const [requestSending, setRequestSending] = useState(false);
 
   const handleConnect = async (id) => {
+    console.log("connect function");
     setRequestSending(true);
     try {
       await sendUserRequest(id);
       toast.success("Request sent successfully");
       setUser([]);
+      setUsername("");
     } catch {
     } finally {
       setRequestSending(false);
@@ -33,6 +36,7 @@ const SearchUser = () => {
       await reviewUserRequest("accepted", reqId);
       toast.success("Request accepted successfully");
       setUser([]);
+      setUsername("");
     } catch {
     } finally {
       setRequestAccepting(false);
@@ -45,6 +49,7 @@ const SearchUser = () => {
       await reviewUserRequest("rejected", reqId);
       toast.success("Request rejected successfully");
       setUser([]);
+      setUsername("");
     } catch {
     } finally {
       setRequestRejecting(false);
@@ -83,7 +88,7 @@ const SearchUser = () => {
     setLoading(true);
     try {
       const res = await searchUser(username.trim());
-      setUser(res?.data || []);
+      setUser(res);
       if (!res) {
         toast.error("User not found");
         setShowError(true);
@@ -144,41 +149,44 @@ const SearchUser = () => {
         {!loading && user && user.length !== 0 && (
           <div className="mt-6 p-6 rounded-lg shadow-md w-full max-w-sm mx-auto flex flex-col items-center">
             <img
-              src={user.data.profilePic}
-              alt={user.data.fullName}
-              className="w-24 h-24 rounded-full mb-4 border-2 border-primary"
+              src={user.data.data.profilePic}
+              alt={user.data.data.fullName}
+              className="w-24 h-24 rounded-full object-cover mb-4 border-2 border-primary"
             />
             <p className="text-lg font-semibold mb-2 text-center">
-              {user.data.fullName}
+              {user.data.data.fullName}
             </p>
-            <p className="text-sm mb-2 text-center">{user.data.username}</p>
-            {user.data.request &&
-            user.data.request.senderId === authUser.data._id &&
-            user.data.request.status === "pending" ? (
-              <div className="btn btn-secondary px-6 py-2">Pending</div>
-            ) : user.data.request &&
-              user.data.request.receiverId === authUser.data._id &&
-              user.data.request.status === "pending" ? (
-              <div className="flex gap-4 mt-2">
-                <button
-                  className={`btn btn-success px-6 py-2 ${
-                    requestAccepting ? "loading bg-success" : ""
-                  }`}
-                  onClick={() => handleAccept(user.data.request._id)}
-                >
-                  {requestAccepting ? "" : "Accept"}
-                </button>
-                <button
-                  className={`btn btn-error px-6 py-2 ${
-                    requestRejecting ? "loading bg-error" : ""
-                  }`}
-                  onClick={() => handleReject(user.data.request._id)}
-                >
-                  {requestRejecting ? "" : "Reject"}
-                </button>
-              </div>
-            ) : user.data.request && user.data.request.status === "accepted" ? (
-              <div className="btn btn-primary px-6 py-2">Connected</div>
+            <p className="text-sm mb-2 text-center">{user.data.data.username}</p>
+            {user.data.req ? (
+              user.data.req.status === "pending" ? (
+                user.data.req.senderId === authUser.data._id ? (
+                  <div className="btn btn-secondary px-6 py-2">Pending</div>
+                ) : user.data.req.receiverId === authUser.data._id ? (
+                  <div className="flex flex-col gap-4 mt-2">
+                    <p className="text-sm text-center">{user.data.data.fullName} has already sent you a request</p>
+                    <div className="flex items-center justify-between">
+                    <button
+                      className={`btn btn-success px-6 py-2 ${
+                        requestAccepting ? "loading bg-success" : ""
+                      }`}
+                      onClick={() => handleAccept(user.data.req._id)}
+                    >
+                      {requestAccepting ? "" : "Accept"}
+                    </button>
+                    <button
+                      className={`btn btn-error px-6 py-2 ${
+                        requestRejecting ? "loading bg-error" : ""
+                      }`}
+                      onClick={() => handleReject(user.data.req._id)}
+                    >
+                      {requestRejecting ? "" : "Reject"}
+                    </button>
+                    </div>
+                  </div>
+                ) : null
+              ) : user.data.req.status === "accepted" ? (
+                <div className="btn btn-primary px-6 py-2">Connected</div>
+              ) : null
             ) : (
               <button
                 className={`mt-2 btn btn-primary ${

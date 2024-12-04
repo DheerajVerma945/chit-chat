@@ -23,21 +23,22 @@ const Navbar = () => {
       <header className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80">
         <div className="container mx-auto px-4 h-16">
           <div className="flex items-center justify-between h-full">
-            <div className="flex items-center gap-8">
+            <div
+              className="flex items-center gap-8"
+              onClick={() => {
+                setSelectedUser(null);
+                setSelectedGroup(null);
+                setGroupData(null);
+                setMessages(null);
+                setShowInfo(false);
+                setGroupMessages(null);
+              }}
+            >
               <Link
                 to="/"
                 className="flex items-center gap-2.5 hover:opacity-80 transition-all"
               >
-                <div
-                  className="size-6 sm:size-10 rounded-lg  flex items-center justify-center"
-                  onClick={() => {
-                    setSelectedUser(null);
-                    setSelectedGroup(null);
-                    setGroupData(null);
-                    setMessages(null);
-                    setGroupMessages(null);
-                  }}
-                >
+                <div className="size-6 sm:size-10 rounded-lg  flex items-center justify-center">
                   <img
                     className="size-6 sm:size-10 object-cover rounded-full"
                     src={Logo}
@@ -60,6 +61,7 @@ const Navbar = () => {
                     setSelectedGroup(null);
                     setGroupData(null);
                     setMessages(null);
+                    setShowInfo(false);
                     setGroupMessages(null);
                   }}
                 >
@@ -77,6 +79,7 @@ const Navbar = () => {
                         setSelectedUser(null);
                         setSelectedGroup(null);
                         setGroupData(null);
+                        setShowInfo(false);
                         setMessages(null);
                         setGroupMessages(null);
                       }}
@@ -101,6 +104,7 @@ const Navbar = () => {
                         setSelectedGroup(null);
                         setGroupData(null);
                         setMessages(null);
+                        setShowInfo(false);
                         setGroupMessages(null);
                       }}
                     >
@@ -136,6 +140,7 @@ const Navbar = () => {
                   setSelectedGroup(null);
                   setGroupData(null);
                   setMessages(null);
+                  setShowInfo(false);
                   setGroupMessages(null);
                 }}
                 className="btn btn-sm bg-red-500 text-white flex-1 hover:bg-red-600"

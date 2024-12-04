@@ -37,6 +37,13 @@ const GroupInfo = () => {
   } = useGroupConfigStore();
   const group = groupData[0];
 
+  const admin = group.members.reduce((acc, member) => {
+    if (member._id === group.admin) {
+      return member;
+    }
+    return acc;
+  }, null);
+
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
 
   useEffect(() => {
@@ -140,7 +147,7 @@ const GroupInfo = () => {
                     isDeletingGroup ? "loading" : ""
                   }`}
                 >
-                  Delete
+                  {isDeletingGroup ? "" : "Delete"}
                 </button>
                 <button
                   onClick={() => setShowDeleteWarning(false)}
@@ -168,7 +175,7 @@ const GroupInfo = () => {
                     isExitingGroup ? "loading" : ""
                   }`}
                 >
-                  Exit
+                  {isExitingGroup ? "" : "Leave"}
                 </button>
                 <button
                   onClick={() => setShowExitWarning(false)}
@@ -195,6 +202,7 @@ const GroupInfo = () => {
                 alt="Group"
                 className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4"
               />
+
               {authUser.data._id === group.admin && (
                 <label
                   htmlFor="group-image-upload"
@@ -211,6 +219,12 @@ const GroupInfo = () => {
                 </label>
               )}
             </div>
+            {authUser.data._id !== group.admin && (
+              <span className="text-sm">
+                Create by {admin.fullName} at{" "}
+                {new Date(group.createdAt).toISOString().split("T")[0]}
+              </span>
+            )}
 
             {authUser.data._id === group.admin && (
               <p className="text-sm text-center">
@@ -355,19 +369,20 @@ const GroupInfo = () => {
               </div>
             )}
 
-          {authUser.data._id !== group.admin && group.visibility ==="private" && (
-            <div className="flex items-center justify-center">
-              <button
-              className={` btn btn-error btn-sm `}
-              onClick={() => {
-                setShowExitWarning(true);
-              }}
-            >
-              <LogOut />
-              <span className="hidden lg:block">Leave</span>
-            </button>
-            </div>
-          )}
+          {authUser.data._id !== group.admin &&
+            group.visibility === "private" && (
+              <div className="flex items-center justify-center">
+                <button
+                  className={` btn btn-error btn-sm `}
+                  onClick={() => {
+                    setShowExitWarning(true);
+                  }}
+                >
+                  <LogOut />
+                  <span className="hidden lg:block">Leave</span>
+                </button>
+              </div>
+            )}
 
           <div className="border-t-2 border-base-100">
             <h2 className="text-lg font-medium mb-4 mt-8">

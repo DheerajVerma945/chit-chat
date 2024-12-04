@@ -110,7 +110,8 @@ export const useGroupConfigStore = create((set, get) => {
 
     exitGroup: async () => {
       const { groupData } = get();
-      const { setSelectedGroup, setGroups } = useGroupChatStore.getState();
+      const { setSelectedGroup, setGroups, groups } =
+        useGroupChatStore.getState();
       set({ isExitingGroup: true });
       try {
         const res = await axiosInstance.post("/group/exitGroup", {
