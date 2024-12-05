@@ -67,24 +67,23 @@ export const useGroupChatStore = create((set, get) => ({
 
   subscribeToGroupMessages: () => {
     const { selectedGroup } = get();
+    const { authUser } = useAuthStore.getState();
     if (!selectedGroup) return;
 
     const socket = useAuthStore.getState().socket;
 
     socket.on("newGroupMessage", (newGroupMessage) => {
-      if (
-        !selectedGroup.members.some(
-          (member) => member._id === newGroupMessage.senderId._id
-        ) ||
-        newGroupMessage.groupId !== selectedGroup._id
-      )
-        return;
+      if (newGroupMessage.groupId !== selectedGroup._id) return;
 
       set({
         groupMessages: [...get().groupMessages, newGroupMessage],
       });
-      const incomingSound = new Audio(IncomingSound);
-      incomingSound.play();
+      console.log(newGroupMessage);
+      console.log(authUser);
+      if (newGroupMessage.senderId._id !== authUser.data._id) {
+        const incomingSound = new Audio(IncomingSound);
+        incomingSound.play();
+      }
     });
   },
 
