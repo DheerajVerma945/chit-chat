@@ -120,7 +120,7 @@ export const useGroupConfigStore = create((set, get) => {
         setSelectedGroup(null);
         set({ groupData: [] });
         setGroups(res.data.data);
-        toast.success("Exited from group successfully");
+        toast.success("Group left successfully");
       } catch (error) {
         toast.error(error?.response?.data?.message);
       } finally {

@@ -5,8 +5,14 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { X } from "lucide-react";
 
 const SearchUser = () => {
-  const { setShowSearch, searchUser, reviewUserRequest, sendUserRequest,exploreUsers } =
-    useUserStore();
+  const {
+    setShowSearch,
+    searchUser,
+    reviewUserRequest,
+    sendUserRequest,
+    exploreUsers,
+    setExploreUsers,
+  } = useUserStore();
   const { authUser } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState([]);
@@ -17,14 +23,16 @@ const SearchUser = () => {
   const [requestSending, setRequestSending] = useState(false);
 
   const handleConnect = async (id) => {
-    console.log("connect function");
+    const newExploreUsers = exploreUsers.filter((user) => user._id !== id);
+    setExploreUsers(newExploreUsers);
     setRequestSending(true);
     try {
       await sendUserRequest(id);
       toast.success("Request sent successfully");
       setUser([]);
       setUsername("");
-    } catch {
+    } catch (error) {
+      console.log(error);
     } finally {
       setRequestSending(false);
     }
@@ -156,31 +164,35 @@ const SearchUser = () => {
             <p className="text-lg font-semibold mb-2 text-center">
               {user.data.data.fullName}
             </p>
-            <p className="text-sm mb-2 text-center">{user.data.data.username}</p>
+            <p className="text-sm mb-2 text-center">
+              {user.data.data.username}
+            </p>
             {user.data.req ? (
               user.data.req.status === "pending" ? (
                 user.data.req.senderId === authUser.data._id ? (
                   <div className="btn btn-secondary px-6 py-2">Pending</div>
                 ) : user.data.req.receiverId === authUser.data._id ? (
                   <div className="flex flex-col gap-4 mt-2">
-                    <p className="text-sm text-center">{user.data.data.fullName} has already sent you a request</p>
+                    <p className="text-sm text-center">
+                      {user.data.data.fullName} has already sent you a request
+                    </p>
                     <div className="flex items-center justify-between">
-                    <button
-                      className={`btn btn-success px-6 py-2 ${
-                        requestAccepting ? "loading bg-success" : ""
-                      }`}
-                      onClick={() => handleAccept(user.data.req._id)}
-                    >
-                      {requestAccepting ? "" : "Accept"}
-                    </button>
-                    <button
-                      className={`btn btn-error px-6 py-2 ${
-                        requestRejecting ? "loading bg-error" : ""
-                      }`}
-                      onClick={() => handleReject(user.data.req._id)}
-                    >
-                      {requestRejecting ? "" : "Reject"}
-                    </button>
+                      <button
+                        className={`btn btn-success px-6 py-2 ${
+                          requestAccepting ? "loading bg-success" : ""
+                        }`}
+                        onClick={() => handleAccept(user.data.req._id)}
+                      >
+                        {requestAccepting ? "" : "Accept"}
+                      </button>
+                      <button
+                        className={`btn btn-error px-6 py-2 ${
+                          requestRejecting ? "loading bg-error" : ""
+                        }`}
+                        onClick={() => handleReject(user.data.req._id)}
+                      >
+                        {requestRejecting ? "" : "Reject"}
+                      </button>
                     </div>
                   </div>
                 ) : null
@@ -192,7 +204,7 @@ const SearchUser = () => {
                 className={`mt-2 btn btn-primary ${
                   requestSending ? "loading" : ""
                 }`}
-                onClick={() => handleConnect(user.data._id)}
+                onClick={() => handleConnect(user.data.data._id)}
               >
                 {requestSending ? "" : "Connect"}
               </button>

@@ -112,6 +112,10 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
+  setExploreUsers: (data) => {
+    set({ exploreUsers: data });
+  },
+
   fetchExploreUsers: async () => {
     try {
       const res = await axiosInstance.get("/user/request/exploreUsers");

@@ -125,7 +125,7 @@ export const useAuthStore = create((set, get) => ({
   updatePrivacy: async (privacy) => {
     try {
       await axiosInstance.put("/auth/updatePrivacy", { privacy});
-      toast.success("Privacy updated successfull");
+      toast.success("Privacy updated successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
