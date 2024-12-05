@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { useAuthStore } from "./useAuthStore";
+import IncomingSound from "../assets/Incoming.mp3";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
@@ -33,7 +34,7 @@ export const useChatStore = create((set, get) => ({
       set({ isMessagesLoading: false });
     }
   },
-  
+
   setUsers: (data) => {
     set({ users: data });
   },
@@ -52,6 +53,8 @@ export const useChatStore = create((set, get) => ({
       set({
         messages: [...get().messages, newMessage],
       });
+      const incomingSound = new Audio(IncomingSound);
+      incomingSound.play();
     });
   },
 

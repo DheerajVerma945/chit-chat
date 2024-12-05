@@ -3,11 +3,15 @@ import { useChatStore } from "../store/useChatStore";
 import { MessageInput, MessageSkeleton, ChatHeader } from "../components";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
+import Incoming from "../assets/Incoming.mp3"
 import { useGroupChatStore } from "../store/useGroupChatStore.js";
 import GroupInfo from "./GroupInfo.jsx";
 
+
 const ChatContainer = () => {
   const { authUser } = useAuthStore();
+
+  const incomingSound = new Audio(Incoming);
   const messagEndRef = useRef(null);
   const {
     messages,
@@ -42,10 +46,10 @@ const ChatContainer = () => {
   ]);
 
   useEffect(() => {
-    if (messagEndRef.current && messages) {
+    if (messagEndRef.current && (messages || groupMessages)) {
       messagEndRef.current.scrollIntoView({ behaviour: "smooth" });
     }
-  }, [messages]);
+  }, [messages,groupMessages]);
 
   if (isMessagesLoading || isGroupMessagesLoading)
     return (
@@ -130,7 +134,7 @@ const ChatContainer = () => {
                   />
                 </div>
               </div>
-              <div className="chat-header mb-1">
+              <div className="chat-header mb-1 mr-3">
                 <time className="text-xs opacity-50 ml-1">
                   {formatMessageTime(message.createdAt)}
                 </time>
@@ -143,7 +147,7 @@ const ChatContainer = () => {
                 } chat-bubble flex flex-col relative text-base sm:text-sm`}
               >
                 {message.senderId._id !== authUser.data._id && (
-                  <p className="absolute top-[-1.5rem] right-0 text-sm">
+                  <p className="absolute top-[-1.5rem] left-10 text-sm">
                     ~{message.senderId.fullName.split(" ")[0]}
                   </p>
                 )}

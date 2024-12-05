@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
+import SentSound from "../assets/Sent.mp3"
 import { useGroupChatStore } from "../store/useGroupChatStore";
 
 const MessageInput = () => {
@@ -9,27 +10,8 @@ const MessageInput = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const { sendMessage, selectedUser } = useChatStore();
-  const { selectedGroup,sendGroupMessage } = useGroupChatStore();
-  const [sendMessageLoading,setSendMessageLoading] = useState(false);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const removeImage = () => {
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
+  const { selectedGroup, sendGroupMessage } = useGroupChatStore();
+  const [sendMessageLoading, setSendMessageLoading] = useState(false);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -49,16 +31,37 @@ const MessageInput = () => {
           image: imagePreview,
         });
       }
+      const sentSound = new Audio(SentSound)
+
+      sentSound.play();
 
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
       console.error("Failed to send message:", error);
-    }
-    finally{
+    } finally {
       setSendMessageLoading(false);
     }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -111,8 +114,10 @@ const MessageInput = () => {
         </div>
         <button
           type="submit"
-          className = {`btn btn-primary ${
-            sendMessageLoading ? "loading bg-primary" : "size-10 btn-sm btn-circle"
+          className={`btn btn-primary ${
+            sendMessageLoading
+              ? "loading bg-primary"
+              : "size-10 btn-sm btn-circle"
           }`}
           disabled={!text.trim() && !imagePreview}
         >
