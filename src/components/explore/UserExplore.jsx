@@ -34,6 +34,7 @@ const UserExplore = () => {
     setRequestSending(id);
     try {
       await sendUserRequest(id);
+      toast.success("Request sent successfully");
       setUsers((prev) => prev.filter((user) => user._id !== id));
     } catch (error) {
       toast.error(error?.response?.data?.message);

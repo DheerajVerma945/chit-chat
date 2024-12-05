@@ -1,18 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Trash2 } from "lucide-react";
 import { useUserStore } from "../store/useUserStore";
 import toast from "react-hot-toast";
 
 const Connections = () => {
-  const { users } = useChatStore();
+  const { users, setUsers } = useChatStore();
   const { removeConnections } = useUserStore();
-  const handleConnectionRemove = async (id) => {
+  const [removing, setRemoving] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const removeConnection = async (id) => {
+    setRemoving(id);
     try {
       await removeConnections(id);
       toast.success("Connection removed successfully");
+      setUsers(users.filter((user) => user._id !== id));
     } catch (error) {
-        console.log(error);
+      toast.error("Failed to remove connection");
+      console.error(error);
+    } finally {
+      setRemoving(null);
+      setSelectedUserId(null);
     }
   };
 
@@ -43,14 +52,46 @@ const Connections = () => {
             <p className="text-base font-medium">{user.fullName}</p>
           </div>
           <button
-            className="btn btn-error btn-sm flex items-center gap-2"
-            onClick={() => handleConnectionRemove(user._id)}
+            className={`btn btn-error btn-sm flex items-center gap-2 ${
+              removing === user._id ? "loading bg-error" : ""
+            }`}
+            onClick={() => setSelectedUserId(user._id)}
           >
-            <span>Remove</span>
-            <Trash2 />
+            {removing !== user._id && (
+              <>
+                <span>Remove</span>
+                <Trash2 />
+              </>
+            )}
           </button>
         </div>
       ))}
+
+      {selectedUserId && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className=" p-6 rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-bold mb-4">Confirm Removal</h2>
+            <p className="mb-6">
+              Are you sure you want to remove this connection? All chats will
+              also be deleted.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => setSelectedUserId(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-error btn-sm"
+                onClick={() => removeConnection(selectedUserId)}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -16,7 +16,7 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get("/user/request/connections");
       set({ users: res.data.data });
     } catch (error) {
-      set({users:[]});
+      set({ users: [] });
     } finally {
       set({ isUsersLoading: false });
     }
@@ -33,9 +33,13 @@ export const useChatStore = create((set, get) => ({
       set({ isMessagesLoading: false });
     }
   },
+  
+  setUsers: (data) => {
+    set({ users: data });
+  },
 
-  setMessages:(data)=>{
-    set({messages:data})
+  setMessages: (data) => {
+    set({ messages: data });
   },
   subscribeToMessages: () => {
     const { selectedUser } = get();
@@ -44,7 +48,7 @@ export const useChatStore = create((set, get) => ({
     const socket = useAuthStore.getState().socket;
 
     socket.on("newMessage", (newMessage) => {
-      if(newMessage.senderId !== selectedUser._id) return;
+      if (newMessage.senderId !== selectedUser._id) return;
       set({
         messages: [...get().messages, newMessage],
       });
