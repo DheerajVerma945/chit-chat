@@ -1,0 +1,58 @@
+import React from "react";
+import { useChatStore } from "../store/useChatStore";
+import { Trash2 } from "lucide-react";
+import { useUserStore } from "../store/useUserStore";
+import toast from "react-hot-toast";
+
+const Connections = () => {
+  const { users } = useChatStore();
+  const { removeConnections } = useUserStore();
+  const handleConnectionRemove = async (id) => {
+    try {
+      await removeConnections(id);
+      toast.success("Connection removed successfully");
+    } catch (error) {
+        console.log(error);
+    }
+  };
+
+  if (users.length === 0)
+    return (
+      <div className="h-screen flex items-center justify-center text-center">
+        <p className="text-lg">
+          No connections yet. Explore people from the Explore page and make
+          connections.
+        </p>
+      </div>
+    );
+
+  return (
+    <div className="p-4 mt-16">
+      <h1 className="text-xl font-bold m-5">Connections ({users.length})</h1>
+      {users.map((user) => (
+        <div
+          key={user._id}
+          className="flex items-center justify-between w-full bg-base-200 p-4 rounded-lg shadow-md mb-4"
+        >
+          <div className="flex items-center">
+            <img
+              src={user.profilePic}
+              alt={user.fullName}
+              className="w-12 h-12 rounded-full mr-4"
+            />
+            <p className="text-base font-medium">{user.fullName}</p>
+          </div>
+          <button
+            className="btn btn-error btn-sm flex items-center gap-2"
+            onClick={() => handleConnectionRemove(user._id)}
+          >
+            <span>Remove</span>
+            <Trash2 />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Connections;

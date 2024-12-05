@@ -13,5 +13,6 @@ import GroupRequests from "./requests/GroupRequests";
 import UserRequests from "./requests/UserRequests"
 import GroupRequestsAdmin from "./group/GroupRequestsAdmin";
 import AddMembers from "./group/AddMembers";
+import Connections from "./Connections";
 
-export{NoChatSelected,SideBarSkeleton,ChatContainer,AddMembers,SideBar,ChatHeader,MessageInput,MessageSkeleton,GroupExplore,UserExplore,UserSkeleton,GroupSkeleton,CreateGroup,UserRequests,GroupRequests,GroupRequestsAdmin}
+export{NoChatSelected,SideBarSkeleton,Connections,ChatContainer,AddMembers,SideBar,ChatHeader,MessageInput,MessageSkeleton,GroupExplore,UserExplore,UserSkeleton,GroupSkeleton,CreateGroup,UserRequests,GroupRequests,GroupRequestsAdmin}

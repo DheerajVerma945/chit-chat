@@ -32,11 +32,9 @@ export const useUserStore = create((set, get) => ({
   },
 
   removeConnections: async (userId) => {
-    //Handle ui changes in itslef
     try {
-      const res = await axiosInstance.delete("/user/request/remove", {
-        userId,
-      });
+      console.log("userid in store",userId)
+      await axiosInstance.post("/user/request/remove", {userId});
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
@@ -62,7 +60,6 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
-  // /group/request
 
   sendGroupRequestUser: async (groupId) => {
     try {

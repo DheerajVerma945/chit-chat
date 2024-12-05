@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Inbox, User, Users } from "lucide-react";
-import { GroupExplore, UserExplore } from "../components";
+import { Connections, GroupExplore, UserExplore } from "../components";
 import { ChatPage } from "./index";
 import { useGroupChatStore } from "../store/useGroupChatStore";
 
@@ -14,8 +14,9 @@ const HomePage = () => {
         {currentContainer === "users" && <UserExplore />}
         {currentContainer === "groups" && <GroupExplore />}
         {currentContainer === "inbox" && <ChatPage />}
+        {currentContainer === "connections" && <Connections />}
       </div>
-      <div className="fixed bottom-1 inset-x-10 h-12  border-t rounded-t-md bg-base-100 shadow-lg flex ">
+      <div className="fixed bottom-1 inset-x-0 sm:inset-x-20 h-12  border-t rounded-t-md bg-base-100 shadow-lg flex ">
         <button
           className={`flex-1 flex flex-col rounded-md items-center justify-center gap-1   transition duration-300 hover:bg-base-200 ${
             currentContainer === "inbox"
@@ -57,6 +58,20 @@ const HomePage = () => {
         >
           <Users size={20} />
           <span className="text-xs lg:text-sm">Explore Groups</span>
+        </button>
+        <button
+          className={`flex-1 flex flex-col rounded-md items-center justify-center gap-1  transition duration-300 hover:bg-base-200 ${
+            currentContainer === "connections"
+              ? "bg-primary-content text-primary"
+              : ""
+          }`}
+          onClick={() => {
+            setCurrentContainer("connections");
+            setSelectedGroup(null);
+          }}
+        >
+          <Users size={20} />
+          <span className="text-xs lg:text-sm">Connections</span>
         </button>
       </div>
     </div>
