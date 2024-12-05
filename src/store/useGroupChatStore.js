@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
+import { useAuthStore } from "./useAuthStore";
+import IncomingSound from "../assets/Incoming.mp3";
 
 export const useGroupChatStore = create((set, get) => ({
   groups: [],
@@ -20,14 +22,14 @@ export const useGroupChatStore = create((set, get) => ({
       set({ isGroupsLoading: false });
     }
   },
-  setGroupMessages:(data)=>{
-    set({groupMessages:data})
+  setGroupMessages: (data) => {
+    set({ groupMessages: data });
   },
 
   setSelectedGroup: (group) => {
     set({ selectedGroup: group });
   },
-  
+
   setShowInfo: (data) => {
     set({ showInfo: data });
   },
@@ -61,5 +63,33 @@ export const useGroupChatStore = create((set, get) => ({
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send message");
     }
+  },
+
+  subscribeToGroupMessages: () => {
+    const { selectedGroup } = get();
+    if (!selectedGroup) return;
+
+    const socket = useAuthStore.getState().socket;
+
+    socket.on("newGroupMessage", (newGroupMessage) => {
+      if (
+        !selectedGroup.members.some(
+          (member) => member._id === newGroupMessage.senderId._id
+        ) ||
+        newGroupMessage.groupId !== selectedGroup._id
+      )
+        return;
+
+      set({
+        groupMessages: [...get().groupMessages, newGroupMessage],
+      });
+      const incomingSound = new Audio(IncomingSound);
+      incomingSound.play();
+    });
+  },
+
+  unSubscribeToGroupMessages: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.off("newGroupMessage");
   },
 }));

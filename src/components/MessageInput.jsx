@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
-import SentSound from "../assets/Sent.mp3"
+import SentSound from "../assets/Sent.mp3";
 import { useGroupChatStore } from "../store/useGroupChatStore";
 
 const MessageInput = () => {
@@ -31,7 +31,7 @@ const MessageInput = () => {
           image: imagePreview,
         });
       }
-      const sentSound = new Audio(SentSound)
+      const sentSound = new Audio(SentSound);
 
       sentSound.play();
 
