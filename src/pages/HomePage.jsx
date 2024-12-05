@@ -3,9 +3,11 @@ import { Inbox, User, Users } from "lucide-react";
 import { Connections, GroupExplore, UserExplore } from "../components";
 import { ChatPage } from "./index";
 import { useGroupChatStore } from "../store/useGroupChatStore";
+import { useChatStore } from "../store/useChatStore";
 
 const HomePage = () => {
   const [currentContainer, setCurrentContainer] = useState("inbox");
+  const {setSelectedUser} = useChatStore()
   const { setSelectedGroup } = useGroupChatStore();
 
   return (
@@ -68,6 +70,7 @@ const HomePage = () => {
           onClick={() => {
             setCurrentContainer("connections");
             setSelectedGroup(null);
+            setSelectedUser(null);
           }}
         >
           <Users size={20} />
