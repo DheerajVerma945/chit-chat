@@ -34,6 +34,16 @@ const Sidebar = () => {
     setUnreadGroupCount,
   } = useGroupChatStore();
 
+  const filterUnreadCount = (id) => {
+    const newCount = unreadCount.filter((count) => count.userId !== id);
+    setUnreadCount(newCount);
+  };
+
+  const filterUnreadGroupCount = (id) => {
+    const newCount = unreadGroupCount.filter((count) => count.groupId !== id);
+    setUnreadGroupCount(newCount);
+  };
+
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -81,7 +91,7 @@ const Sidebar = () => {
         <div className="border-b border-base-300 w-full p-5">
           <div className="flex items-center justify-between  gap-2  md:gap-2">
             <button
-              className={`flex items-center gap-2 p-2 rounded-md ${
+              className={`flex relative items-center gap-2 p-2 rounded-md ${
                 showContacts ? "btn" : ""
               }`}
               onClick={() => {
@@ -94,9 +104,13 @@ const Sidebar = () => {
             >
               <User className="size-6" />
               <span className="font-medium hidden pb- lg:block">Contacts</span>
+              {showGroups && unreadCount.length > 0 && (
+                <span className="absolute -top-2 right-1 w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+              )}
             </button>
+
             <button
-              className={`flex items-center mr-2 gap-2 p-2 rounded-md ${
+              className={`flex relative items-center mr-2 gap-2 p-2 rounded-md ${
                 showGroups ? "btn" : ""
               }`}
               onClick={() => {
@@ -108,6 +122,9 @@ const Sidebar = () => {
             >
               <Users className="size-6" />
               <span className="font-medium hidden lg:block">Groups</span>
+              {showContacts && unreadGroupCount.length > 0 && (
+                <span className="absolute -top-2 right-1 w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+              )}
             </button>
           </div>
         </div>
@@ -147,10 +164,7 @@ const Sidebar = () => {
                         key={user._id}
                         onClick={() => {
                           setSelectedUser(user);
-                          setUnreadCount([
-                            ...unreadCount,
-                            { userId: user._id, count: 0 },
-                          ]);
+                          filterUnreadCount(user._id);
                           setSelectedGroup(null);
                           setGroupMessages([]);
                           setShowGroups(false);
@@ -204,10 +218,7 @@ const Sidebar = () => {
                         key={user._id}
                         onClick={() => {
                           setSelectedUser(user);
-                          setUnreadCount([
-                            ...unreadCount,
-                            { userId: user._id, count: 0 },
-                          ]);
+                          filterUnreadCount(user._id);
                           setSelectedGroup(null);
                           setGroupMessages([]);
                           setShowGroups(false);
@@ -273,7 +284,7 @@ const Sidebar = () => {
               >
                 <Plus />
                 <span className="hidden lg:block">Create new group</span>
-                <span className="block lg:hidden">Group</span>
+                <span className="block lg:hidden">Create</span>
               </button>
             </div>
             <div className="overflow-y-auto w-full py-3 border-t border-base-300">
@@ -281,10 +292,7 @@ const Sidebar = () => {
                 <button
                   key={group._id}
                   onClick={() => {
-                    setUnreadGroupCount([
-                      ...unreadGroupCount,
-                      { groupId: group._id, count: 0 },
-                    ]);
+                    filterUnreadGroupCount(group._id);
                     setSelectedGroup(group);
                     setConnectionsForGroup([]);
                     setMessages([]);

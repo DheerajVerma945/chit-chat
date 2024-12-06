@@ -37,14 +37,14 @@ export const useGroupChatStore = create((set, get) => ({
         }
       }
 
-      set({ uneradGroupCount: unreadCounts });
+      set({ unreadGroupCount: unreadCounts });
     } catch (error) {
       console.error("Error fetching unread group counts:", error);
     }
   },
 
   setUnreadGroupCount: (data) => {
-    set({ uneradGroupCount: data });
+    set({ unreadGroupCount: data });
   },
 
   setGroupMessages: (data) => {

@@ -92,6 +92,15 @@ export const useChatStore = create((set, get) => ({
         incomingSound.play();
       }
     });
+    socket.on("messageRead", ({ messageIds }) => {
+      console.log(messageIds);
+      const updatedMessages = get().messages.map((message) =>
+        messageIds.includes(message._id)
+          ? { ...message, isRead: true }
+          : message
+      );
+      set({ messages: updatedMessages });
+    });
   },
 
   unSubscribeToMessages: () => {
