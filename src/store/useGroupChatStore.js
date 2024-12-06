@@ -108,6 +108,12 @@ export const useGroupChatStore = create((set, get) => ({
 
         set({ unreadGroupCount: [...unreadGroupCount] });
       } else {
+        if (newGroupMessage.senderId._id !== authUser.data._id) {
+          socket.emit("updateLastGroupMessageIsRead", {
+            userId: authUser.data._id,
+            messageId: newGroupMessage._id,
+          });
+        }
         set({
           groupMessages: [...get().groupMessages, newGroupMessage],
         });

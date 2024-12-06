@@ -3,7 +3,6 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { useAuthStore } from "./useAuthStore";
 import IncomingSound from "../assets/Incoming.mp3";
-import { io } from "socket.io-client";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
@@ -85,7 +84,10 @@ export const useChatStore = create((set, get) => ({
 
         set({ unreadCount: [...unreadCount] });
       } else {
-        socket.emit("updateLastMessageIsRead", { userId: selectedUser._id ,messageId:newMessage._id});
+        socket.emit("updateLastMessageIsRead", {
+          userId: selectedUser._id,
+          messageId: newMessage._id,
+        });
         set({
           messages: [...get().messages, newMessage],
         });
