@@ -92,7 +92,7 @@ const GroupExplore = () => {
                   }`}
                   onClick={() => handleGroupRequest(group._id)}
                 >
-                  {requestSending === group._id ? "Requesting..." : "Request"}
+                  {requestSending === group._id ? "" : "Request"}
                 </button>
               </div>
             ) : (
@@ -104,7 +104,7 @@ const GroupExplore = () => {
                   }`}
                   onClick={() => handleJoinGroup(group._id)}
                 >
-                  {isJoiningGroup === group._id ? "Joining..." : "Join Group"}
+                  {isJoiningGroup === group._id ? "" : "Join Group"}
                 </button>
               </div>
             )}

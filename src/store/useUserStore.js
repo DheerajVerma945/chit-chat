@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import { useAuthStore } from "../store/useAuthStore";
+import { useChatStore } from "./useChatStore";
 
 export const useUserStore = create((set, get) => ({
   isConnectionsLoading: false,
@@ -33,8 +35,7 @@ export const useUserStore = create((set, get) => ({
 
   removeConnections: async (userId) => {
     try {
-      console.log("userid in store",userId)
-      await axiosInstance.post("/user/request/remove", {userId});
+      await axiosInstance.post("/user/request/remove", { userId });
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
@@ -59,7 +60,6 @@ export const useUserStore = create((set, get) => ({
       set({ isUserRequestsLoading: false });
     }
   },
-
 
   sendGroupRequestUser: async (groupId) => {
     try {
@@ -121,6 +121,41 @@ export const useUserStore = create((set, get) => ({
       set({ exploreUsers: [] });
     }
   },
+
+  subscribeToUserRequests: () => {
+    const { socket } = useAuthStore.getState();
+
+    socket.on("newUserRequest", (data) => {
+      const { userRequests } = get();
+      set({ userRequests: [...userRequests, data] });
+    });
+
+    socket.on("newConnection", (data) => {
+      const { users, setUsers } = useChatStore.getState();
+      const userExists = users.some((user) => user.id === data.id);
+      if (!userExists) {
+        setUsers([...users, data]);
+      }
+    });
+
+    socket.on("removedConnection", (userId) => {
+      console.log(userId);
+      const { users, setUsers } = useChatStore.getState();
+      console.log(users);
+      const newConnections = users.filter((user) => user._id !== userId);
+      console.log(newConnections);
+      setUsers(newConnections);
+    });
+  },
+
+  unsubscribeToUserRequests: () => {
+    const { socket } = useAuthStore.getState();
+    socket.off("newUserRequest");
+  },
+
+  subscribeToGroupRequests: () => {},
+
+  unsubscribeToGroupRequests: () => {},
 
   searchUser: async (username) => {
     try {

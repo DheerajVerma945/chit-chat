@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 import Logo from "../../public/Logo.png";
@@ -11,12 +11,24 @@ import { useGroupConfigStore } from "../store/useGroupConfigStore";
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
   const [showLogoutMsg, setShowLogoutMsg] = useState(false);
-  const { userRequests, groupRequestsUser } = useUserStore();
+  const {
+    userRequests,
+    groupRequestsUser,
+    subscribeToUserRequests,
+    unsubscribeToUserRequests,
+  } = useUserStore();
   const totalRequests = userRequests.length + groupRequestsUser.length;
   const { setGroupMessages, setSelectedGroup, setShowInfo } =
     useGroupChatStore();
   const { setGroupData } = useGroupConfigStore();
   const { setSelectedUser, setMessages } = useChatStore();
+
+  useEffect(() => {
+    subscribeToUserRequests();
+    return () => {
+      unsubscribeToUserRequests();
+    };
+  });
 
   return (
     <>

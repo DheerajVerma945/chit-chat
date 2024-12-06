@@ -101,7 +101,7 @@ const UserExplore = () => {
                 }`}
                 onClick={() => handleConnectionRequest(user._id)}
               >
-                {requestSending === user._id ? "Requesting..." : "Connect"}
+                {requestSending === user._id ? "" : "Connect"}
               </button>
             </div>
           </div>
