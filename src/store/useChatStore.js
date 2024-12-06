@@ -24,19 +24,25 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  getUnreadCount: (users) => {
+  getUnreadCount: async (users) => {
     try {
-      const unreadCount = [];
-      users.forEach(async (user) => {
+      const unreadCounts = [];
+
+      for (const user of users) {
         const res = await axiosInstance.get(`messages/unread/${user._id}`);
         if (res.data.data > 0) {
-          unreadCount[user._id] = res.data.data;
-          set({ unreadCount });
+          unreadCounts.push({ userId: user._id, count: res.data.data });
         }
-      });
+      }
+
+      set({ unreadCount: unreadCounts });
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching unread counts:", error);
     }
+  },
+
+  setUnreadCount: (data) => {
+    set({ unreadCount: data });
   },
 
   getMessages: async (userId) => {
@@ -60,18 +66,31 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
-
     const socket = useAuthStore.getState().socket;
 
     socket.on("newMessage", (newMessage) => {
-      if (newMessage.senderId !== selectedUser._id) return;
-      set({
-        messages: [...get().messages, newMessage],
-      });
-      const incomingSound = new Audio(IncomingSound);
-      incomingSound.play();
+      const { selectedUser, unreadCount } = get();
+
+      if (newMessage.senderId !== selectedUser?._id) {
+        const existingCount = unreadCount.find(
+          (count) => count.userId === newMessage.senderId
+        );
+
+        if (existingCount) {
+          existingCount.count += 1;
+        } else {
+          unreadCount.push({ userId: newMessage.senderId, count: 1 });
+        }
+
+        set({ unreadCount: [...unreadCount] });
+      } else {
+        set({
+          messages: [...get().messages, newMessage],
+        });
+
+        const incomingSound = new Audio(IncomingSound);
+        incomingSound.play();
+      }
     });
   },
 

@@ -5,20 +5,14 @@ import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 import { useGroupChatStore } from "../store/useGroupChatStore.js";
 import GroupInfo from "./GroupInfo.jsx";
-import { Check, CheckCircle } from "lucide-react";
+import { Check } from "lucide-react";
 
 const ChatContainer = () => {
   const { authUser } = useAuthStore();
 
   const messagEndRef = useRef(null);
-  const {
-    messages,
-    getMessages,
-    isMessagesLoading,
-    selectedUser,
-    subscribeToMessages,
-    unSubscribeToMessages,
-  } = useChatStore();
+  const { messages, getMessages, isMessagesLoading, selectedUser } =
+    useChatStore();
 
   const {
     groupMessages,
@@ -26,39 +20,20 @@ const ChatContainer = () => {
     isGroupMessagesLoading,
     selectedGroup,
     showInfo,
-    subscribeToGroupMessages,
-    unSubscribeToGroupMessages,
   } = useGroupChatStore();
 
   useEffect(() => {
     if (selectedUser) getMessages(selectedUser._id);
     if (selectedGroup) getGroupMessages(selectedGroup._id);
 
-    if (selectedUser) subscribeToMessages();
-    if (selectedGroup) subscribeToGroupMessages();
-
-    return () => {
-      if (selectedUser) unSubscribeToMessages();
-      if (selectedGroup) unSubscribeToGroupMessages();
-    };
-  }, [
-    selectedUser?._id,
-    selectedGroup?._id,
-    getMessages,
-    getGroupMessages,
-    subscribeToMessages,
-    subscribeToGroupMessages,
-    unSubscribeToMessages,
-    unSubscribeToGroupMessages,
-  ]);
+    return () => {};
+  }, [selectedUser?._id, selectedGroup?._id, getMessages, getGroupMessages]);
 
   useEffect(() => {
     if (messagEndRef.current && (messages || groupMessages)) {
       messagEndRef.current.scrollIntoView({ behaviour: "smooth" });
     }
   }, [messages, groupMessages]);
-
-  console.log(messages);
 
   if (isMessagesLoading || isGroupMessagesLoading)
     return (

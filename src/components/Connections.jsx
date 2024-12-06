@@ -47,7 +47,7 @@ const Connections = () => {
             <img
               src={user.profilePic}
               alt={user.fullName}
-              className="w-12 h-12 rounded-full mr-4"
+              className="w-12 h-12 rounded-full object-cover mr-4"
             />
             <p className="text-base font-medium">{user.fullName}</p>
           </div>

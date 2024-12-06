@@ -6,6 +6,7 @@ import IncomingSound from "../assets/Incoming.mp3";
 export const useGroupChatStore = create((set, get) => ({
   groups: [],
   groupMessages: [],
+  unreadGroupCount: [],
   selectedGroup: null,
   isGroupsLoading: false,
   isGroupMessagesLoading: false,
@@ -22,6 +23,30 @@ export const useGroupChatStore = create((set, get) => ({
       set({ isGroupsLoading: false });
     }
   },
+
+  getUnreadGroupCount: async (groups) => {
+    try {
+      const unreadCounts = [];
+
+      for (const group of groups) {
+        const res = await axiosInstance.get(
+          `/group/messages/unread/${group._id}`
+        );
+        if (res.data.data > 0) {
+          unreadCounts.push({ groupId: group._id, count: res.data.data });
+        }
+      }
+
+      set({ uneradGroupCount: unreadCounts });
+    } catch (error) {
+      console.error("Error fetching unread group counts:", error);
+    }
+  },
+
+  setUnreadGroupCount: (data) => {
+    set({ uneradGroupCount: data });
+  },
+
   setGroupMessages: (data) => {
     set({ groupMessages: data });
   },
@@ -66,23 +91,30 @@ export const useGroupChatStore = create((set, get) => ({
   },
 
   subscribeToGroupMessages: () => {
-    const { selectedGroup } = get();
     const { authUser } = useAuthStore.getState();
-    if (!selectedGroup) return;
-
     const socket = useAuthStore.getState().socket;
 
     socket.on("newGroupMessage", (newGroupMessage) => {
-      if (newGroupMessage.groupId !== selectedGroup._id) return;
+      const { unreadGroupCount, selectedGroup } = get();
+      if (newGroupMessage.groupId !== selectedGroup?._id) {
+        const existingCount = unreadGroupCount.find(
+          (count) => count.groupId === newGroupMessage.groupId
+        );
+        if (existingCount) {
+          existingCount.count += 1;
+        } else {
+          unreadGroupCount.push({ groupId: newGroupMessage.groupId, count: 1 });
+        }
 
-      set({
-        groupMessages: [...get().groupMessages, newGroupMessage],
-      });
-      console.log(newGroupMessage);
-      console.log(authUser);
-      if (newGroupMessage.senderId._id !== authUser.data._id) {
-        const incomingSound = new Audio(IncomingSound);
-        incomingSound.play();
+        set({ unreadGroupCount: [...unreadGroupCount] });
+      } else {
+        set({
+          groupMessages: [...get().groupMessages, newGroupMessage],
+        });
+        if (newGroupMessage.senderId._id !== authUser.data._id) {
+          const incomingSound = new Audio(IncomingSound);
+          incomingSound.play();
+        }
       }
     });
   },

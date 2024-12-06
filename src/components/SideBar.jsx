@@ -17,6 +17,7 @@ const Sidebar = () => {
     isUsersLoading,
     getUnreadCount,
     unreadCount,
+    setUnreadCount,
   } = useChatStore();
 
   const { setGroupData, setConnectionsForGroup } = useGroupConfigStore();
@@ -28,6 +29,9 @@ const Sidebar = () => {
     isGroupsLoading,
     setShowInfo,
     setGroupMessages,
+    getUnreadGroupCount,
+    unreadGroupCount,
+    setUnreadGroupCount,
   } = useGroupChatStore();
 
   const { onlineUsers } = useAuthStore();
@@ -39,13 +43,19 @@ const Sidebar = () => {
   useEffect(() => {
     getUsers();
     getGroups();
-  }, [getUsers]);
+  }, []);
 
   useEffect(() => {
     if (users.length > 0) {
       getUnreadCount(users);
     }
   }, [users]);
+
+  useEffect(() => {
+    if (groups.length > 0) {
+      getUnreadGroupCount(groups);
+    }
+  }, [groups]);
 
   if (isUsersLoading || isGroupsLoading) return <SideBarSkeleton />;
 
@@ -137,20 +147,20 @@ const Sidebar = () => {
                         key={user._id}
                         onClick={() => {
                           setSelectedUser(user);
+                          setUnreadCount([
+                            ...unreadCount,
+                            { userId: user._id, count: 0 },
+                          ]);
                           setSelectedGroup(null);
                           setGroupMessages([]);
                           setShowGroups(false);
                           setShowInfo(false);
                         }}
-                        className={`
-              w-full p-3 flex items-center gap-3
-              hover:bg-base-300 transition-colors
-              ${
-                selectedUser?._id === user._id
-                  ? "bg-base-300 ring-1 ring-base-300"
-                  : ""
-              }
-            `}
+                        className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
+                          selectedUser?._id === user._id
+                            ? "bg-base-300 ring-1 ring-base-300"
+                            : ""
+                        }`}
                       >
                         <div className="relative mx-auto lg:mx-0">
                           <img
@@ -159,10 +169,18 @@ const Sidebar = () => {
                             className="size-12 object-cover rounded-full"
                           />
                           {onlineUsers.includes(user._id) && (
-                            <span
-                              className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
-                            />
+                            <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
+                          )}
+                          {unreadCount.find(
+                            (count) => count.userId === user._id
+                          )?.count && (
+                            <span className="absolute -top-2 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
+                              {
+                                unreadCount.find(
+                                  (count) => count.userId === user._id
+                                ).count
+                              }
+                            </span>
                           )}
                         </div>
                         <div className="hidden lg:block text-left min-w-0">
@@ -186,20 +204,20 @@ const Sidebar = () => {
                         key={user._id}
                         onClick={() => {
                           setSelectedUser(user);
+                          setUnreadCount([
+                            ...unreadCount,
+                            { userId: user._id, count: 0 },
+                          ]);
                           setSelectedGroup(null);
                           setGroupMessages([]);
                           setShowGroups(false);
                           setShowInfo(false);
                         }}
-                        className={`
-              w-full p-3 flex items-center gap-3
-              hover:bg-base-300 transition-colors
-              ${
-                selectedUser?._id === user._id
-                  ? "bg-base-300 ring-1 ring-base-300"
-                  : ""
-              }
-            `}
+                        className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
+                          selectedUser?._id === user._id
+                            ? "bg-base-300 ring-1 ring-base-300"
+                            : ""
+                        }`}
                       >
                         <div className="relative mx-auto lg:mx-0">
                           <img
@@ -208,10 +226,18 @@ const Sidebar = () => {
                             className="size-12 object-cover rounded-full"
                           />
                           {onlineUsers.includes(user._id) && (
-                            <span
-                              className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
-                            />
+                            <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
+                          )}
+                          {unreadCount.find(
+                            (count) => count.userId === user._id
+                          )?.count && (
+                            <span className="absolute -top-2 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
+                              {
+                                unreadCount.find(
+                                  (count) => count.userId === user._id
+                                ).count
+                              }
+                            </span>
                           )}
                         </div>
                         <div className="hidden lg:block text-left min-w-0">
@@ -237,6 +263,7 @@ const Sidebar = () => {
             )}
           </>
         )}
+
         {showGroups && (
           <>
             <div className="mt-2 flex items-center justify-center mb-2">
@@ -254,21 +281,21 @@ const Sidebar = () => {
                 <button
                   key={group._id}
                   onClick={() => {
+                    setUnreadGroupCount([
+                      ...unreadGroupCount,
+                      { groupId: group._id, count: 0 },
+                    ]);
                     setSelectedGroup(group);
                     setConnectionsForGroup([]);
                     setMessages([]);
                     setGroupData([group]);
                     setShowInfo(false);
                   }}
-                  className={`
-              w-full p-3 flex items-center gap-3
-              hover:bg-base-300 transition-colors
-              ${
-                selectedGroup?._id === group._id
-                  ? "bg-base-300 ring-1 ring-base-300"
-                  : ""
-              }
-            `}
+                  className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
+                    selectedGroup?._id === group._id
+                      ? "bg-base-300 ring-1 ring-base-300"
+                      : ""
+                  }`}
                 >
                   <div className="relative mx-auto lg:mx-0">
                     <img
@@ -276,9 +303,23 @@ const Sidebar = () => {
                       alt={group.name}
                       className="size-12 object-cover rounded-full"
                     />
+                    {unreadGroupCount.find(
+                      (count) => count.groupId === group._id
+                    )?.count && (
+                      <span className="absolute -top-2 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
+                        {
+                          unreadGroupCount.find(
+                            (count) => count.groupId === group._id
+                          ).count
+                        }
+                      </span>
+                    )}
                   </div>
                   <div className="hidden lg:block text-left min-w-0">
                     <div className="font-medium truncate">{group.name}</div>
+                    <div className="text-sm text-zinc-400">
+                      {group.members?.length} members
+                    </div>
                   </div>
                 </button>
               ))}
