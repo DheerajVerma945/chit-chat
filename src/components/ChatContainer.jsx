@@ -5,6 +5,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 import { useGroupChatStore } from "../store/useGroupChatStore.js";
 import GroupInfo from "./GroupInfo.jsx";
+import { Check, CheckCircle } from "lucide-react";
 
 const ChatContainer = () => {
   const { authUser } = useAuthStore();
@@ -57,6 +58,8 @@ const ChatContainer = () => {
     }
   }, [messages, groupMessages]);
 
+  console.log(messages);
+
   if (isMessagesLoading || isGroupMessagesLoading)
     return (
       <div className="flex-1 flex flex-col overflow-auto  scrollbar-hidden">
@@ -105,7 +108,7 @@ const ChatContainer = () => {
                     message.senderId === authUser.data._id
                       ? "bg-primary text-primary-content"
                       : "bg-base-200 text-base-content"
-                  } chat-bubble flex flex-col text-base sm:text-sm`}
+                  } chat-bubble relative flex flex-col text-base sm:text-sm`}
                 >
                   {message.image && (
                     <img
@@ -115,6 +118,19 @@ const ChatContainer = () => {
                     />
                   )}
                   {message.text && <p>{message.text}</p>}
+
+                  {message.senderId === authUser.data._id && (
+                    <div className="absolute -bottom-1 -right-1 flex flex-col items-center text-secondary-content">
+                      {message.isRead ? (
+                        <>
+                          <Check className="text-xs scale-50 sm:scale-75 -mb-3" />
+                          <Check className="text-xs scale-50 sm:scale-75 -mt-2" />
+                        </>
+                      ) : (
+                        <Check className="text-xs scale-50 sm:scale-75" />
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

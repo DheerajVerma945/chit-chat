@@ -7,6 +7,7 @@ import IncomingSound from "../assets/Incoming.mp3";
 export const useChatStore = create((set, get) => ({
   messages: [],
   users: [],
+  unreadCount: [],
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
@@ -20,6 +21,21 @@ export const useChatStore = create((set, get) => ({
       set({ users: [] });
     } finally {
       set({ isUsersLoading: false });
+    }
+  },
+
+  getUnreadCount: (users) => {
+    try {
+      const unreadCount = [];
+      users.forEach(async (user) => {
+        const res = await axiosInstance.get(`messages/unread/${user._id}`);
+        if (res.data.data > 0) {
+          unreadCount[user._id] = res.data.data;
+          set({ unreadCount });
+        }
+      });
+    } catch (error) {
+      console.log(error);
     }
   },
 
@@ -42,6 +58,7 @@ export const useChatStore = create((set, get) => ({
   setMessages: (data) => {
     set({ messages: data });
   },
+
   subscribeToMessages: () => {
     const { selectedUser } = get();
     if (!selectedUser) return;

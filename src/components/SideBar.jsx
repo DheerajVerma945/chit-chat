@@ -15,6 +15,8 @@ const Sidebar = () => {
     setMessages,
     setSelectedUser,
     isUsersLoading,
+    getUnreadCount,
+    unreadCount,
   } = useChatStore();
 
   const { setGroupData, setConnectionsForGroup } = useGroupConfigStore();
@@ -28,7 +30,6 @@ const Sidebar = () => {
     setGroupMessages,
   } = useGroupChatStore();
 
-
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -39,6 +40,12 @@ const Sidebar = () => {
     getUsers();
     getGroups();
   }, [getUsers]);
+
+  useEffect(() => {
+    if (users.length > 0) {
+      getUnreadCount(users);
+    }
+  }, [users]);
 
   if (isUsersLoading || isGroupsLoading) return <SideBarSkeleton />;
 
