@@ -13,6 +13,7 @@ import {
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
 import { AddMembers, GroupRequestsAdmin } from "../components";
 import { groupRequestAdminStore } from "../store/useGroupRequestAdminStore";
+import { useGroupChatStore } from "../store/useGroupChatStore";
 
 const GroupInfo = () => {
   const {
@@ -35,6 +36,8 @@ const GroupInfo = () => {
     isDeletingGroup,
     isExitingGroup,
   } = useGroupConfigStore();
+
+  const {groups} = useGroupChatStore();
   const group = groupData[0];
 
   const admin = group.members.reduce((acc, member) => {
@@ -49,7 +52,7 @@ const GroupInfo = () => {
   useEffect(() => {
     setGroupData(groupData);
     getGroupRequestsAdmin();
-  }, [groupData, setGroupData]);
+  }, [groupData,groups, setGroupData]);
 
   const { authUser } = useAuthStore();
 

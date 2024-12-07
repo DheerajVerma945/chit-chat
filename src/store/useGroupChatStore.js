@@ -142,10 +142,58 @@ export const useGroupChatStore = create((set, get) => ({
       }
     });
 
-    socket.on("newMember",(member)=>{
-      const {groups,setGroups} = get();
-      
-    })
+    socket.on("newMember", ({ groupId, user }) => {
+      const { groups, setGroups, selectedGroup } = get();
+      if (selectedGroup._id === groupId) {
+        const isPresent = selectedGroup.members.some(
+          (member) => member._id === user._id
+        );
+        if (!isPresent) {
+          selectedGroup.members.push(user);
+        }
+      }
+      const updatedGroups = groups.map((group) =>
+        group._id === groupId
+          ? {
+              ...group,
+              members: group.members.some((member) => member._id === user._id)
+                ? group.members
+                : [...group.members, user],
+            }
+          : group
+      );
+
+      setGroups(updatedGroups);
+    });
+
+    socket.on("updatedMembers", ({ groupId, userId }) => {
+      const { groups, setGroups, selectedGroup } = get();
+      if (selectedGroup._id === groupId) {
+        selectedGroup.members = selectedGroup.members.filter(
+          (member) => member._id !== userId
+        );
+      }
+      const updatedGroups = groups.map((group) =>
+        group._id === groupId
+          ? {
+              ...group,
+              members: group.members.filter((member) => member._id !== userId),
+            }
+          : group
+      );
+      setGroups(updatedGroups);
+    });
+
+    socket.on("updatedGroupData", ({ groupId, group }) => {
+      const { groups, setGroups, selectedGroup } = get();
+      if (selectedGroup._id === groupId) {
+        selectedGroup.name = group.name;
+        selectedGroup.description = group.description;
+        selectedGroup.photo = group.photo;
+      }
+      const updatedGroups = groups.map((g) => (g._id === groupId ? group : g));
+      setGroups(updatedGroups);
+    });
   },
 
   unSubscribeToGroupMessages: () => {
@@ -153,5 +201,8 @@ export const useGroupChatStore = create((set, get) => ({
     socket.off("newGroupMessage");
     socket.off("removedGroup");
     socket.off("newGroup");
+    socket.off("newMember");
+    socket.off("updatedMembers");
+    socket.off("updatedGroupData");
   },
 }));
