@@ -7,5 +7,6 @@ import ForgotPass from "./ForgotPass";
 import ResetVerification from "./ResetVerification";
 import ChatPage from "./ChatPage";
 import Requests from "./Requests";
+import Error from "./Error"
 
-export {HomePage,SignUpPage,Settings,LoginPage,ProfilePage,ForgotPass,ResetVerification,ChatPage,Requests}
+export {HomePage,SignUpPage,Settings,LoginPage,ProfilePage,ForgotPass,ResetVerification,ChatPage,Requests,Error}

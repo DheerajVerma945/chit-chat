@@ -9,8 +9,8 @@ import {
   ForgotPass,
   ResetVerification,
   Requests,
-  ChatPage,
   HomePage,
+  Error,
 } from "./pages/index";
 import { useAuthStore } from "./store/useAuthStore";
 import { Loader } from "lucide-react";
@@ -85,6 +85,7 @@ const App = () => {
           path="/profile"
           element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
         />
+        <Route path="*" element={<Error />} />
       </Routes>
       <Toaster />
     </div>
