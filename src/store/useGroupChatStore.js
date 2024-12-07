@@ -141,6 +141,11 @@ export const useGroupChatStore = create((set, get) => ({
         setGroups(groups);
       }
     });
+
+    socket.on("newMember",(member)=>{
+      const {groups,setGroups} = get();
+      
+    })
   },
 
   unSubscribeToGroupMessages: () => {
