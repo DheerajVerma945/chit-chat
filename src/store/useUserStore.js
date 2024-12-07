@@ -139,18 +139,24 @@ export const useUserStore = create((set, get) => ({
     });
 
     socket.on("removedConnection", (userId) => {
-      console.log(userId);
-      const { users, setUsers } = useChatStore.getState();
-      console.log(users);
+      const { users, setUsers, setSelectedUser } = useChatStore.getState();
       const newConnections = users.filter((user) => user._id !== userId);
-      console.log(newConnections);
       setUsers(newConnections);
+      setSelectedUser(null);
+    });
+
+    socket.on("newGroupRequest", (newRequest) => {
+      const { groupRequestsUser } = get();
+      set({ groupRequestsUser: [...groupRequestsUser, newRequest] });
     });
   },
 
   unsubscribeToUserRequests: () => {
     const { socket } = useAuthStore.getState();
     socket.off("newUserRequest");
+    socket.off("newConnection");
+    socket.off("removedConnection");
+    socket.off("newGroupRequest");
   },
 
   subscribeToGroupRequests: () => {},

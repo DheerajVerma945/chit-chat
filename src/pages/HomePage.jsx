@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Inbox, User, Users } from "lucide-react";
+import { Inbox, User, UserRoundCheckIcon, Users } from "lucide-react";
 import { Connections, GroupExplore, UserExplore } from "../components";
 import { ChatPage } from "./index";
 import { useGroupChatStore } from "../store/useGroupChatStore";
@@ -73,7 +73,7 @@ const HomePage = () => {
             setSelectedUser(null);
           }}
         >
-          <Users size={20} />
+          <UserRoundCheckIcon size={20} />
           <span className="text-xs lg:text-sm">Connections</span>
         </button>
       </div>

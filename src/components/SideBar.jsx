@@ -138,7 +138,7 @@ const Sidebar = () => {
                   to="/"
                   className="text-blue-500 hover:underline font-medium text-lg lg:text-base"
                 >
-                  Explore connections
+                  Explore People
                 </Link>
               </div>
             ) : (

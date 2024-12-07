@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { useAuthStore } from "./useAuthStore";
 import IncomingSound from "../assets/Incoming.mp3";
+import toast from "react-hot-toast";
 
 export const useGroupChatStore = create((set, get) => ({
   groups: [],
@@ -123,10 +124,29 @@ export const useGroupChatStore = create((set, get) => ({
         }
       }
     });
+
+    socket.on("removedGroup", (groupId) => {
+      const { groups, setGroups, setSelectedGroup, setShowInfo } = get();
+      const newGroups = groups.filter((group) => group._id !== groupId);
+      setGroups(newGroups);
+      setSelectedGroup(null);
+      setShowInfo(false);
+    });
+
+    socket.on("newGroup", (group) => {
+      const { setGroups, groups } = get();
+      const isGroupExists = groups.some((g) => g._id === group._id);
+      if (!isGroupExists) {
+        groups.push(group);
+        setGroups(groups);
+      }
+    });
   },
 
   unSubscribeToGroupMessages: () => {
     const socket = useAuthStore.getState().socket;
     socket.off("newGroupMessage");
+    socket.off("removedGroup");
+    socket.off("newGroup");
   },
 }));

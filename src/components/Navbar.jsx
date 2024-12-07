@@ -24,9 +24,9 @@ const Navbar = () => {
   const { setSelectedUser, setMessages } = useChatStore();
 
   useEffect(() => {
-    subscribeToUserRequests();
+    if (authUser) subscribeToUserRequests();
     return () => {
-      unsubscribeToUserRequests();
+      if (authUser) unsubscribeToUserRequests();
     };
   });
 
