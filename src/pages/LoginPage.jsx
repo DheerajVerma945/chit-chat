@@ -87,9 +87,9 @@ const LoginPage = () => {
                     onClick={() => setShowPass(!showPass)}
                   >
                     {showPass ? (
-                      <EyeOff className="size-5 text-base-content/40" />
-                    ) : (
                       <Eye className="size-5 text-base-content/40" />
+                    ) : (
+                      <EyeOff className="size-5 text-base-content/40" />
                     )}
                   </button>
                 </div>

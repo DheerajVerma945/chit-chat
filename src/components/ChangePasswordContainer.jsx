@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const ChangePasswordContainer = () => {
   const { isUpdatingPassword, updatePassword } = useAuthStore();
-  const [showContainer,setShowContainer] = useState(true);
+  const [showContainer, setShowContainer] = useState(true);
   const [formData, setFormData] = useState({
     currPass: "",
     newPass: "",
@@ -26,14 +26,14 @@ const ChangePasswordContainer = () => {
       currPass: formData.currPass,
       newPass: formData.newPass,
     });
-    console.log("Password",res);
-    if(res.status === 200){
+    console.log("Password", res);
+    if (res.status === 200) {
       setShowContainer(false);
       setFormData({
         currPass: "",
         newPass: "",
         confirmPass: "",
-      })
+      });
     }
   };
 
@@ -43,8 +43,7 @@ const ChangePasswordContainer = () => {
       [field]: !prev[field],
     }));
   };
-  if(!showContainer)
-    return null
+  if (!showContainer) return null;
 
   return (
     <div className="space-y-5 mt-4">
@@ -62,7 +61,7 @@ const ChangePasswordContainer = () => {
           className="absolute right-4 top-3 cursor-pointer"
           onClick={() => togglePasswordVisibility("currPass")}
         >
-          {passwordVisibility.currPass ? <EyeOff /> : <Eye />}
+          {passwordVisibility.currPass ? <Eye /> : <EyeOff />}
         </div>
       </div>
 
@@ -80,7 +79,7 @@ const ChangePasswordContainer = () => {
           className="absolute right-4 top-3 cursor-pointer"
           onClick={() => togglePasswordVisibility("newPass")}
         >
-          {passwordVisibility.newPass ? <EyeOff /> : <Eye />}
+          {passwordVisibility.newPass ? <Eye /> : <EyeOff />}
         </div>
       </div>
 
@@ -98,7 +97,7 @@ const ChangePasswordContainer = () => {
           className="absolute right-4 top-3 cursor-pointer"
           onClick={() => togglePasswordVisibility("confirmPass")}
         >
-          {passwordVisibility.confirmPass ? <EyeOff /> : <Eye />}
+          {passwordVisibility.confirmPass ? <Eye /> : <EyeOff />}
         </div>
       </div>
 
