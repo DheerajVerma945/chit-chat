@@ -117,8 +117,7 @@ export const useGroupChatStore = create((set, get) => ({
           ? allGroupMessages
           : [...allGroupMessages, newMessage],
       });
-      console.log("New Presentgroupmessages",groupMessages);
-      console.log("New all group messages ",allGroupMessages);
+
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send message");
     }

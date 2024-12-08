@@ -20,7 +20,10 @@ const ChatContainer = () => {
     isGroupMessagesLoading,
     selectedGroup,
     showInfo,
+    allGroupMessages,
   } = useGroupChatStore();
+  console.log("New Presentgroupmessages", groupMessages);
+  console.log("New all group messages ", allGroupMessages);
 
   useEffect(() => {
     if (selectedUser) getMessages(selectedUser._id);
