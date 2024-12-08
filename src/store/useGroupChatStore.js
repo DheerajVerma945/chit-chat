@@ -46,7 +46,7 @@ export const useGroupChatStore = create((set, get) => ({
       console.log(error);
     }
   },
-  
+
   getUnreadGroupCount: async (groups) => {
     try {
       const unreadCounts = [];
@@ -99,12 +99,13 @@ export const useGroupChatStore = create((set, get) => ({
 
   sendGroupMessage: async (data) => {
     try {
-      const { selectedGroup, groupMessages } = get();
+      const { selectedGroup, groupMessages, allGroupMessages } = get();
       const res = await axiosInstance.post(
         `/group/messages/send/${selectedGroup._id}`,
         data
       );
       set({ groupMessages: [...groupMessages, res.data.data] });
+      set({ allGroupMessages: [...allGroupMessages, res.data.data] });
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send message");
     }
