@@ -45,7 +45,7 @@ const ChatContainer = () => {
     );
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto  scrollbar-hidden">
+    <div className="flex-1 ml-2 flex flex-col overflow-auto  scrollbar-hidden">
       <ChatHeader />
       {!showInfo && (
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -89,7 +89,7 @@ const ChatContainer = () => {
                     <img
                       src={message.image}
                       alt="Attachment"
-                      className="sm:max-w-[200px] rounded-md mb-2"
+                      className="sm:max-w-[200px] max-w-[150px] rounded-md mb-2"
                     />
                   )}
                   {message.text && <p>{message.text}</p>}

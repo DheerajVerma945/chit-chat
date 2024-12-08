@@ -7,38 +7,72 @@ import IncomingSound from "../assets/Incoming.mp3";
 export const useChatStore = create((set, get) => ({
   messages: [],
   users: [],
+  allMessages: [],
   unreadCount: [],
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
+  showSideBar: true,
 
   getUsers: async () => {
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/user/request/connections");
       set({ users: res.data.data });
-    } catch (error) {
+    } catch {
       set({ users: [] });
     } finally {
       set({ isUsersLoading: false });
     }
   },
 
+  setShowSideBar: (data) => {
+    set({ showSideBar: data });
+  },
+
   getUnreadCount: async (users) => {
     try {
       const unreadCounts = [];
+      const { allMessages } = get();
+      const { authUser } = useAuthStore.getState();
 
-      for (const user of users) {
-        const res = await axiosInstance.get(`messages/unread/${user._id}`);
-        if (res.data.data > 0) {
-          unreadCounts.push({ userId: user._id, count: res.data.data });
+      users.forEach((user) => {
+        const count = allMessages.filter(
+          (message) =>
+            message.senderId === user._id &&
+            message.receiverId === authUser.data._id &&
+            !message.isRead
+        ).length;
+        if (count > 0) {
+          unreadCounts.push({ userId: user._id, count });
         }
-      }
+      });
 
       set({ unreadCount: unreadCounts });
     } catch (error) {
       console.error("Error fetching unread counts:", error);
     }
+  },
+
+  updateReadCount: async (userId) => {
+    try {
+      await axiosInstance.put("/messages/updateRead", { userId });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  getAllMessages: async () => {
+    try {
+      const res = await axiosInstance.get("/messages/getAllMessages");
+      set({ allMessages: res?.data?.data || [] });
+    } catch {
+      set({ allMessages: [] });
+    }
+  },
+
+  setAllMessages: (data) => {
+    set({ allMessages: data });
   },
 
   setUnreadCount: (data) => {
@@ -47,10 +81,14 @@ export const useChatStore = create((set, get) => ({
 
   getMessages: async (userId) => {
     set({ isMessagesLoading: true });
+    const { allMessages } = get();
     try {
-      const res = await axiosInstance.get(`messages/${userId}`);
-      set({ messages: Array.isArray(res.data.data) ? res.data.data : [] });
-    } catch (error) {
+      const filteredMessages = allMessages.filter(
+        (message) =>
+          message.senderId === userId || message.receiverId === userId
+      );
+      set({ messages: filteredMessages });
+    } catch {
       set({ messages: [] });
     } finally {
       set({ isMessagesLoading: false });
@@ -69,13 +107,15 @@ export const useChatStore = create((set, get) => ({
     const socket = useAuthStore.getState().socket;
 
     socket.on("newMessage", (newMessage) => {
-      const { selectedUser, unreadCount } = get();
+      const { selectedUser, unreadCount, setAllMessages, allMessages } = get();
+
+      const newAllMessages = [...allMessages, newMessage];
+      setAllMessages(newAllMessages);
 
       if (newMessage.senderId !== selectedUser?._id) {
         const existingCount = unreadCount.find(
           (count) => count.userId === newMessage.senderId
         );
-
         if (existingCount) {
           existingCount.count += 1;
         } else {
@@ -88,14 +128,12 @@ export const useChatStore = create((set, get) => ({
           userId: selectedUser._id,
           messageId: newMessage._id,
         });
-        set({
-          messages: [...get().messages, newMessage],
-        });
-
+        set({ messages: [...get().messages, newMessage] });
         const incomingSound = new Audio(IncomingSound);
         incomingSound.play();
       }
     });
+
     socket.on("updateRead", () => {
       const { messages } = get();
       const { authUser } = useAuthStore.getState();

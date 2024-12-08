@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 export const useGroupChatStore = create((set, get) => ({
   groups: [],
+  allGroupMessages: [],
   groupMessages: [],
   unreadGroupCount: [],
   selectedGroup: null,
@@ -18,60 +19,78 @@ export const useGroupChatStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/group/findMyGroups");
       set({ groups: res.data.data });
-    } catch (error) {
+    } catch {
       set({ groups: [] });
     } finally {
       set({ isGroupsLoading: false });
     }
   },
 
-  getUnreadGroupCount: async (groups) => {
+  getAllGroupMessages: async () => {
     try {
-      const unreadCounts = [];
-
-      for (const group of groups) {
-        const res = await axiosInstance.get(
-          `/group/messages/unread/${group._id}`
-        );
-        if (res.data.data > 0) {
-          unreadCounts.push({ groupId: group._id, count: res.data.data });
-        }
-      }
-
-      set({ unreadGroupCount: unreadCounts });
-    } catch (error) {
-      console.error("Error fetching unread group counts:", error);
+      const res = await axiosInstance.get("/group/messages/getAllMessages");
+      set({ allGroupMessages: res?.data?.data || [] });
+    } catch {
+      set({ allGroupMessages: [] });
     }
   },
 
-  setUnreadGroupCount: (data) => {
-    set({ unreadGroupCount: data });
+  setAllGroupMessages: (data) => {
+    set({ allGroupMessages: data });
   },
 
-  setGroupMessages: (data) => {
-    set({ groupMessages: data });
+  updateGroupReadCount: async (groupId) => {
+    try {
+      await axiosInstance.put("/group/messages/updateGroupUnread", { groupId });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  
+  getUnreadGroupCount: async (groups) => {
+    try {
+      const unreadCounts = [];
+      const { allGroupMessages } = get();
+      const { authUser } = useAuthStore.getState();
+
+      groups.forEach((group) => {
+        const count = allGroupMessages.filter(
+          (message) =>
+            message.groupId === group._id &&
+            message.senderId._id !== authUser.data._id &&
+            !message.isRead.includes(authUser.data._id)
+        ).length;
+
+        if (count > 0) {
+          unreadCounts.push({ groupId: group._id, count });
+        }
+      });
+
+      set({ unreadGroupCount: unreadCounts });
+    } catch {
+      set({ unreadGroupCount: [] });
+    }
   },
 
-  setSelectedGroup: (group) => {
-    set({ selectedGroup: group });
-  },
+  setUnreadGroupCount: (data) => set({ unreadGroupCount: data }),
 
-  setShowInfo: (data) => {
-    set({ showInfo: data });
-  },
+  setGroupMessages: (data) => set({ groupMessages: data }),
 
-  setGroups: (data) => {
-    set({ groups: data });
-  },
+  setSelectedGroup: (group) => set({ selectedGroup: group }),
+
+  setShowInfo: (data) => set({ showInfo: data }),
+
+  setGroups: (data) => set({ groups: data }),
 
   getGroupMessages: async (groupId) => {
     set({ isGroupMessagesLoading: true });
     try {
-      const res = await axiosInstance.get(
-        `/group/messages/getMessages/${groupId}`
+      const { allGroupMessages } = get();
+      const messages = allGroupMessages.filter(
+        (message) => message.groupId === groupId
       );
-      set({ groupMessages: Array.isArray(res.data.data) ? res.data.data : [] });
-    } catch (error) {
+      set({ groupMessages: messages });
+    } catch {
       set({ groupMessages: [] });
     } finally {
       set({ isGroupMessagesLoading: false });
@@ -79,8 +98,8 @@ export const useGroupChatStore = create((set, get) => ({
   },
 
   sendGroupMessage: async (data) => {
-    const { selectedGroup, groupMessages } = get();
     try {
+      const { selectedGroup, groupMessages } = get();
       const res = await axiosInstance.post(
         `/group/messages/send/${selectedGroup._id}`,
         data
@@ -96,11 +115,22 @@ export const useGroupChatStore = create((set, get) => ({
     const socket = useAuthStore.getState().socket;
 
     socket.on("newGroupMessage", (newGroupMessage) => {
-      const { unreadGroupCount, selectedGroup } = get();
+      const {
+        unreadGroupCount,
+        selectedGroup,
+        groupMessages,
+        allGroupMessages,
+        setAllGroupMessages,
+      } = get();
+
+      const newAllGroupMessages = [...allGroupMessages, newGroupMessage];
+      setAllGroupMessages(newAllGroupMessages);
+
       if (newGroupMessage.groupId !== selectedGroup?._id) {
         const existingCount = unreadGroupCount.find(
           (count) => count.groupId === newGroupMessage.groupId
         );
+
         if (existingCount) {
           existingCount.count += 1;
         } else {
@@ -115,9 +145,9 @@ export const useGroupChatStore = create((set, get) => ({
             messageId: newGroupMessage._id,
           });
         }
-        set({
-          groupMessages: [...get().groupMessages, newGroupMessage],
-        });
+
+        set({ groupMessages: [...groupMessages, newGroupMessage] });
+
         if (newGroupMessage.senderId._id !== authUser.data._id) {
           const incomingSound = new Audio(IncomingSound);
           incomingSound.play();
@@ -126,73 +156,58 @@ export const useGroupChatStore = create((set, get) => ({
     });
 
     socket.on("removedGroup", (groupId) => {
-      const { groups, setGroups, setSelectedGroup, setShowInfo } = get();
-      const newGroups = groups.filter((group) => group._id !== groupId);
-      setGroups(newGroups);
-      setSelectedGroup(null);
-      setShowInfo(false);
+      const { groups } = get();
+      set({
+        groups: groups.filter((group) => group._id !== groupId),
+        selectedGroup: null,
+        showInfo: false,
+      });
     });
 
     socket.on("newGroup", (group) => {
-      const { setGroups, groups } = get();
-      const isGroupExists = groups.some((g) => g._id === group._id);
-      if (!isGroupExists) {
-        groups.push(group);
-        setGroups(groups);
+      const { groups } = get();
+      if (!groups.some((g) => g._id === group._id)) {
+        set({ groups: [...groups, group] });
       }
     });
 
     socket.on("newMember", ({ groupId, user }) => {
-      const { groups, setGroups, selectedGroup } = get();
-      if (selectedGroup._id === groupId) {
-        const isPresent = selectedGroup.members.some(
-          (member) => member._id === user._id
-        );
-        if (!isPresent) {
-          selectedGroup.members.push(user);
-        }
-      }
-      const updatedGroups = groups.map((group) =>
-        group._id === groupId
-          ? {
-              ...group,
-              members: group.members.some((member) => member._id === user._id)
-                ? group.members
-                : [...group.members, user],
-            }
-          : group
-      );
-
-      setGroups(updatedGroups);
+      const { groups } = get();
+      set({
+        groups: groups.map((group) =>
+          group._id === groupId
+            ? {
+                ...group,
+                members: group.members.some((member) => member._id === user._id)
+                  ? group.members
+                  : [...group.members, user],
+              }
+            : group
+        ),
+      });
     });
 
     socket.on("updatedMembers", ({ groupId, userId }) => {
-      const { groups, setGroups, selectedGroup } = get();
-      if (selectedGroup._id === groupId) {
-        selectedGroup.members = selectedGroup.members.filter(
-          (member) => member._id !== userId
-        );
-      }
-      const updatedGroups = groups.map((group) =>
-        group._id === groupId
-          ? {
-              ...group,
-              members: group.members.filter((member) => member._id !== userId),
-            }
-          : group
-      );
-      setGroups(updatedGroups);
+      const { groups } = get();
+      set({
+        groups: groups.map((group) =>
+          group._id === groupId
+            ? {
+                ...group,
+                members: group.members.filter(
+                  (member) => member._id !== userId
+                ),
+              }
+            : group
+        ),
+      });
     });
 
     socket.on("updatedGroupData", ({ groupId, group }) => {
-      const { groups, setGroups, selectedGroup } = get();
-      if (selectedGroup._id === groupId) {
-        selectedGroup.name = group.name;
-        selectedGroup.description = group.description;
-        selectedGroup.photo = group.photo;
-      }
-      const updatedGroups = groups.map((g) => (g._id === groupId ? group : g));
-      setGroups(updatedGroups);
+      const { groups } = get();
+      set({
+        groups: groups.map((g) => (g._id === groupId ? { ...g, ...group } : g)),
+      });
     });
   },
 
