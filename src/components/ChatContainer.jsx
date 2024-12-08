@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { MessageInput, MessageSkeleton, ChatHeader } from "../components";
 import { useAuthStore } from "../store/useAuthStore";
@@ -13,6 +13,8 @@ const ChatContainer = () => {
   const messagEndRef = useRef(null);
   const { messages, getMessages, isMessagesLoading, selectedUser } =
     useChatStore();
+
+  const [lastMessage, setlastMessage] = useState(null);
 
   const {
     groupMessages,
@@ -114,56 +116,64 @@ const ChatContainer = () => {
             ))}
           {groupMessages &&
             groupMessages.length > 0 &&
-            groupMessages.map((message) => (
-              <div
-                key={message._id}
-                className={`chat ${
-                  message.senderId._id === authUser.data._id
-                    ? "chat-end"
-                    : "chat-start"
-                }`}
-                ref={messagEndRef}
-              >
-                <div className="chat-image avatar">
-                  <div className="size-10 rounded-full border">
-                    <img
-                      src={
-                        message.senderId._id === authUser.data._id
-                          ? authUser.data.profilePic
-                          : message.senderId.profilePic
-                      }
-                      alt="profile pic"
-                    />
+            groupMessages.map((message) => {
+              if (lastMessage && lastMessage._id === message._id) {
+                return null;
+              }
+
+              setlastMessage(message);
+
+              return (
+                <div
+                  key={message._id}
+                  className={`chat ${
+                    message.senderId._id === authUser.data._id
+                      ? "chat-end"
+                      : "chat-start"
+                  }`}
+                  ref={messagEndRef}
+                >
+                  <div className="chat-image avatar">
+                    <div className="size-10 rounded-full border">
+                      <img
+                        src={
+                          message.senderId._id === authUser.data._id
+                            ? authUser.data.profilePic
+                            : message.senderId.profilePic
+                        }
+                        alt="profile pic"
+                      />
+                    </div>
+                  </div>
+                  <div className="chat-header mb-1 mr-3">
+                    <time className="text-xs opacity-50 ml-1">
+                      {formatMessageTime(message.createdAt)}
+                    </time>
+                  </div>
+                  <div
+                    className={`${
+                      message.senderId._id === authUser.data._id
+                        ? "bg-primary text-primary-content"
+                        : "bg-base-200 text-base-content"
+                    } chat-bubble flex flex-col relative text-base sm:text-sm`}
+                  >
+                    {message.senderId._id !== authUser.data._id && (
+                      <p className="absolute top-[-1.5rem] left-10 text-sm">
+                        ~{message.senderId.fullName.split(" ")[0]}
+                      </p>
+                    )}
+                    {message.image && (
+                      <img
+                        src={message.image}
+                        alt="Attachment"
+                        className="sm:max-w-[200px] rounded-md mb-2"
+                      />
+                    )}
+                    {message.text && <p>{message.text}</p>}
                   </div>
                 </div>
-                <div className="chat-header mb-1 mr-3">
-                  <time className="text-xs opacity-50 ml-1">
-                    {formatMessageTime(message.createdAt)}
-                  </time>
-                </div>
-                <div
-                  className={`${
-                    message.senderId._id === authUser.data._id
-                      ? "bg-primary text-primary-content"
-                      : "bg-base-200 text-base-content"
-                  } chat-bubble flex flex-col relative text-base sm:text-sm`}
-                >
-                  {message.senderId._id !== authUser.data._id && (
-                    <p className="absolute top-[-1.5rem] left-10 text-sm">
-                      ~{message.senderId.fullName.split(" ")[0]}
-                    </p>
-                  )}
-                  {message.image && (
-                    <img
-                      src={message.image}
-                      alt="Attachment"
-                      className="sm:max-w-[200px] rounded-md mb-2"
-                    />
-                  )}
-                  {message.text && <p>{message.text}</p>}
-                </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       )}
       {showInfo && <GroupInfo />}
