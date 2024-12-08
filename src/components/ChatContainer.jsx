@@ -27,11 +27,6 @@ const ChatContainer = () => {
     ...new Map(groupMessages.map((message) => [message._id, message])).values(),
   ];
 
-  console.log("unique group messages", uniqueGroupMessages);
-
-  console.log("New Presentgroupmessages", groupMessages);
-  console.log("New all group messages ", allGroupMessages);
-
   useEffect(() => {
     if (selectedUser) getMessages(selectedUser._id);
     if (selectedGroup) getGroupMessages(selectedGroup._id);

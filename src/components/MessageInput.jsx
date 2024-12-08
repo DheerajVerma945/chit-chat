@@ -66,64 +66,65 @@ const MessageInput = () => {
 
   return (
     <div className="p-4 w-full">
-  {imagePreview && (
-    <div className="mb-3 flex items-center gap-2">
-      <div className="relative">
-        <img
-          src={imagePreview}
-          alt="Preview"
-          className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
-        />
-        <button
-          onClick={removeImage}
-          className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300
+      {imagePreview && (
+        <div className="mb-3 flex items-center gap-2">
+          <div className="relative">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
+            />
+            <button
+              onClick={removeImage}
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300
           flex items-center justify-center"
-          type="button"
+              type="button"
+            >
+              <X className="size-3" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+        <div className="flex-1 flex gap-2">
+          <input
+            type="text"
+            className="w-full input input-bordered rounded-lg input-md"
+            placeholder="Type a message..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+          />
+          <button
+            type="button"
+            className={`btn-md sm:btn ${
+              imagePreview ? "text-emerald-500" : "text-zinc-400"
+            }`}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Image />
+          </button>
+        </div>
+        <button
+          type="submit"
+          className={`btn btn-primary ${
+            sendMessageLoading
+              ? "loading bg-primary"
+              : "size-7 sm:size-10 btn-md btn-circle"
+          }`}
+          disabled={(!text.trim() && !imagePreview) || sendMessageLoading}
         >
-          <X className="size-3" />
+          {!sendMessageLoading && <Send className="size-8" />}
         </button>
-      </div>
+      </form>
     </div>
-  )}
-
-  <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-    <div className="flex-1 flex gap-2">
-      <input
-        type="text"
-        className="w-full input input-bordered rounded-lg input-md"
-        placeholder="Type a message..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <input
-        type="file"
-        accept="image/*"
-        className="hidden"
-        ref={fileInputRef}
-        onChange={handleImageChange}
-      />
-      <button
-        type="button"
-        className={`btn-md sm:btn ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <Image />
-      </button>
-    </div>
-    <button
-      type="submit"
-      className={`btn btn-primary ${
-        sendMessageLoading
-          ? "loading bg-primary"
-          : "size-7 sm:size-10 btn-md btn-circle"
-      }`}
-      disabled={!text.trim() && !imagePreview}
-    >
-      {!sendMessageLoading && <Send className="size-8" />}
-    </button>
-  </form>
-</div>
-
   );
 };
 export default MessageInput;
