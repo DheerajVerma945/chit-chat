@@ -106,6 +106,9 @@ export const useGroupChatStore = create((set, get) => ({
       );
   
       const newMessage = res.data.data;
+      console.log(newMessage);
+      console.log(groupMessages);
+      console.log(allGroupMessages);
       set({
         groupMessages: groupMessages.some(msg => msg._id === newMessage._id)
           ? groupMessages
