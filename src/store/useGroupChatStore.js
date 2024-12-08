@@ -104,12 +104,20 @@ export const useGroupChatStore = create((set, get) => ({
         `/group/messages/send/${selectedGroup._id}`,
         data
       );
-      set({ groupMessages: [...groupMessages, res.data.data] });
-      set({ allGroupMessages: [...allGroupMessages, res.data.data] });
+  
+      const newMessage = res.data.data;
+      set({
+        groupMessages: groupMessages.some(msg => msg._id === newMessage._id)
+          ? groupMessages
+          : [...groupMessages, newMessage],
+        allGroupMessages: allGroupMessages.some(msg => msg._id === newMessage._id)
+          ? allGroupMessages
+          : [...allGroupMessages, newMessage],
+      });
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send message");
     }
-  },
+  },  
 
   subscribeToGroupMessages: () => {
     const { authUser } = useAuthStore.getState();
