@@ -4,8 +4,6 @@ import { axiosInstance } from "../lib/axios";
 import { useGroupChatStore } from "./useGroupChatStore";
 
 export const useGroupConfigStore = create((set, get) => {
-  const { selectedGroup, setSelectedGroup, setGroups, groups } =
-    useGroupChatStore.getState();
   return {
     isAddingMember: false,
     isUpdatingGroup: false,
@@ -22,7 +20,7 @@ export const useGroupConfigStore = create((set, get) => {
 
     addMember: async (userId) => {
       const { connectionsForGroup } = get();
-      const {selectedGroup} = useGroupChatStore.getState();
+      const { selectedGroup, setSelectedGroup } = useGroupChatStore.getState();
       set({ isAddingMember: true });
       try {
         const res = await axiosInstance.post("/group/addMember", {
@@ -44,7 +42,7 @@ export const useGroupConfigStore = create((set, get) => {
 
     removeMember: async (userId) => {
       set({ isRemovingMember: true });
-      const {selectedGroup} = useGroupChatStore.getState();
+      const { selectedGroup, setSelectedGroup } = useGroupChatStore.getState();
       try {
         const res = await axiosInstance.post("/group/removeMember", {
           userId,
@@ -63,8 +61,7 @@ export const useGroupConfigStore = create((set, get) => {
 
     updateGroup: async (data) => {
       set({ isUpdatingGroup: true });
-      const {selectedGroup} = useGroupChatStore.getState();
-      console.log(selectedGroup);
+      const { selectedGroup, setSelectedGroup } = useGroupChatStore.getState();
       try {
         const res = await axiosInstance.patch(
           `/group/updateGroup/${selectedGroup._id}`,
@@ -81,7 +78,8 @@ export const useGroupConfigStore = create((set, get) => {
 
     deleteGroup: async () => {
       set({ isDeletingGroup: true });
-      const {selectedGroup} = useGroupChatStore.getState();
+      const { selectedGroup, setSelectedGroup, setGroups, groups } =
+        useGroupChatStore.getState();
       const deletedGroup = selectedGroup;
       try {
         await axiosInstance.delete("/group/deleteGroup", {
@@ -102,8 +100,8 @@ export const useGroupConfigStore = create((set, get) => {
 
     exitGroup: async () => {
       set({ isExitingGroup: true });
-      const {selectedGroup} = useGroupChatStore.getState();
-      console.log(selectedGroup);
+      const { selectedGroup, setSelectedGroup, setGroups } =
+        useGroupChatStore.getState();
       try {
         const res = await axiosInstance.post("/group/exitGroup", {
           groupId: selectedGroup._id,
@@ -120,6 +118,7 @@ export const useGroupConfigStore = create((set, get) => {
     },
 
     joinGroup: async (groupId) => {
+      const { setGroups, groups } = useGroupChatStore();
       try {
         const res = await axiosInstance.post("/group/joinGroup", { groupId });
         setGroups([...groups, res.data.data]);
@@ -130,7 +129,8 @@ export const useGroupConfigStore = create((set, get) => {
     },
 
     createGroup: async (name) => {
-      const {setSelectedGroup} = useGroupChatStore.getState();
+      const { setSelectedGroup, setGroups, groups } =
+        useGroupChatStore.getState();
 
       set({ isCreatingGroup: true });
       try {
@@ -147,6 +147,7 @@ export const useGroupConfigStore = create((set, get) => {
 
     updateGroupDp: async (newPhoto) => {
       set({ isUpdatingGroup: true });
+      const { selectedGroup, setSelectedGroup } = useGroupChatStore.getState();
       try {
         const res = await axiosInstance.put(
           `/group/updateGroupPhoto/${selectedGroup._id}`,
@@ -162,7 +163,7 @@ export const useGroupConfigStore = create((set, get) => {
     },
 
     getMembersForAdding: async (connections) => {
-      const {selectedGroup}= useGroupChatStore.getState();
+      const { selectedGroup } = useGroupChatStore.getState();
       try {
         const groupId = selectedGroup._id;
         const res = await axiosInstance.get(
