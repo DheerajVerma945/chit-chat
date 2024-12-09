@@ -2,12 +2,12 @@ import {  Info, X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 import { useGroupChatStore } from "../store/useGroupChatStore";
-import { useState } from "react";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { selectedGroup, setSelectedGroup ,setShowInfo,showInfo} = useGroupChatStore();
   const { onlineUsers } = useAuthStore();
+
 
   return (
     <div className="p-2.5 border-b border-base-300">

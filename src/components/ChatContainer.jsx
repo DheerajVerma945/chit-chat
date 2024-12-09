@@ -24,7 +24,7 @@ const ChatContainer = () => {
   } = useGroupChatStore();
 
   const uniqueGroupMessages = [
-    ...new Map(groupMessages.map((message) => [message._id, message])).values(),
+    ...new Map(groupMessages?.map((message) => [message._id, message])).values(),
   ];
 
   useEffect(() => {

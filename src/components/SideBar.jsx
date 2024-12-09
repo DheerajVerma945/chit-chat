@@ -24,7 +24,7 @@ const Sidebar = () => {
     setShowSideBar,
   } = useChatStore();
 
-  const { setGroupData, setConnectionsForGroup } = useGroupConfigStore();
+  const {  setConnectionsForGroup } = useGroupConfigStore();
   const {
     getGroups,
     groups,
@@ -323,7 +323,6 @@ const Sidebar = () => {
                         updateGroupReadCount(group._id);
                         setConnectionsForGroup([]);
                         setMessages([]);
-                        setGroupData([group]);
                         setShowInfo(false);
                       }}
                       className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${

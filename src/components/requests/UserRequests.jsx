@@ -69,7 +69,7 @@ const UserRequests = () => {
               }`}
               onClick={() => handleAccept(request)}
             >
-              Accept
+              {currReq === request._id && status === "accepted" ? "" : "Accept"}
             </button>
             <button
               className={`btn btn-error btn-sm ${
@@ -79,7 +79,7 @@ const UserRequests = () => {
               }`}
               onClick={() => handleReject(request)}
             >
-              Reject
+              { currReq === request._id && status === "rejected" ? "" : "Reject"}
             </button>
           </div>
         </div>

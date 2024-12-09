@@ -82,7 +82,7 @@ const GroupRequestsAdmin = () => {
                     }`}
                     onClick={() => handleAccept(request._id)}
                   >
-                    {currOperation !== "accepted" && (
+                    {currUser !== request._id && currOperation !== "accepted" && (
                       <>
                         <UserPlus2 className="w-4 h-4" />
                         Accept

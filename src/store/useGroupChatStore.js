@@ -50,6 +50,7 @@ export const useGroupChatStore = create((set, get) => ({
   getUnreadGroupCount: async (groups) => {
     try {
       const unreadCounts = [];
+      if (groups.length === 0) return;
       const { allGroupMessages } = get();
       const { authUser } = useAuthStore.getState();
 
@@ -104,21 +105,22 @@ export const useGroupChatStore = create((set, get) => ({
         `/group/messages/send/${selectedGroup._id}`,
         data
       );
-  
+
       const newMessage = res.data.data;
       set({
-        groupMessages: groupMessages.some(msg => msg._id === newMessage._id)
+        groupMessages: groupMessages.some((msg) => msg._id === newMessage._id)
           ? groupMessages
           : [...groupMessages, newMessage],
-        allGroupMessages: allGroupMessages.some(msg => msg._id === newMessage._id)
+        allGroupMessages: allGroupMessages.some(
+          (msg) => msg._id === newMessage._id
+        )
           ? allGroupMessages
           : [...allGroupMessages, newMessage],
       });
-
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send message");
     }
-  },  
+  },
 
   subscribeToGroupMessages: () => {
     const { authUser } = useAuthStore.getState();
@@ -182,7 +184,18 @@ export const useGroupChatStore = create((set, get) => ({
     });
 
     socket.on("newMember", ({ groupId, user }) => {
-      const { groups } = get();
+      const { groups, selectedGroup, setSelectedGroup } = get();
+
+      if (selectedGroup) {
+        const memberExists = selectedGroup.members.some(
+          (member) => member._id === user._id
+        );
+        const updatedMembers = memberExists
+          ? selectedGroup.members
+          : [...selectedGroup.members, user];
+        setSelectedGroup({ ...selectedGroup, members: updatedMembers });
+      }
+
       set({
         groups: groups.map((group) =>
           group._id === groupId
@@ -198,7 +211,13 @@ export const useGroupChatStore = create((set, get) => ({
     });
 
     socket.on("updatedMembers", ({ groupId, userId }) => {
-      const { groups } = get();
+      const { groups, selectedGroup, setSelectedGroup } = get();
+      if (selectedGroup) {
+        const updatedMembers = selectedGroup.members.filter(
+          (member) => member._id !== userId
+        );
+        setSelectedGroup({ ...selectedGroup, members: updatedMembers });
+      }
       set({
         groups: groups.map((group) =>
           group._id === groupId

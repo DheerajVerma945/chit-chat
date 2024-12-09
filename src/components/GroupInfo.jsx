@@ -23,11 +23,9 @@ const GroupInfo = () => {
     showGroupRequestsAdmin,
   } = groupRequestAdminStore();
   const {
-    groupData,
     removeMember,
     isRemovingMember,
     updateGroup,
-    setGroupData,
     exitGroup,
     updateGroupDp,
     showAddUsers,
@@ -37,22 +35,18 @@ const GroupInfo = () => {
     isExitingGroup,
   } = useGroupConfigStore();
 
-  const {groups} = useGroupChatStore();
-  const group = groupData[0];
+  const {groups,selectedGroup} = useGroupChatStore();
+  const [group,setGroup] = useState(selectedGroup);
 
-  const admin = group.members.reduce((acc, member) => {
-    if (member._id === group.admin) {
-      return member;
-    }
-    return acc;
-  }, null);
+
+  const admin = selectedGroup.admin;
 
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
 
   useEffect(() => {
-    setGroupData(groupData);
+    setGroup(selectedGroup)
     getGroupRequestsAdmin();
-  }, [groupData,groups, setGroupData]);
+  }, [groups,selectedGroup]);
 
   const { authUser } = useAuthStore();
 
