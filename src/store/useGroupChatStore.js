@@ -233,7 +233,10 @@ export const useGroupChatStore = create((set, get) => ({
     });
 
     socket.on("updatedGroupData", ({ groupId, group }) => {
-      const { groups } = get();
+      const { groups, selectedGroup, setSelectedGroup } = get();
+      if (selectedGroup) {
+        setSelectedGroup(group);
+      }
       set({
         groups: groups.map((g) => (g._id === groupId ? { ...g, ...group } : g)),
       });

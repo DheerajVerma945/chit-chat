@@ -20,7 +20,6 @@ const Navbar = () => {
   const totalRequests = userRequests.length + groupRequestsUser.length;
   const { setGroupMessages, setSelectedGroup, setShowInfo } =
     useGroupChatStore();
-  const { setGroupData } = useGroupConfigStore();
   const { setSelectedUser, setMessages } = useChatStore();
 
   useEffect(() => {
@@ -40,7 +39,6 @@ const Navbar = () => {
               onClick={() => {
                 setSelectedUser(null);
                 setSelectedGroup(null);
-                setGroupData(null);
                 setMessages(null);
                 setShowInfo(false);
                 setGroupMessages(null);
@@ -71,7 +69,6 @@ const Navbar = () => {
                   onClick={() => {
                     setSelectedUser(null);
                     setSelectedGroup(null);
-                    setGroupData(null);
                     setMessages(null);
                     setShowInfo(false);
                     setGroupMessages(null);
@@ -90,7 +87,6 @@ const Navbar = () => {
                       onClick={() => {
                         setSelectedUser(null);
                         setSelectedGroup(null);
-                        setGroupData(null);
                         setShowInfo(false);
                         setMessages(null);
                         setGroupMessages(null);
@@ -114,7 +110,6 @@ const Navbar = () => {
                       onClick={() => {
                         setSelectedUser(null);
                         setSelectedGroup(null);
-                        setGroupData(null);
                         setMessages(null);
                         setShowInfo(false);
                         setGroupMessages(null);
@@ -150,7 +145,6 @@ const Navbar = () => {
                   setShowLogoutMsg(false);
                   setSelectedUser(null);
                   setSelectedGroup(null);
-                  setGroupData(null);
                   setMessages(null);
                   setShowInfo(false);
                   setGroupMessages(null);

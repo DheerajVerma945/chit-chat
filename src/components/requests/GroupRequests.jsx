@@ -38,7 +38,6 @@ const GroupRequests = () => {
         No group requests at the moment
       </div>
     );
-    console.log(groupRequestsUser);
 
   return (
     <div className="w-full p-5">

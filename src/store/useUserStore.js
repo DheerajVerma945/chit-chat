@@ -96,6 +96,7 @@ export const useUserStore = create((set, get) => ({
       set({ groupRequestsUser: filteredGroupRequests });
       toast.success(`Request ${status} successfully`);
     } catch (error) {
+      console.log(error);
       toast.error(error?.response?.data?.message);
     }
   },
