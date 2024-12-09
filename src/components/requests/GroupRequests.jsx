@@ -40,7 +40,7 @@ const GroupRequests = () => {
     );
 
   return (
-    <div className="w-full p-5">
+    <div className="w-full p-5  overflow-x-auto scrollbar-hidden">
       {groupRequestsUser.map((request) => (
         <div
           key={request._id}

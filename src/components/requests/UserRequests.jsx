@@ -42,11 +42,11 @@ const UserRequests = () => {
   };
 
   return (
-    <div className="w-full p-5">
+    <div className="w-full p-4 overflow-x-auto scrollbar-hidden ">
       {userRequests.map((request) => (
         <div
           key={request._id}
-          className="flex items-center justify-between p-4  rounded-lg shadow-md mb-4"
+          className="flex items-center justify-between p-4   rounded-lg shadow-md "
         >
           <div className="flex items-center gap-4">
             <img
