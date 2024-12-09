@@ -44,7 +44,7 @@ const GroupRequests = () => {
       {groupRequestsUser.map((request) => (
         <div
           key={request._id}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-base-100 rounded-lg shadow-md mb-4"
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg shadow-md mb-4"
         >
           <div className="flex items-center gap-4">
             <img

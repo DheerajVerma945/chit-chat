@@ -46,7 +46,7 @@ const UserRequests = () => {
       {userRequests.map((request) => (
         <div
           key={request._id}
-          className="flex items-center justify-between p-4 bg-base-100 rounded-lg shadow-md mb-4"
+          className="flex items-center justify-between p-4  rounded-lg shadow-md mb-4"
         >
           <div className="flex items-center gap-4">
             <img

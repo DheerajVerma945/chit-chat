@@ -28,12 +28,12 @@ const GroupRequestsAdmin = () => {
     }
   };
 
-  const handleReject = async(id) => {
+  const handleReject = async (id) => {
     setCurrOperation("rejected");
     setCurrUser(id);
     try {
-        await reviewGroupRequestAdmin("rejected",id);
-        toast.success("Request rejected successfully")
+      await reviewGroupRequestAdmin("rejected", id);
+      toast.success("Request rejected successfully");
     } catch (error) {
       console.log(error);
     } finally {
@@ -82,7 +82,10 @@ const GroupRequestsAdmin = () => {
                     }`}
                     onClick={() => handleAccept(request._id)}
                   >
-                    {currUser !== request._id && currOperation !== "accepted" && (
+                    {currUser === request._id &&
+                    currOperation === "accepted" ? (
+                      ""
+                    ) : (
                       <>
                         <UserPlus2 className="w-4 h-4" />
                         Accept
@@ -97,7 +100,9 @@ const GroupRequestsAdmin = () => {
                     }`}
                     onClick={() => handleReject(request._id)}
                   >
-                    {currOperation !== "rejected" && "Reject"}
+                    {currUser === request._id && currOperation === "rejected"
+                      ? ""
+                      : "Reject"}
                   </button>
                 </div>
               </div>
