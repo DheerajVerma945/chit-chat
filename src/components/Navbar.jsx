@@ -54,7 +54,7 @@ const Navbar = () => {
                     src={Logo}
                   />
                 </div>
-                <h1 className="text-sm sm:text-lg font-bold">Chit-Chat</h1>
+                <h1 className="text-lg font-bold">Chit-Chat</h1>
               </Link>
             </div>
 
