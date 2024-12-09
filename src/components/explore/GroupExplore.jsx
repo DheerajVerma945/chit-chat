@@ -32,6 +32,7 @@ const GroupExplore = () => {
     try {
       await sendGroupRequestUser(id);
       setGroups((prev) => prev.filter((group) => group._id !== id));
+      toast.success("Request Sent successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
@@ -90,6 +91,7 @@ const GroupExplore = () => {
                   className={`btn btn-primary ${
                     requestSending === group._id ? "loading bg-primary" : ""
                   }`}
+                  disabled={requestSending === group._id}
                   onClick={() => handleGroupRequest(group._id)}
                 >
                   {requestSending === group._id ? "" : "Request"}
@@ -102,6 +104,7 @@ const GroupExplore = () => {
                   className={`btn btn-primary ${
                     isJoiningGroup === group._id ? "loading bg-primary" : ""
                   }`}
+                  disabled={isJoiningGroup === group._id}
                   onClick={() => handleJoinGroup(group._id)}
                 >
                   {isJoiningGroup === group._id ? "" : "Join Group"}

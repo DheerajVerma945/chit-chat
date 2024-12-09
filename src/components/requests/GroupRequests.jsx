@@ -65,23 +65,23 @@ const GroupRequests = () => {
           <div className="flex gap-4 mt-4 sm:mt-0">
             <button
               className={`btn btn-success btn-sm ${
-                currReq === request._id && status === "accepted"
+                currReq === request._id && isAccepting
                   ? "loading bg-success"
                   : ""
               }`}
-              onClick={() => handleAccept(request)}
+              onClick={() => handleAccept(request._id)}
+              disabled={isAccepting || isRejecting}
             >
-             {currReq === request._id && status === "accepted" ? "" : "Accept"}
+              {currReq === request._id && isAccepting ? "" : "Accept"}
             </button>
             <button
               className={`btn btn-error btn-sm ${
-                currReq === request._id && status === "rejected"
-                  ? "loading bg-error"
-                  : ""
+                currReq === request._id && isRejecting ? "loading bg-error" : ""
               }`}
-              onClick={() => handleReject(request)}
+              onClick={() => handleReject(request._id)}
+              disabled={isAccepting || isRejecting}
             >
-              {currReq === request._id && status === "rejected" ? "" : "Reject"}
+              {currReq === request._id && isRejecting ? "" : "Reject"}
             </button>
           </div>
         </div>

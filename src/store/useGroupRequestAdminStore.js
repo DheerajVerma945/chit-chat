@@ -48,16 +48,19 @@ export const groupRequestAdminStore = create((set) => ({
   },
 
   reviewGroupRequestAdmin: async (status, reqId) => {
-    const { setGroupData } = useGroupConfigStore.getState();
-    const { selectedGroup } = useGroupChatStore.getState();
+    const { selectedGroup, setSelectedGroup } = useGroupChatStore.getState();
 
     try {
       const res = await axiosInstance.post(
         `group/request/review/admin/${status}`,
         { reqId, groupId: selectedGroup._id }
       );
-      setGroupData([res.data.data]);
+      if (status === "accepted") {
+        setSelectedGroup(res.data.data);
+      }
     } catch (error) {
+      console.log(error);
+      console.log("he;llo");
       toast.error(error?.response?.data?.message);
     }
   },

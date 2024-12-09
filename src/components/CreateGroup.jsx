@@ -49,7 +49,7 @@ const CreateGroup = ({ onClose }) => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
-              <label className="label">
+              <label className="label mb-2">
                 <span className="label-text">Group Name</span>
               </label>
               <input

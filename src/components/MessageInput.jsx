@@ -114,14 +114,14 @@ const MessageInput = () => {
         </div>
         <button
           type="submit"
-          className={`btn btn-primary ${
+          className={` ${
             sendMessageLoading
               ? "loading bg-primary"
-              : "size-7 sm:size-10 btn-md btn-circle"
+              : "size-7 sm:size-10 "
           }`}
           disabled={(!text.trim() && !imagePreview) || sendMessageLoading}
         >
-          {!sendMessageLoading && <Send className="size-8" />}
+          {!sendMessageLoading && <Send className="size-7" />}
         </button>
       </form>
     </div>

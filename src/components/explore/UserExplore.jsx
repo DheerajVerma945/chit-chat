@@ -51,7 +51,7 @@ const UserExplore = () => {
         <p className="text-lg font-medium ">No users found</p>
         {showSearch && <SearchUser />}
 
-        <div className="fixed right-10 bottom-20">
+        <div className="fixed z-50 right-10 bottom-20">
           <button
             className="btn btn-primary flex items-center justify-center p-3 rounded-full shadow-lg hover:shadow-xl transition"
             onClick={() => setShowSearch(true)}
@@ -65,7 +65,7 @@ const UserExplore = () => {
   return (
     <div className="mt-16 py-8 px-4 max-w-7xl mx-auto relative">
       {showSearch && <SearchUser />}
-      <div className="fixed right-10 bottom-20">
+      <div className="fixed z-50 right-10 bottom-20">
         <button
           className="btn btn-primary flex items-center justify-center p-3 rounded-full shadow-lg hover:shadow-xl transition"
           onClick={() => setShowSearch(true)}
@@ -99,6 +99,7 @@ const UserExplore = () => {
                 className={`btn btn-primary ${
                   requestSending === user._id ? "loading bg-primary" : ""
                 }`}
+                disabled={requestSending === user._id}
                 onClick={() => handleConnectionRequest(user._id)}
               >
                 {requestSending === user._id ? "" : "Connect"}
