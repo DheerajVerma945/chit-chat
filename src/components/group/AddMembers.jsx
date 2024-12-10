@@ -50,7 +50,7 @@ const AddMembers = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-base-300 bg-opacity-50 z-40 flex justify-center items-center">
+    <div className="fixed inset-0 overflow-auto scrollbar-hidden bg-black bg-opacity-60 z-40 flex justify-center items-center">
       <div className="relative bg-base-100 p-6 rounded-xl max-w-lg w-full shadow-lg">
         <button
           onClick={() => setShowAddUsers(false)}
@@ -65,55 +65,61 @@ const AddMembers = () => {
               <div className="loading bg-primary"></div>
             </div>
           ) : connectionsForGroup.length > 0 ? (
-            connectionsForGroup.map((connection) => (
-              <div
-                key={connection._id}
-                className="flex justify-between items-center p-4 border-b border-base-200"
-              >
-                <div className="flex items-center gap-4">
-                  <img
-                    src={connection.profilePic}
-                    alt={connection.fullName}
-                    loading="lazy"
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <span className="text-sm font-medium">
-                    {connection.fullName}
-                  </span>
+            <div className="max-h-[50vh] scrollbar-hidden  overflow-y-auto">
+              {connectionsForGroup.map((connection) => (
+                <div
+                  key={connection._id}
+                  className="flex justify-between items-center p-4 mb-2 border-b border-base-200"
+                >
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={connection.profilePic}
+                      alt={connection.fullName}
+                      loading="lazy"
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <span className="text-sm font-medium">
+                      {connection.fullName}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    {connection.privacy ? (
+                      <button
+                        className={`btn btn-secondary text-sm ${
+                          currUser === connection._id
+                            ? "loading bg-primary"
+                            : ""
+                        }`}
+                        onClick={() => handleInviteUser(connection._id)}
+                      >
+                        {currUser !== connection._id && (
+                          <>
+                            <Lock className="w-4 h-4" />
+                            <p>Invite</p>
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <button
+                        className={`btn btn-primary text-sm ${
+                          currUser === connection._id
+                            ? "loading bg-primary"
+                            : ""
+                        }`}
+                        onClick={() => handleAddUser(connection._id)}
+                      >
+                        {currUser !== connection._id && (
+                          <>
+                            <UserPlus2 className="w-4 h-4" />
+                            <p>Add</p>
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  {connection.privacy ? (
-                    <button
-                      className={`btn btn-secondary text-sm ${
-                        currUser === connection._id ? "loading bg-primary" : ""
-                      }`}
-                      onClick={() => handleInviteUser(connection._id)}
-                    >
-                      {currUser !== connection._id && (
-                        <>
-                          <Lock className="w-4 h-4" />
-                          <p>Invite</p>
-                        </>
-                      )}
-                    </button>
-                  ) : (
-                    <button
-                      className={`btn btn-primary text-sm ${
-                        currUser === connection._id ? "loading bg-primary" : ""
-                      }`}
-                      onClick={() => handleAddUser(connection._id)}
-                    >
-                      {currUser !== connection._id && (
-                        <>
-                          <UserPlus2 className="w-4 h-4" />
-                          <p>Add</p>
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
             <p className="text-center text-sm">No connections available</p>
           )}
