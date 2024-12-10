@@ -18,7 +18,6 @@ export const useGroupChatStore = create((set, get) => ({
     set({ isGroupsLoading: true });
     try {
       const res = await axiosInstance.get("/group/findMyGroups");
-      console.log(res.data.data);
       set({ groups: res.data.data });
     } catch {
       set({ groups: [] });
@@ -31,7 +30,6 @@ export const useGroupChatStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/group/messages/getAllMessages");
       set({ allGroupMessages: res?.data?.data || [] });
-      console.log(res.data.data);
     } catch {
       set({ allGroupMessages: [] });
     }

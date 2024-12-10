@@ -18,9 +18,13 @@ const Navbar = () => {
     unsubscribeToUserRequests,
   } = useUserStore();
   const totalRequests = userRequests.length + groupRequestsUser.length;
-  const { setGroupMessages, setSelectedGroup, setShowInfo } =
-    useGroupChatStore();
-  const { setSelectedUser, setMessages } = useChatStore();
+  const {
+    setGroupMessages,
+    setSelectedGroup,
+    setAllGroupMessages,
+    setShowInfo,
+  } = useGroupChatStore();
+  const { setSelectedUser, setMessages, setUnreadCount,setAllMessages } = useChatStore();
 
   useEffect(() => {
     if (authUser) subscribeToUserRequests();
@@ -149,6 +153,9 @@ const Navbar = () => {
                   setMessages(null);
                   setShowInfo(false);
                   setGroupMessages(null);
+                  setAllGroupMessages([]);
+                  setAllMessages([]);
+                  setUnreadCount([]);
                 }}
                 className="btn btn-sm bg-red-500 text-white flex-1 hover:bg-red-600"
               >
