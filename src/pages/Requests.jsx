@@ -15,7 +15,7 @@ const Requests = () => {
             showUserRequests
               ? "bg-primary text-base-300"
               : "bg-base-200 text-base-content"
-          } py-2 px-4 rounded-lg transition-all`}
+          } py-2  px-4 rounded-lg transition-all`}
         >
           User Requests{" "}
           {userRequests.length > 0 && <>({userRequests.length})</>}
@@ -25,8 +25,8 @@ const Requests = () => {
           className={`w-1/2 ${
             !showUserRequests
               ? "bg-primary text-base-300"
-              : "bg-base-200 text-base-content"
-          } py-2 px-4 rounded-lg transition-all`}
+              : "bg-base-200  text-base-content"
+          } py-2 whitespace-nowrap px-4 rounded-lg transition-all`}
         >
           Group Requests{" "}
           {groupRequestsUser.length > 0 && <>({groupRequestsUser.length})</>}

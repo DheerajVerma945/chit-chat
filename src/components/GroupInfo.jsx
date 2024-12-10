@@ -8,6 +8,7 @@ import {
   LucideTrash2,
   MoreVertical,
   Settings,
+  Trash2Icon,
   UserPlus2,
 } from "lucide-react";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
@@ -407,12 +408,19 @@ const GroupInfo = () => {
                       <div className="flex relative">
                         {showAdminOptions === member._id && (
                           <button
-                            className={`absolute -right-5 top-12 sm:right-16 sm:top-2 btn btn-error btn-sm ${
+                            className={`absolute right-10 top-2 sm:right-16 sm:top-2 btn btn-error btn-sm ${
                               isRemovingMember ? "loading bg-error" : ""
                             }`}
                             onClick={() => handleRemoveMember(member._id)}
                           >
-                            {!isRemovingMember ? "Remove" : ""}
+                            {!isRemovingMember ? (
+                              <>
+                                <span className="hidden sm:block"> Remove</span>
+                                <Trash2Icon className="block sm:hidden"/>
+                              </>
+                            ) : (
+                              ""
+                            )}
                           </button>
                         )}
 
