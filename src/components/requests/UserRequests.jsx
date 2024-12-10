@@ -52,6 +52,7 @@ const UserRequests = () => {
             <img
               src={request.senderId.profilePic}
               alt={request.senderId.fullName}
+              loading="lazy"
               className="w-12 h-12 rounded-full object-cover"
             />
             <div>

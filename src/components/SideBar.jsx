@@ -3,7 +3,7 @@ import { useChatStore } from "../store/useChatStore";
 import { useGroupChatStore } from "../store/useGroupChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { CreateGroup, SideBarSkeleton } from "../components";
-import { ArrowLeft, ArrowRight, Plus, User, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, User, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useGroupConfigStore } from "../store/useGroupConfigStore";
 
@@ -92,26 +92,26 @@ const Sidebar = () => {
 
   return (
     <div className="relative">
-      <div className="absolute -left-1 -top-2 z-50 m-2 cursor-pointer sm:hidden">
+      <div className="absolute left-1 top-2 z-50  cursor-pointer sm:hidden">
         {showSideBar && (
           <div onClick={() => setShowSideBar(false)}>
-            <ArrowLeft />
+            <ChevronLeft />
           </div>
         )}
         {!showSideBar && (
           <div onClick={() => setShowSideBar(true)}>
-            <ArrowRight />
+            <ChevronRight />
           </div>
         )}
       </div>
       {showSideBar && (
-        <>
+        <div className="mt-5">
           {showCreateGroup && (
             <CreateGroup onClose={() => setShowCreateGroup(false)} />
           )}
-          <aside className="h-full w-28 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200  scrollbar-hidden">
+          <aside className="h-full  w-28 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200  scrollbar-hidden">
             <div className="border-b border-base-300 w-full p-5">
-              <div className="flex items-center justify-between  gap-2  md:gap-2">
+              <div className="flex items-center justify-between   gap-2 ">
                 <button
                   className={`flex relative items-center gap-2 p-2 rounded-md ${
                     showContacts ? "btn" : ""
@@ -205,6 +205,7 @@ const Sidebar = () => {
                               <img
                                 src={user.profilePic}
                                 alt={user.fullName}
+                                loading="lazy"
                                 className="size-12 object-cover rounded-full"
                               />
                               {onlineUsers.includes(user._id) && (
@@ -260,6 +261,7 @@ const Sidebar = () => {
                               <img
                                 src={user.profilePic}
                                 alt={user.fullName}
+                                loading="lazy"
                                 className="size-12 object-cover rounded-full"
                               />
                               {onlineUsers.includes(user._id) && (
@@ -335,6 +337,7 @@ const Sidebar = () => {
                         <img
                           src={group.photo}
                           alt={group.name}
+                          
                           className="size-12 object-cover rounded-full"
                         />
                         {unreadGroupCount.find(
@@ -361,7 +364,7 @@ const Sidebar = () => {
               </>
             )}
           </aside>
-        </>
+        </div>
       )}
     </div>
   );

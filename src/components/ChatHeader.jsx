@@ -1,16 +1,16 @@
-import {  Info, X } from "lucide-react";
+import { Info, X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
 import { useGroupChatStore } from "../store/useGroupChatStore";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
-  const { selectedGroup, setSelectedGroup ,setShowInfo,showInfo} = useGroupChatStore();
+  const { selectedGroup, setSelectedGroup, setShowInfo, showInfo } =
+    useGroupChatStore();
   const { onlineUsers } = useAuthStore();
 
-
   return (
-    <div className="p-2.5 border-b border-base-300">
+    <div className="p-2.5  ml-5 border-b border-base-300">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="avatar">
@@ -19,10 +19,15 @@ const ChatHeader = () => {
                 <img
                   src={selectedUser.profilePic}
                   alt={selectedUser.fullName}
+                  loading="lazy"
                 />
               )}
               {selectedGroup && (
-                <img src={selectedGroup.photo} alt={selectedGroup.name} />
+                <img
+                  src={selectedGroup.photo}
+                  alt={selectedGroup.name}
+                  loading="lazy"
+                />
               )}
             </div>
           </div>

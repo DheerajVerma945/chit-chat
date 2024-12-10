@@ -52,6 +52,7 @@ const Navbar = () => {
                   <img
                     className="size-6 sm:size-10 object-cover rounded-full"
                     src={Logo}
+                    loading="lazy"
                   />
                 </div>
                 <h1 className="text-lg font-bold">Chit-Chat</h1>

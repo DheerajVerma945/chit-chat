@@ -65,6 +65,7 @@ const ProfilePage = () => {
               <img
                 src={authUser.data.profilePic}
                 alt="Profile"
+                loading="lazy"
                 className="size-32 rounded-full object-cover border-4"
               />
               <label

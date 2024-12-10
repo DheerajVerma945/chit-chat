@@ -159,6 +159,7 @@ const SearchUser = () => {
             <img
               src={user.data.data.profilePic}
               alt={user.data.data.fullName}
+              loading="lazy"
               className="w-24 h-24 rounded-full object-cover mb-4 border-2 border-primary"
             />
             <p className="text-lg font-semibold mb-2 text-center">

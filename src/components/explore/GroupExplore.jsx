@@ -76,6 +76,7 @@ const GroupExplore = () => {
               <img
                 src={group.photo}
                 alt={group.name}
+                loading="lazy"
                 className="object-cover w-full h-full"
               />
             </div>

@@ -15,7 +15,9 @@ const SettingsPage = () => {
       <div className="space-y-6">
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">Themes</h2>
-          <p className="text-sm text-base-content/70">Choose a theme for the app.</p>
+          <p className="text-sm text-base-content/70">
+            Choose a theme for the app.
+          </p>
         </div>
 
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 overflow-hidden">
@@ -28,7 +30,10 @@ const SettingsPage = () => {
               `}
               onClick={() => setTheme(t)}
             >
-              <div className="relative h-8 w-full rounded-md overflow-hidden" data-theme={t}>
+              <div
+                className="relative h-8 w-full rounded-md overflow-hidden"
+                data-theme={t}
+              >
                 <div className="absolute inset-0 grid grid-cols-4 gap-px p-1">
                   <div className="rounded bg-primary"></div>
                   <div className="rounded bg-secondary"></div>
@@ -43,7 +48,7 @@ const SettingsPage = () => {
           ))}
         </div>
         <div className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg">
-        <h3 className="text-lg font-semibold m-3">Preview</h3>
+          <h3 className="text-lg font-semibold m-3">Preview</h3>
           <div className="p-4 bg-base-200">
             <div className="max-w-lg mx-auto">
               <div className="bg-base-100 rounded-xl shadow-sm overflow-hidden">
@@ -63,23 +68,76 @@ const SettingsPage = () => {
                   {PREVIEW_MESSAGES.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex ${message.isSent ? "justify-end" : "justify-start"}`}
+                      className={`flex ${
+                        message.isSent ? "justify-end" : "justify-start"
+                      }`}
                     >
                       <div
                         className={`
                           max-w-[80%] rounded-xl p-3 shadow-sm
-                          ${message.isSent ? "bg-primary text-primary-content" : "bg-base-200"}
+                          ${
+                            message.isSent
+                              ? "bg-primary text-primary-content"
+                              : "bg-base-200"
+                          }
                         `}
                       >
                         <p className="text-sm">{message.content}</p>
-                        <p
-                          className={`
+                        <div className="flex items-center justify-between">
+                          <p
+                            className={`
                             text-[10px] mt-1.5
-                            ${message.isSent ? "text-primary-content/70" : "text-base-content/70"}
+                            ${
+                              message.isSent
+                                ? "text-primary-content/70"
+                                : "text-base-content/70"
+                            }
                           `}
-                        >
-                          12:00 PM
-                        </p>
+                          >
+                            12:00 PM
+                          </p>
+                          {message.isSent && (
+                            <svg
+                              fill="#000000"
+                              width="20px"
+                              height="20px"
+                              viewBox="-2.4 -2.4 28.80 28.80"
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="icon flat-line mt-2"
+                            >
+                              <g strokeWidth="0"></g>
+                              <g
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              ></g>
+                              <g>
+                                <line
+                                  x1="13.22"
+                                  y1="16.5"
+                                  x2="21"
+                                  y2="7.5"
+                                  style={{
+                                    fill: "none",
+                                    stroke: "#000000",
+                                    strokeLinecap: "round",
+                                    strokeLinejoin: "round",
+                                    strokeWidth: 2,
+                                  }}
+                                />
+                                <polyline
+                                  points="3 11.88 7 16.5 14.78 7.5"
+                                  style={{
+                                    fill: "none",
+                                    stroke: "#000000",
+                                    strokeLinecap: "round",
+                                    strokeLinejoin: "round",
+                                    strokeWidth: 2,
+                                  }}
+                                />
+                              </g>
+                            </svg>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}

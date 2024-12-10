@@ -86,6 +86,7 @@ const UserExplore = () => {
               <img
                 src={user.profilePic}
                 alt={user.fullName}
+                loading="lazy"
                 className="object-cover w-full h-full"
               />
             </div>

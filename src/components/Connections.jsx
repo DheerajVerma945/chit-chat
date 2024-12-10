@@ -9,9 +9,11 @@ const Connections = () => {
   const { removeConnections } = useUserStore();
   const [removing, setRemoving] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const removeConnection = async (id) => {
     setRemoving(id);
+    setLoading(true);
     try {
       await removeConnections(id);
       toast.success("Connection removed successfully");
@@ -22,6 +24,7 @@ const Connections = () => {
     } finally {
       setRemoving(null);
       setSelectedUserId(null);
+      setLoading(false);
     }
   };
 
@@ -47,14 +50,13 @@ const Connections = () => {
             <img
               src={user.profilePic}
               alt={user.fullName}
+              loading="lazy"
               className="w-12 h-12 rounded-full object-cover mr-4"
             />
             <p className="text-base font-medium">{user.fullName}</p>
           </div>
           <button
-            className={`btn btn-error btn-sm flex items-center gap-2 ${
-              removing === user._id ? "loading bg-error" : ""
-            }`}
+            className={`btn btn-error btn-sm flex items-center gap-2`}
             onClick={() => setSelectedUserId(user._id)}
           >
             {removing !== user._id && (
@@ -69,7 +71,7 @@ const Connections = () => {
 
       {selectedUserId && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className=" p-6 rounded-lg shadow-lg w-80">
+          <div className=" p-6 rounded-lg bg-base-100 shadow-lg w-80">
             <h2 className="text-lg font-bold mb-4">Confirm Removal</h2>
             <p className="mb-6">
               Are you sure you want to remove this connection? All chats will
@@ -83,10 +85,10 @@ const Connections = () => {
                 Cancel
               </button>
               <button
-                className="btn btn-error btn-sm"
+                className={`btn btn-error btn-sm ${loading ? "loading bg-error":""}`}
                 onClick={() => removeConnection(selectedUserId)}
               >
-                Confirm
+                {loading ? "":"Confirm"}
               </button>
             </div>
           </div>

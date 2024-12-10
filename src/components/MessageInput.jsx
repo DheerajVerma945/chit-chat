@@ -72,6 +72,7 @@ const MessageInput = () => {
             <img
               src={imagePreview}
               alt="Preview"
+              loading="lazy"
               className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
             />
             <button
@@ -117,11 +118,11 @@ const MessageInput = () => {
           className={` ${
             sendMessageLoading
               ? "loading bg-primary"
-              : "size-7 sm:size-10 "
+              : "btn btn-primary h-10 min-h-0"
           }`}
           disabled={(!text.trim() && !imagePreview) || sendMessageLoading}
         >
-          {!sendMessageLoading && <Send className="size-7" />}
+          {!sendMessageLoading && <Send size={18} />}
         </button>
       </form>
     </div>

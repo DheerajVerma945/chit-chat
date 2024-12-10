@@ -74,6 +74,7 @@ const AddMembers = () => {
                   <img
                     src={connection.profilePic}
                     alt={connection.fullName}
+                    loading="lazy"
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <span className="text-sm font-medium">

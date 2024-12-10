@@ -62,8 +62,8 @@ const SignUpPage = () => {
       setIsValidatingUsername(true);
       const res = await axiosInstance.get(`/auth/validateUserName/${username}`);
       setIsUsernameValid(res?.data?.status === "success");
-    } catch (error){
-      toast.error(error?.response?.data?.message)
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
       setIsUsernameValid(false);
     } finally {
       setIsValidatingUsername(false);

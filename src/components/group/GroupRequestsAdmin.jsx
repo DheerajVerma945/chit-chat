@@ -67,6 +67,7 @@ const GroupRequestsAdmin = () => {
                   <img
                     src={request.senderId.profilePic}
                     alt={request.senderId.fullName}
+                    loading="lazy"
                     className="w-12 h-12 rounded-full object-cover border border-base-300"
                   />
                   <span className="text-sm font-medium text-base-content">

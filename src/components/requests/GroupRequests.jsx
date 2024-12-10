@@ -50,6 +50,7 @@ const GroupRequests = () => {
             <img
               src={request.senderId.profilePic}
               alt={request.senderId.fullName}
+              loading="lazy"
               className="w-12 h-12 rounded-full object-cover"
             />
             <div>
@@ -65,23 +66,23 @@ const GroupRequests = () => {
           <div className="flex gap-4 mt-4 sm:mt-0">
             <button
               className={`btn btn-success btn-sm ${
-                currReq === request._id && isAccepting
+                currReq === request._id && status === "accepted"
                   ? "loading bg-success"
                   : ""
               }`}
-              onClick={() => handleAccept(request._id)}
-              disabled={isAccepting || isRejecting}
+              onClick={() => handleAccept(request)}
+              disabled={status === "accepted" || status === "rejected"}
             >
-              {currReq === request._id && isAccepting ? "" : "Accept"}
+              {currReq === request._id && status === "accepted" ? "" : "Accept"}
             </button>
             <button
               className={`btn btn-error btn-sm ${
-                currReq === request._id && isRejecting ? "loading bg-error" : ""
+                currReq === request._id && status === "rejected" ? "loading bg-error" : ""
               }`}
-              onClick={() => handleReject(request._id)}
-              disabled={isAccepting || isRejecting}
+              onClick={() => handleReject(request)}
+              disabled={status === "accepted" || status === "rejected"}
             >
-              {currReq === request._id && isRejecting ? "" : "Reject"}
+              {currReq === request._id && status === "rejected" ? "" : "Reject"}
             </button>
           </div>
         </div>

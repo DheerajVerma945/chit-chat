@@ -7,7 +7,7 @@ import { useChatStore } from "../store/useChatStore";
 
 const HomePage = () => {
   const [currentContainer, setCurrentContainer] = useState("inbox");
-  const {setSelectedUser} = useChatStore()
+  const { setSelectedUser } = useChatStore();
   const { setSelectedGroup } = useGroupChatStore();
 
   return (
@@ -18,7 +18,7 @@ const HomePage = () => {
         {currentContainer === "inbox" && <ChatPage />}
         {currentContainer === "connections" && <Connections />}
       </div>
-      <div className="fixed bottom-1 inset-x-0 sm:inset-x-20 h-12  border-t rounded-t-md bg-base-100 shadow-lg flex ">
+      <div className="bottom-1  inset-x-0 sm:inset-x-20 h-12  border-t rounded-t-md border-b border-base-300 fixed w-full  z-40 backdrop-blur-lg bg-base-100/20 flex ">
         <button
           className={`flex-1 flex flex-col rounded-md items-center justify-center gap-1   transition duration-300 hover:bg-base-200 ${
             currentContainer === "inbox"

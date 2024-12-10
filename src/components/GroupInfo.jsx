@@ -35,18 +35,17 @@ const GroupInfo = () => {
     isExitingGroup,
   } = useGroupConfigStore();
 
-  const {groups,selectedGroup} = useGroupChatStore();
-  const [group,setGroup] = useState(selectedGroup);
-
+  const { groups, selectedGroup } = useGroupChatStore();
+  const [group, setGroup] = useState(selectedGroup);
 
   const admin = selectedGroup.admin;
 
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
 
   useEffect(() => {
-    setGroup(selectedGroup)
+    setGroup(selectedGroup);
     getGroupRequestsAdmin();
-  }, [groups,selectedGroup]);
+  }, [groups, selectedGroup]);
 
   const { authUser } = useAuthStore();
 
@@ -197,6 +196,7 @@ const GroupInfo = () => {
               <img
                 src={group.photo}
                 alt="Group"
+                loading="lazy"
                 className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4"
               />
 
@@ -395,6 +395,7 @@ const GroupInfo = () => {
                     <img
                       src={member.profilePic}
                       alt={member.fullName}
+                      loading="lazy"
                       className="w-10 h-10 object-cover rounded-full"
                     />
                     <span className="text-sm font-medium">

@@ -5,7 +5,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 import { useGroupChatStore } from "../store/useGroupChatStore.js";
 import GroupInfo from "./GroupInfo.jsx";
-import { Check } from "lucide-react";
+
 
 const ChatContainer = () => {
   const { authUser } = useAuthStore();
@@ -24,7 +24,9 @@ const ChatContainer = () => {
   } = useGroupChatStore();
 
   const uniqueGroupMessages = [
-    ...new Map(groupMessages?.map((message) => [message._id, message])).values(),
+    ...new Map(
+      groupMessages?.map((message) => [message._id, message])
+    ).values(),
   ];
 
   useEffect(() => {
@@ -66,18 +68,6 @@ const ChatContainer = () => {
                 }`}
                 ref={messagEndRef}
               >
-                <div className="chat-image avatar">
-                  <div className="size-10 rounded-full border">
-                    <img
-                      src={
-                        message.senderId === authUser.data._id
-                          ? authUser.data.profilePic
-                          : selectedUser.profilePic
-                      }
-                      alt="profile pic"
-                    />
-                  </div>
-                </div>
                 <div className="chat-header mb-1">
                   <time className="text-xs opacity-50 ml-1">
                     {formatMessageTime(message.createdAt)}
@@ -93,6 +83,7 @@ const ChatContainer = () => {
                   {message.image && (
                     <img
                       src={message.image}
+                      loading="lazy"
                       alt="Attachment"
                       className="sm:max-w-[200px] max-w-[150px] rounded-md mb-2"
                     />
@@ -100,14 +91,70 @@ const ChatContainer = () => {
                   {message.text && <p>{message.text}</p>}
 
                   {message.senderId === authUser.data._id && (
-                    <div className="absolute -bottom-1 -right-1 flex flex-col items-center text-secondary-content">
+                    <div className="absolute -bottom-1 -right-0 my-1  flex flex-col items-center text-secondary-content">
                       {message.isRead ? (
                         <>
-                          <Check className="text-xs scale-50 sm:scale-75 -mb-3" />
-                          <Check className="text-xs scale-50 sm:scale-75 -mt-2" />
+                          <svg
+                            fill="#000000"
+                            width="20px"
+                            height="20px"
+                            viewBox="-2.4 -2.4 28.80 28.80"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon flat-line"
+                          >
+                            <g strokeWidth="0"></g>
+                            <g strokeLinecap="round" strokeLinejoin="round"></g>
+                            <g>
+                              <line
+                                x1="13.22"
+                                y1="16.5"
+                                x2="21"
+                                y2="7.5"
+                                style={{
+                                  fill: "none",
+                                  stroke: "#000000",
+                                  strokeLinecap: "round",
+                                  strokeLinejoin: "round",
+                                  strokeWidth: 2,
+                                }}
+                              />
+                              <polyline
+                                points="3 11.88 7 16.5 14.78 7.5"
+                                style={{
+                                  fill: "none",
+                                  stroke: "#000000",
+                                  strokeLinecap: "round",
+                                  strokeLinejoin: "round",
+                                  strokeWidth: 2,
+                                }}
+                              />
+                            </g>
+                          </svg>
                         </>
                       ) : (
-                        <Check className="text-xs scale-50 sm:scale-75" />
+                        <svg
+                          fill="#000000"
+                          width="18px"
+                          height="18px"
+                          viewBox="-2.4 -2.4 28.80 28.80"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="icon flat-line "
+                        >
+                          <g strokeWidth="0"></g>
+                          <g strokeLinecap="round" strokeLinejoin="round"></g>
+                          <g>
+                            <polyline
+                              points="4 12 9 17 20 6"
+                              style={{
+                                fill: "none",
+                                stroke: "#000000",
+                                strokeLinecap: "round",
+                                strokeLinejoin: "round",
+                                strokeWidth: 2,
+                              }}
+                            />
+                          </g>
+                        </svg>
                       )}
                     </div>
                   )}
@@ -134,6 +181,7 @@ const ChatContainer = () => {
                           ? authUser.data.profilePic
                           : message.senderId.profilePic
                       }
+                      loading="lazy"
                       alt="profile pic"
                     />
                   </div>
@@ -159,6 +207,7 @@ const ChatContainer = () => {
                     <img
                       src={message.image}
                       alt="Attachment"
+                      loading="lazy"
                       className="sm:max-w-[200px] rounded-md mb-2"
                     />
                   )}
