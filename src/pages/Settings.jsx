@@ -98,12 +98,12 @@ const SettingsPage = () => {
                           </p>
                           {message.isSent && (
                             <svg
-                              fill="#000000"
                               width="20px"
                               height="20px"
                               viewBox="-2.4 -2.4 28.80 28.80"
                               xmlns="http://www.w3.org/2000/svg"
-                              className="icon flat-line mt-2"
+                              className="icon flat-line mt-2 text-primary-content"
+                              style={{ color: "currentColor" }}
                             >
                               <g strokeWidth="0"></g>
                               <g
@@ -118,7 +118,7 @@ const SettingsPage = () => {
                                   y2="7.5"
                                   style={{
                                     fill: "none",
-                                    stroke: "#000000",
+                                    stroke: "currentColor",
                                     strokeLinecap: "round",
                                     strokeLinejoin: "round",
                                     strokeWidth: 2,
@@ -128,7 +128,7 @@ const SettingsPage = () => {
                                   points="3 11.88 7 16.5 14.78 7.5"
                                   style={{
                                     fill: "none",
-                                    stroke: "#000000",
+                                    stroke: "currentColor",
                                     strokeLinecap: "round",
                                     strokeLinejoin: "round",
                                     strokeWidth: 2,

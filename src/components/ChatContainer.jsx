@@ -6,7 +6,6 @@ import { formatMessageTime } from "../lib/utils";
 import { useGroupChatStore } from "../store/useGroupChatStore.js";
 import GroupInfo from "./GroupInfo.jsx";
 
-
 const ChatContainer = () => {
   const { authUser } = useAuthStore();
 
@@ -20,7 +19,6 @@ const ChatContainer = () => {
     isGroupMessagesLoading,
     selectedGroup,
     showInfo,
-    allGroupMessages,
   } = useGroupChatStore();
 
   const uniqueGroupMessages = [
@@ -91,16 +89,16 @@ const ChatContainer = () => {
                   {message.text && <p>{message.text}</p>}
 
                   {message.senderId === authUser.data._id && (
-                    <div className="absolute -bottom-1 -right-0 my-1  flex flex-col items-center text-secondary-content">
+                    <div className="absolute -bottom-1 -right-0 my-1  flex flex-col items-center ">
                       {message.isRead ? (
                         <>
                           <svg
-                            fill="#000000"
                             width="20px"
                             height="20px"
                             viewBox="-2.4 -2.4 28.80 28.80"
                             xmlns="http://www.w3.org/2000/svg"
-                            className="icon flat-line"
+                            className="icon flat-line mt-2 text-primary-content"
+                            style={{ color: "currentColor" }}
                           >
                             <g strokeWidth="0"></g>
                             <g strokeLinecap="round" strokeLinejoin="round"></g>
@@ -112,7 +110,7 @@ const ChatContainer = () => {
                                 y2="7.5"
                                 style={{
                                   fill: "none",
-                                  stroke: "#000000",
+                                  stroke: "currentColor",
                                   strokeLinecap: "round",
                                   strokeLinejoin: "round",
                                   strokeWidth: 2,
@@ -122,7 +120,7 @@ const ChatContainer = () => {
                                 points="3 11.88 7 16.5 14.78 7.5"
                                 style={{
                                   fill: "none",
-                                  stroke: "#000000",
+                                  stroke: "currentColor",
                                   strokeLinecap: "round",
                                   strokeLinejoin: "round",
                                   strokeWidth: 2,
@@ -133,12 +131,12 @@ const ChatContainer = () => {
                         </>
                       ) : (
                         <svg
-                          fill="#000000"
                           width="18px"
                           height="18px"
                           viewBox="-2.4 -2.4 28.80 28.80"
                           xmlns="http://www.w3.org/2000/svg"
-                          className="icon flat-line "
+                          className="icon flat-line text-primary-content"
+                          style={{ color: "currentColor" }}
                         >
                           <g strokeWidth="0"></g>
                           <g strokeLinecap="round" strokeLinejoin="round"></g>
@@ -147,7 +145,7 @@ const ChatContainer = () => {
                               points="4 12 9 17 20 6"
                               style={{
                                 fill: "none",
-                                stroke: "#000000",
+                                stroke: "currentColor",
                                 strokeLinecap: "round",
                                 strokeLinejoin: "round",
                                 strokeWidth: 2,
