@@ -105,11 +105,11 @@ const Sidebar = () => {
         )}
       </div>
       {showSideBar && (
-        <div className="mt-5">
+        <>
           {showCreateGroup && (
             <CreateGroup onClose={() => setShowCreateGroup(false)} />
           )}
-          <aside className="h-full  w-28 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200  scrollbar-hidden">
+          <aside className="h-full w-28 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200  scrollbar-hidden">
             <div className="border-b border-base-300 w-full p-5">
               <div className="flex items-center justify-between   gap-2 ">
                 <button
@@ -364,7 +364,7 @@ const Sidebar = () => {
               </>
             )}
           </aside>
-        </div>
+        </>
       )}
     </div>
   );
