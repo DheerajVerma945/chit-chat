@@ -42,7 +42,7 @@ const UserRequests = () => {
   };
 
   return (
-    <div className="w-full p-4 overflow-x-auto scrollbar-hidden ">
+    <div className="w-full p-4 overflow-auto scrollbar-hidden ">
       {userRequests.map((request) => (
         <div
           key={request._id}

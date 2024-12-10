@@ -177,9 +177,6 @@ const Sidebar = () => {
                         />
                         <span className="text-sm">Show online only</span>
                       </label>
-                      <span className="text-xs text-zinc-500">
-                        ({onlineUsers.length - 1}) online
-                      </span>
                     </div>
                     {!showOnlineOnly && (
                       <div className="overflow-y-auto w-full py-3">
