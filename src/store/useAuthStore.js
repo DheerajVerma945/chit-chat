@@ -3,7 +3,10 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = "https://chit-chat-bac.up.railway.app";
+const BASE_URL = "https://backend-v0ob.onrender.com";
+// Backup for render 
+// const BASE_URL = "https://chit-chat-bac.up.railway.app";
+
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
